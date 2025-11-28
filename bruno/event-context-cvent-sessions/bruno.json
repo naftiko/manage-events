@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Cvent Sessions API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

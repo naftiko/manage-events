@@ -1,0 +1,799 @@
+- name: posts - CREATE - Quota per app
+  type: quota
+  limit: 150000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on posts resource per application
+  userMultiplied: false
+
+- name: posts - CREATE - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on posts resource per user
+  userMultiplied: true
+
+- name: groupDefinitions - GET - Quota per app
+  type: quota
+  limit: 5000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on groupDefinitions resource per application
+  userMultiplied: false
+
+- name: groupDefinitions - GET - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on groupDefinitions resource per user
+  userMultiplied: true
+
+- name: documents - ACTIONinitializeUpload - Quota per app
+  type: quota
+  limit: 300000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONinitializeUpload method on documents resource per application
+  userMultiplied: false
+
+- name: documents - ACTIONinitializeUpload - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONinitializeUpload method on documents resource per user
+  userMultiplied: true
+
+- name: shares - UPDATE - Quota per app
+  type: quota
+  limit: 1000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on shares resource per application
+  userMultiplied: false
+
+- name: shares - UPDATE - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on shares resource per user
+  userMultiplied: true
+
+- name: documents - FINDERassociatedAccount - Quota per app
+  type: quota
+  limit: 300000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for FINDERassociatedAccount method on documents resource per application
+  userMultiplied: false
+
+- name: documents - FINDERassociatedAccount - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for FINDERassociatedAccount method on documents resource per user
+  userMultiplied: true
+
+- name: groupDefinitions - BATCH_GET - Quota per app
+  type: quota
+  limit: 5000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for BATCH_GET method on groupDefinitions resource per application
+  userMultiplied: false
+
+- name: groupDefinitions - BATCH_GET - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for BATCH_GET method on groupDefinitions resource per user
+  userMultiplied: true
+
+- name: socialActions/comments - UPDATE - Quota per app
+  type: quota
+  limit: 5000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on socialActions/comments resource per application
+  userMultiplied: false
+
+- name: socialActions/comments - UPDATE - Quota per user
+  type: quota
+  limit: 50000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on socialActions/comments resource per user
+  userMultiplied: true
+
+- name: reactions - UPDATE - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on reactions resource per application
+  userMultiplied: false
+
+- name: reactions - UPDATE - Quota per user
+  type: quota
+  limit: 10000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on reactions resource per user
+  userMultiplied: true
+
+- name: socialActions/comments - DELETE - Quota per app
+  type: quota
+  limit: 5000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on socialActions/comments resource per application
+  userMultiplied: false
+
+- name: socialActions/comments - DELETE - Quota per user
+  type: quota
+  limit: 50000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on socialActions/comments resource per user
+  userMultiplied: true
+
+- name: reactions - DELETE - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on reactions resource per application
+  userMultiplied: false
+
+- name: reactions - DELETE - Quota per user
+  type: quota
+  limit: 10000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on reactions resource per user
+  userMultiplied: true
+
+- name: images - BATCH_GET - Quota per app
+  type: quota
+  limit: 500000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for BATCH_GET method on images resource per application
+  userMultiplied: false
+
+- name: images - BATCH_GET - Quota per user
+  type: quota
+  limit: 50000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for BATCH_GET method on images resource per user
+  userMultiplied: true
+
+- name: userinfo - GET - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on userinfo resource per application
+  userMultiplied: false
+
+- name: userinfo - GET - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on userinfo resource per user
+  userMultiplied: true
+
+- name: images - ACTIONinitializeUpload - Quota per app
+  type: quota
+  limit: 300000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONinitializeUpload method on images resource per application
+  userMultiplied: false
+
+- name: images - ACTIONinitializeUpload - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONinitializeUpload method on images resource per user
+  userMultiplied: true
+
+- name: images - GET - Quota per app
+  type: quota
+  limit: 500000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on images resource per application
+  userMultiplied: false
+
+- name: images - GET - Quota per user
+  type: quota
+  limit: 150000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on images resource per user
+  userMultiplied: true
+
+- name: socialMetadata - UPDATE - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on socialMetadata resource per application
+  userMultiplied: false
+
+- name: socialMetadata - UPDATE - Quota per user
+  type: quota
+  limit: 10000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on socialMetadata resource per user
+  userMultiplied: true
+
+- name: videos - UPDATE - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on videos resource per application
+  userMultiplied: false
+
+- name: videos - UPDATE - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on videos resource per user
+  userMultiplied: true
+
+- name: groupMemberships - FINDERmember - Quota per app
+  type: quota
+  limit: 5000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for FINDERmember method on groupMemberships resource per application
+  userMultiplied: false
+
+- name: groupMemberships - FINDERmember - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for FINDERmember method on groupMemberships resource per user
+  userMultiplied: true
+
+- name: videos - BATCH_GET - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for BATCH_GET method on videos resource per application
+  userMultiplied: false
+
+- name: videos - BATCH_GET - Quota per user
+  type: quota
+  limit: 15000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for BATCH_GET method on videos resource per user
+  userMultiplied: true
+
+- name: videos - GET - Quota per app
+  type: quota
+  limit: 300000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on videos resource per application
+  userMultiplied: false
+
+- name: videos - GET - Quota per user
+  type: quota
+  limit: 5000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on videos resource per user
+  userMultiplied: true
+
+- name: ugcPosts - CREATE - Quota per app
+  type: quota
+  limit: 125000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on ugcPosts resource per application
+  userMultiplied: false
+
+- name: ugcPosts - CREATE - Quota per user
+  type: quota
+  limit: 200
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on ugcPosts resource per user
+  userMultiplied: true
+
+- name: images - UPDATE - Quota per app
+  type: quota
+  limit: 300000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on images resource per application
+  userMultiplied: false
+
+- name: images - UPDATE - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on images resource per user
+  userMultiplied: true
+
+- name: assets/mediaArtifactPublicUrls - FINDERplayableStreams - Quota per app
+  type: quota
+  limit: 4000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for FINDERplayableStreams method on assets/mediaArtifactPublicUrls resource per application
+  userMultiplied: false
+
+- name: assets/mediaArtifactPublicUrls - FINDERplayableStreams - Quota per user
+  type: quota
+  limit: 40000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for FINDERplayableStreams method on assets/mediaArtifactPublicUrls resource per user
+  userMultiplied: true
+
+- name: videos - ACTIONinitializeUpload - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONinitializeUpload method on videos resource per application
+  userMultiplied: false
+
+- name: videos - ACTIONinitializeUpload - Quota per user
+  type: quota
+  limit: 1000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONinitializeUpload method on videos resource per user
+  userMultiplied: true
+
+- name: documents - BATCH_GET - Quota per app
+  type: quota
+  limit: 300000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for BATCH_GET method on documents resource per application
+  userMultiplied: false
+
+- name: documents - BATCH_GET - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for BATCH_GET method on documents resource per user
+  userMultiplied: true
+
+- name: assets - GET - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on assets resource per application
+  userMultiplied: false
+
+- name: assets - GET - Quota per user
+  type: quota
+  limit: 5000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on assets resource per user
+  userMultiplied: true
+
+- name: posts - UPDATE - Quota per app
+  type: quota
+  limit: 1000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on posts resource per application
+  userMultiplied: false
+
+- name: posts - UPDATE - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for UPDATE method on posts resource per user
+  userMultiplied: true
+
+- name: reactions - CREATE - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on reactions resource per application
+  userMultiplied: false
+
+- name: reactions - CREATE - Quota per user
+  type: quota
+  limit: 10000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on reactions resource per user
+  userMultiplied: true
+
+- name: posts - DELETE - Quota per app
+  type: quota
+  limit: 3000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on posts resource per application
+  userMultiplied: false
+
+- name: posts - DELETE - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on posts resource per user
+  userMultiplied: true
+
+- name: assets - ACTIONregisterUpload - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONregisterUpload method on assets resource per application
+  userMultiplied: false
+
+- name: assets - ACTIONregisterUpload - Quota per user
+  type: quota
+  limit: 1000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONregisterUpload method on assets resource per user
+  userMultiplied: true
+
+- name: documents - GET - Quota per app
+  type: quota
+  limit: 300000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on documents resource per application
+  userMultiplied: false
+
+- name: documents - GET - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on documents resource per user
+  userMultiplied: true
+
+- name: ugcPosts - DELETE - Quota per app
+  type: quota
+  limit: 1000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on ugcPosts resource per application
+  userMultiplied: false
+
+- name: ugcPosts - DELETE - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on ugcPosts resource per user
+  userMultiplied: true
+
+- name: reactions - GET - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on reactions resource per application
+  userMultiplied: false
+
+- name: reactions - GET - Quota per user
+  type: quota
+  limit: 10000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for GET method on reactions resource per user
+  userMultiplied: true
+
+- name: videos - ACTIONfinalizeUpload - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONfinalizeUpload method on videos resource per application
+  userMultiplied: false
+
+- name: videos - ACTIONfinalizeUpload - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONfinalizeUpload method on videos resource per user
+  userMultiplied: true
+
+- name: socialActions/comments - CREATE - Quota per app
+  type: quota
+  limit: 5000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on socialActions/comments resource per application
+  userMultiplied: false
+
+- name: socialActions/comments - CREATE - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on socialActions/comments resource per user
+  userMultiplied: true
+
+- name: reactions - FINDERentity - Quota per app
+  type: quota
+  limit: 100000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for FINDERentity method on reactions resource per application
+  userMultiplied: false
+
+- name: reactions - FINDERentity - Quota per user
+  type: quota
+  limit: 10000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for FINDERentity method on reactions resource per user
+  userMultiplied: true
+
+- name: assets - ACTIONcompleteMultipartUpload - Quota per app
+  type: quota
+  limit: 5000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONcompleteMultipartUpload method on assets resource per application
+  userMultiplied: false
+
+- name: assets - ACTIONcompleteMultipartUpload - Quota per user
+  type: quota
+  limit: 500
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for ACTIONcompleteMultipartUpload method on assets resource per user
+  userMultiplied: true
+
+- name: shares - CREATE - Quota per app
+  type: quota
+  limit: 1000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on shares resource per application
+  userMultiplied: false
+
+- name: shares - CREATE - Quota per user
+  type: quota
+  limit: 150
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on shares resource per user
+  userMultiplied: true
+
+- name: socialActions/likes - CREATE - Quota per app
+  type: quota
+  limit: 3000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on socialActions/likes resource per application
+  userMultiplied: false
+
+- name: socialActions/likes - CREATE - Quota per user
+  type: quota
+  limit: 10000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for CREATE method on socialActions/likes resource per user
+  userMultiplied: true
+
+- name: socialActions/likes - DELETE - Quota per app
+  type: quota
+  limit: 3000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on socialActions/likes resource per application
+  userMultiplied: false
+
+- name: socialActions/likes - DELETE - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on socialActions/likes resource per user
+  userMultiplied: true
+
+- name: shares - DELETE - Quota per app
+  type: quota
+  limit: 1000000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on shares resource per application
+  userMultiplied: false
+
+- name: shares - DELETE - Quota per user
+  type: quota
+  limit: 20000
+  metric: requests
+  domains:
+    - api.linkedin.com
+  timeframe: daily
+  description: Rate limit for DELETE method on shares resource per user
+  userMultiplied: true

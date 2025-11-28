@@ -1,0 +1,137 @@
+- id: sfree
+  name: Free
+  description: A free account to do basic networking and brand building. 
+  entries:
+    - label: Monthly Cost
+      description: The monthly subscription cost for this plan
+      metric: currency
+      limit: 69
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$69.99"
+    - label: Annual Cost
+      description: The annual subscription cost for this plan
+      metric: currency
+      limit: 539
+      timeFrame: annually
+      geo: global
+      unit: 1
+      price: "$539.88"
+  elements:
+    - name: InMail credits 15 per month
+    - name: See Who's Viewed Your Profile from the last 365 days
+    - name: Open Profile
+    - name: Unlimited People Browsing
+    - name: Top Applicant Job recommendations
+    - name: Company insights
+    - name: Resume insights
+    - name: 22,000+ LinkedIn Learning courses
+    - name: Full access to Interview Preparation tools
+- id: sales-navigator-core
+  name: Sales Navigator Core
+  description: Current plan for growing and nurturing your network with basic InMail and profile viewing features
+  entries:
+    - label: Monthly Cost
+      description: The monthly subscription cost for this plan
+      metric: currency
+      limit: 69
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$69.99"
+    - label: Annual Cost
+      description: The annual subscription cost for this plan
+      metric: currency
+      limit: 539
+      timeFrame: annually
+      geo: global
+      unit: 1
+      price: "$539.88"
+  elements:
+    - name: InMail credits 15 per month
+    - name: See Who's Viewed Your Profile from the last 365 days
+    - name: Open Profile
+    - name: Unlimited People Browsing
+    - name: Top Applicant Job recommendations
+    - name: Company insights
+    - name: Resume insights
+    - name: 22,000+ LinkedIn Learning courses
+    - name: Full access to Interview Preparation tools
+
+- id: sales-navigator-advanced
+  name: Sales Navigator Advanced
+  description: Recommended plan to unlock sales opportunities with advanced search, lead tracking, and Sales Navigator platform access
+  entries:
+    - label: Monthly Cost
+      description: The monthly subscription cost for this plan
+      metric: currency
+      limit: 119
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$119.99"
+    - label: Annual Cost
+      description: The annual subscription cost for this plan with 25% savings
+      metric: currency
+      limit: 1079
+      timeFrame: annually
+      geo: global
+      unit: 1
+      price: "$1,079.88"
+  elements:
+    - name: Sales Navigator InMail credits 50 per month
+    - name: Sales Navigator platform
+    - name: Find the right leads and accounts with advanced search
+    - name: Save time with lead and account recommendations
+    - name: See Who's Viewed Your Profile from the last 365 days
+    - name: Open Profile
+    - name: Unlimited People Browsing
+    - name: Save leads and accounts to track their activity
+    - name: Access to your 2nd and 3rd degree networks
+    - name: Top Applicant Job recommendations
+    - name: Company insights
+    - name: Resume insights
+    - name: Seize opportunities with real-time lead and account alerts
+    - name: 22,000+ LinkedIn Learning courses
+    - name: Full access to Interview Preparation tools
+
+- id: sales-navigator-business
+  name: Business
+  description: Enterprise plan to unlock sales opportunities with team collaboration, TeamLink, custom lists, and advanced team management features
+  entries:
+    - label: Monthly Cost
+      description: The monthly subscription cost for this plan
+      metric: currency
+      limit: 159
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$159.99"
+    - label: Annual Cost
+      description: The annual subscription cost for this plan with 6% savings
+      metric: currency
+      limit: 1799
+      timeFrame: annually
+      geo: global
+      unit: 1
+      price: "$1,799.88"
+  elements:
+    - name: Sales Navigator InMail credits 50 per month
+    - name: Leverage your team's network with TeamLink
+    - name: Sales Navigator platform
+    - name: Find the right leads and accounts with advanced search
+    - name: Save time with lead and account recommendations
+    - name: See Who's Viewed Your Profile from the last 365 days
+    - name: Open Profile
+    - name: Unlimited People Browsing
+    - name: Save leads and accounts to track their activity
+    - name: Shareable custom lead and account lists
+    - name: Manage multiple licenses for your team
+    - name: Upload and manage your book of business
+    - name: Team collaboration tools
+    - name: Access to your 2nd and 3rd degree networks
+    - name: Company insights
+    - name: Resume insights
+    - name: Seize opportunities with real-time lead and account alerts
+    - name: Send Smart Links and track engagement

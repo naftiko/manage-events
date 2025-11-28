@@ -1,0 +1,319 @@
+arazzo: 1.0.0
+info:
+  title: Cvent OAuth2 Authentication Workflow
+  version: 1.0.0
+  description: |
+    This Arazzo specification describes the OAuth2 client credentials flow 
+    for authenticating with the Cvent REST API platform.
+    
+    The workflow obtains a bearer token that can be used to make authenticated
+    requests to Cvent API endpoints.
+
+sourceDescriptions:
+  - name: cvent-api
+    type: openapi
+    url: https://api-platform.cvent.com/ea/openapi.json
+    x-serverUrl: https://api-platform.cvent.com
+
+workflows:
+  - workflowId: oauth2-client-credentials-flow
+    summary: OAuth2 Client Credentials Authentication
+    description: |
+      Authenticates with Cvent API using OAuth2 client credentials flow.
+      This workflow is used by developer applications to obtain an access token
+      for making API requests.
+      
+      Prerequisites:
+      - Client ID from your Cvent application
+      - Client Secret from your Cvent application
+      - Base64 encoded credentials (client_id:client_secret)
+    
+    parameters:
+      - name: datacenter
+        in: header
+        value: north-america
+        description: |
+          The datacenter region for your Cvent account.
+          Options: 'north-america' or 'europe'
+      
+      - name: client_id
+        in: header
+        value: $inputs.client_id
+        description: Your application's client ID
+      
+      - name: client_secret
+        in: header
+        value: $inputs.client_secret
+        description: Your application's client secret
+    
+    inputs:
+      type: object
+      properties:
+        client_id:
+          type: string
+          description: Client ID from your Cvent application
+        client_secret:
+          type: string
+          description: Client secret from your Cvent application
+        datacenter:
+          type: string
+          enum: [north-america, europe]
+          default: north-america
+          description: The datacenter region (north-america or europe)
+        scopes:
+          type: array
+          items:
+            type: string
+          description: |
+            Optional array of OAuth scopes to request.
+            If not provided, default scopes from the application will be used.
+          examples:
+            - ["event/events:read", "event/attendees:read"]
+    
+    steps:
+      - stepId: determine-hostname
+        description: Determine the API hostname based on datacenter region
+        operationId: getHostname
+        parameters:
+          - name: datacenter
+            in: query
+            value: $inputs.datacenter
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          hostname: $response.body.hostname
+        x-implementation: |
+          Returns the appropriate hostname:
+          - north-america: https://api-platform.cvent.com
+          - europe: https://api-platform-eur.cvent.com
+      
+      - stepId: encode-credentials
+        description: Base64 encode the client credentials
+        dependsOn: determine-hostname
+        x-implementation: |
+          Encode credentials in the format: base64(client_id:client_secret)
+        outputs:
+          encoded_credentials: $base64($inputs.client_id + ':' + $inputs.client_secret)
+      
+      - stepId: request-access-token
+        description: Request an OAuth2 access token using client credentials
+        dependsOn: encode-credentials
+        operationPath: /ea/oauth2/token
+        operationId: requestToken
+        requestBody:
+          contentType: application/x-www-form-urlencoded
+          payload:
+            grant_type: client_credentials
+            client_id: $inputs.client_id
+        parameters:
+          - name: Authorization
+            in: header
+            value: Basic $steps.encode-credentials.outputs.encoded_credentials
+          - name: Content-Type
+            in: header
+            value: application/x-www-form-urlencoded
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: $response.body.access_token != null
+          - condition: $response.body.token_type == 'Bearer'
+        onSuccess:
+          - name: store-token
+            type: end
+            workflowId: oauth2-client-credentials-flow
+        onFailure:
+          - name: authentication-failed
+            type: end
+            workflowId: oauth2-client-credentials-flow
+        outputs:
+          access_token: $response.body.access_token
+          expires_in: $response.body.expires_in
+          token_type: $response.body.token_type
+          token_expires_at: $datetime.now() + $response.body.expires_in
+    
+    outputs:
+      access_token: $steps.request-access-token.outputs.access_token
+      expires_in: $steps.request-access-token.outputs.expires_in
+      token_type: $steps.request-access-token.outputs.token_type
+      authorization_header: Bearer $steps.request-access-token.outputs.access_token
+
+  - workflowId: oauth2-authorization-code-flow
+    summary: OAuth2 Authorization Code Flow (Planner Users Only)
+    description: |
+      Authenticates with Cvent API using OAuth2 authorization code flow.
+      This workflow is only supported for planner users with administrator role.
+      Developer users cannot use this flow.
+      
+      Prerequisites:
+      - Client ID from your Cvent application
+      - Client Secret from your Cvent application
+      - Redirect URI configured in your application
+      - User must be a planner with administrator role
+    
+    parameters:
+      - name: datacenter
+        in: header
+        value: north-america
+        description: The datacenter region (north-america or europe)
+      
+      - name: client_id
+        in: header
+        value: $inputs.client_id
+        description: Your application's client ID
+      
+      - name: redirect_uri
+        in: header
+        value: $inputs.redirect_uri
+        description: Your application's redirect URI
+    
+    inputs:
+      type: object
+      properties:
+        client_id:
+          type: string
+          description: Client ID from your Cvent application
+        client_secret:
+          type: string
+          description: Client secret from your Cvent application
+        redirect_uri:
+          type: string
+          format: uri
+          description: Redirect URI configured in your application
+        datacenter:
+          type: string
+          enum: [north-america, europe]
+          default: north-america
+        scopes:
+          type: array
+          items:
+            type: string
+          description: OAuth scopes to request
+          examples:
+            - ["event/events:read", "event/events:write"]
+        state:
+          type: string
+          description: Optional state parameter for CSRF protection
+    
+    steps:
+      - stepId: determine-hostname
+        description: Determine the API hostname based on datacenter region
+        x-implementation: |
+          Returns the appropriate hostname based on datacenter input
+        outputs:
+          hostname: $inputs.datacenter == 'europe' ? 'https://api-platform-eur.cvent.com' + 'https://api-platform.cvent.com'
+          authorize_url: $outputs.hostname + '/ea/oauth2/authorize'
+          token_url: $outputs.hostname + '/ea/oauth2/token'
+      
+      - stepId: build-authorization-url
+        description: Build the authorization URL for user consent
+        dependsOn: determine-hostname
+        x-implementation: |
+          Constructs the authorization URL with required parameters
+        outputs:
+          authorization_url: $steps.determine-hostname.outputs.authorize_url + 
+            '?response_type=code' +
+            '&client_id=' + $inputs.client_id +
+            '&redirect_uri=' + $inputs.redirect_uri +
+            ($inputs.scopes ? '&scope=' + $inputs.scopes.join(' ') + '') +
+            ($inputs.state ? '&state=' + $inputs.state + '')
+      
+      - stepId: user-authorization
+        description: User authorizes the application (manual step)
+        dependsOn: build-authorization-url
+        x-implementation: |
+          User is redirected to authorization URL, logs in, and grants consent.
+          After approval, user is redirected back to redirect_uri with authorization code.
+        outputs:
+          authorization_code: $callback.query.code
+          returned_state: $callback.query.state
+      
+      - stepId: validate-state
+        description: Validate state parameter to prevent CSRF attacks
+        dependsOn: user-authorization
+        x-implementation: |
+          If state was provided in input, verify it matches the returned state
+        successCriteria:
+          - condition: $inputs.state == null || $inputs.state == $steps.user-authorization.outputs.returned_state
+      
+      - stepId: encode-credentials
+        description: Base64 encode the client credentials
+        dependsOn: validate-state
+        x-implementation: |
+          Encode credentials in the format: base64(client_id:client_secret)
+        outputs:
+          encoded_credentials: $base64($inputs.client_id + ':' + $inputs.client_secret)
+      
+      - stepId: exchange-code-for-token
+        description: Exchange authorization code for access token
+        dependsOn: encode-credentials
+        operationPath: /ea/oauth2/token
+        operationId: exchangeCodeForToken
+        requestBody:
+          contentType: application/x-www-form-urlencoded
+          payload:
+            grant_type: authorization_code
+            code: $steps.user-authorization.outputs.authorization_code
+            redirect_uri: $inputs.redirect_uri
+            client_id: $inputs.client_id
+        parameters:
+          - name: Authorization
+            in: header
+            value: Basic $steps.encode-credentials.outputs.encoded_credentials
+          - name: Content-Type
+            in: header
+            value: application/x-www-form-urlencoded
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: $response.body.access_token != null
+        outputs:
+          access_token: $response.body.access_token
+          expires_in: $response.body.expires_in
+          token_type: $response.body.token_type
+          refresh_token: $response.body.refresh_token
+    
+    outputs:
+      access_token: $steps.exchange-code-for-token.outputs.access_token
+      expires_in: $steps.exchange-code-for-token.outputs.expires_in
+      token_type: $steps.exchange-code-for-token.outputs.token_type
+      refresh_token: $steps.exchange-code-for-token.outputs.refresh_token
+      authorization_header: Bearer $steps.exchange-code-for-token.outputs.access_token
+
+components:
+  parameters:
+    datacenter:
+      name: datacenter
+      description: The Cvent datacenter region
+      schema:
+        type: string
+        enum: [north-america, europe]
+        default: north-america
+    
+    client_id:
+      name: client_id
+      description: OAuth2 client ID
+      schema:
+        type: string
+    
+    client_secret:
+      name: client_secret
+      description: OAuth2 client secret
+      schema:
+        type: string
+        format: password
+
+  x-datacenter-mapping:
+    north-america:
+      hostname: https://api-platform.cvent.com
+      authorize_url: https://api-platform.cvent.com/ea/oauth2/authorize
+      token_url: https://api-platform.cvent.com/ea/oauth2/token
+    europe:
+      hostname: https://api-platform-eur.cvent.com
+      authorize_url: https://api-platform-eur.cvent.com/ea/oauth2/authorize
+      token_url: https://api-platform-eur.cvent.com/ea/oauth2/token
+
+  x-scope-categories:
+    account: [hooks, user-groups, users]
+    appointments: [appointment-attendees, appointment-events, appointment-types, appointments, available-times, locations]
+    budget: [budget-items, budget-totals, cards, currency-conversion-rate, payments, transactions]
+    event: [admission-items, attendees, sessions, speakers, contacts, events]
+    survey: [questions, respondents, responses, surveys]
+    exhibitor: [exhibitors, booth-staff, leads, badges]

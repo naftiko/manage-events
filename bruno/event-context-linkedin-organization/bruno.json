@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "LinkedIn Organization Lookup API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

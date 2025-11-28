@@ -1,0 +1,260 @@
+---
+# OAuth App Burst Limit
+- name: OAuth App Burst Limit
+  type: burst
+  limit: 110
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 10 seconds
+  description: For apps with OAuth authentication, each HubSpot account that installs your app is limited to 110 requests every 10 seconds. This excludes the Search API.
+  userMultiplied: false
+
+# App Limits - Free and Starter
+- name: App Limit - Free and Starter (Per 10 Seconds)
+  type: rate
+  limit: 100
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 10 seconds
+  description: Apps installed in Free and Starter tier accounts are limited to 100 requests per 10 seconds per app.
+  userMultiplied: false
+
+- name: App Limit - Free and Starter (Daily)
+  type: daily
+  limit: 250000
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 1 day
+  description: Apps installed in Free and Starter tier accounts are limited to 250,000 requests per day per account. Daily limit resets at midnight based on account time zone setting.
+  userMultiplied: false
+
+# App Limits - Professional
+- name: App Limit - Professional (Per 10 Seconds)
+  type: rate
+  limit: 190
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 10 seconds
+  description: Apps installed in Professional tier accounts are limited to 190 requests per 10 seconds per app.
+  userMultiplied: false
+
+- name: App Limit - Professional (Daily)
+  type: daily
+  limit: 625000
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 1 day
+  description: Apps installed in Professional tier accounts are limited to 625,000 requests per day per account. Daily limit resets at midnight based on account time zone setting.
+  userMultiplied: false
+
+# App Limits - Enterprise
+- name: App Limit - Enterprise (Per 10 Seconds)
+  type: rate
+  limit: 190
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 10 seconds
+  description: Apps installed in Enterprise tier accounts are limited to 190 requests per 10 seconds per app.
+  userMultiplied: false
+
+- name: App Limit - Enterprise (Daily)
+  type: daily
+  limit: 1000000
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 1 day
+  description: Apps installed in Enterprise tier accounts are limited to 1,000,000 requests per day per account. Daily limit resets at midnight based on account time zone setting.
+  userMultiplied: false
+
+# App Limits with API Limit Increase
+- name: App Limit with API Limit Increase (Per 10 Seconds)
+  type: rate
+  limit: 250
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 10 seconds
+  description: Apps with API Limit Increase purchased are limited to 250 requests per 10 seconds per app, regardless of account tier (Free, Starter, Professional, or Enterprise).
+  userMultiplied: false
+
+- name: App Limit with API Limit Increase (Daily)
+  type: daily
+  limit: 1000000
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 1 day
+  description: Apps with API Limit Increase purchased receive an additional 1,000,000 requests per day on top of base subscription limit, for each limit increase purchased. Maximum of two API limit increases can be purchased. Daily limit resets at midnight based on account time zone setting.
+  userMultiplied: false
+
+# Search API Limits
+- name: Search API Rate Limit
+  type: rate
+  limit: 5
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 1 second
+  description: Search API endpoints are rate limited to 5 requests per second per authentication token. Not exempt from OAuth burst limit.
+  userMultiplied: false
+
+- name: Search API Page Size Limit
+  type: page
+  limit: 200
+  metric: records
+  domains:
+    - api.hubapi.com
+  timeframe: per request
+  description: Search API endpoints return a maximum of 200 records per page request.
+  userMultiplied: false
+
+# App and Account Limits
+- name: Legacy Public Apps per Developer Account
+  type: quota
+  limit: 100
+  metric: apps
+  domains:
+    - developers.hubspot.com
+  timeframe: unlimited
+  description: You can create up to 100 legacy public apps per developer account.
+  userMultiplied: false
+
+- name: Legacy Private Apps per HubSpot Account
+  type: quota
+  limit: 20
+  metric: apps
+  domains:
+    - developers.hubspot.com
+  timeframe: unlimited
+  description: You can create up to 20 legacy private apps per HubSpot account.
+  userMultiplied: false
+
+- name: Webhook Subscriptions per App
+  type: quota
+  limit: 1000
+  metric: subscriptions
+  domains:
+    - api.hubapi.com
+  timeframe: unlimited
+  description: You can create up to 1,000 webhook subscriptions per app.
+  userMultiplied: false
+
+- name: CRM Extension Settings per Legacy Public App
+  type: quota
+  limit: 25
+  metric: settings
+  domains:
+    - api.hubapi.com
+  timeframe: unlimited
+  description: You can create up to 25 CRM extension settings per legacy public app.
+  userMultiplied: false
+
+# Timeline Event Limits
+- name: Timeline Event Types per Public App
+  type: quota
+  limit: 750
+  metric: event_types
+  domains:
+    - api.hubapi.com
+  timeframe: unlimited
+  description: Timeline events in a legacy public app can have up to 750 timeline event types per public app.
+  userMultiplied: false
+
+- name: Timeline Event Properties per Event Type
+  type: quota
+  limit: 500
+  metric: properties
+  domains:
+    - api.hubapi.com
+  timeframe: unlimited
+  description: Each timeline event type can have up to 500 properties.
+  userMultiplied: false
+
+- name: Timeline Event Instance ID Size
+  type: size
+  limit: 500
+  metric: bytes
+  domains:
+    - api.hubapi.com
+  timeframe: per instance
+  description: Each serialized timeline event instance ID is limited to 500 bytes.
+  userMultiplied: false
+
+- name: Timeline Event Property Size
+  type: size
+  limit: 510
+  metric: kilobytes
+  domains:
+    - api.hubapi.com
+  timeframe: per property
+  description: Each timeline event property/token is limited to 510 KB per property.
+  userMultiplied: false
+
+- name: Timeline Event Instance Total Size
+  type: size
+  limit: 1
+  metric: megabytes
+  domains:
+    - api.hubapi.com
+  timeframe: per instance
+  description: Each serialized timeline event instance has a total size limit of 1 MB.
+  userMultiplied: false
+
+# Custom Event Limits
+- name: Custom Event Definitions per Account
+  type: quota
+  limit: 500
+  metric: definitions
+  domains:
+    - api.hubapi.com
+  timeframe: unlimited
+  description: There is a limit of 500 unique event definitions per account.
+  userMultiplied: false
+
+- name: Custom Event Completions per Month
+  type: monthly
+  limit: 30000000
+  metric: completions
+  domains:
+    - api.hubapi.com
+  timeframe: 1 month
+  description: There is a limit of 30 million event completions per month.
+  userMultiplied: false
+
+- name: Send Custom Event Completions Rate Limit
+  type: rate
+  limit: 1250
+  metric: requests
+  domains:
+    - api.hubapi.com
+  timeframe: 1 second
+  description: The send custom event completions endpoint supports up to 1,250 requests per second.
+  userMultiplied: false
+
+- name: Custom Event Completion Batch Size
+  type: batch
+  limit: 500
+  metric: completions
+  domains:
+    - api.hubapi.com
+  timeframe: per request
+  description: The custom event completion batch endpoint supports batches of 500 completions per request.
+  userMultiplied: false
+
+# Error Response Threshold
+- name: Error Response Threshold
+  type: threshold
+  limit: 5
+  metric: percent
+  domains:
+    - api.hubapi.com
+  timeframe: 1 day
+  description: Requests resulting in an error response (429 or other errors) shouldn't exceed 5% of your total daily requests. Apps listed in HubSpot App Marketplace must stay under this 5% limit to be certified.
+  userMultiplied: false
