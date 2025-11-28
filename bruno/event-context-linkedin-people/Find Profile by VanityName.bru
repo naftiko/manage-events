@@ -1,0 +1,16 @@
+meta {
+  name: Find Profile by VanityName
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/people
+  body: none
+  auth: inherit
+}
+
+params:query {
+  q: 
+  vanityName: 
+}

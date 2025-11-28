@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Cvent Events API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

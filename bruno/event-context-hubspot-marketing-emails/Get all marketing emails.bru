@@ -1,0 +1,159 @@
+meta {
+  name: Get all marketing emails
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/marketing/v3/emails/
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~after: 
+  ~archived: 
+  ~campaign: 
+  ~createdAfter: 
+  ~createdAt: 
+  ~createdBefore: 
+  ~includedProperties: 
+  ~includeStats: 
+  ~isPublished: 
+  ~limit: 
+  ~marketingCampaignNames: 
+  ~publishedAfter: 
+  ~publishedAt: 
+  ~publishedBefore: 
+  ~sort: 
+  ~type: 
+  ~updatedAfter: 
+  ~updatedAt: 
+  ~updatedBefore: 
+  ~workflowNames: 
+}
+
+example {
+  name: Example response with a single batch email
+  
+  request: {
+    url: {{baseUrl}}/marketing/v3/emails/
+    method: GET
+    mode: none
+    params:query: {
+      ~after: 
+      ~archived: 
+      ~campaign: 
+      ~createdAfter: 
+      ~createdAt: 
+      ~createdBefore: 
+      ~includedProperties: 
+      ~includeStats: 
+      ~isPublished: 
+      ~limit: 
+      ~marketingCampaignNames: 
+      ~publishedAfter: 
+      ~publishedAt: 
+      ~publishedBefore: 
+      ~sort: 
+      ~type: 
+      ~updatedAfter: 
+      ~updatedAt: 
+      ~updatedBefore: 
+      ~workflowNames: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "paging": {
+            "next": {
+              "after": "MjA%3D",
+              "link": "https://api.hubapi.com/marketing/v3/emails/emails?after=MjA%3D"
+            },
+            "prev": {
+              "before": "MTA%3D",
+              "link": "https://api.hubapi.com/marketing/v3/emails/emails?after=MTA%3D"
+            }
+          },
+          "results": [
+            {
+              "activeDomain": "",
+              "archived": false,
+              "content": {
+                "templatePath": "generated_layouts/4701002617.html",
+                "widgets": {
+                  "hs_email_body": {
+                    "body": {
+                      "html": "<p>Hi {{contact.firstname}},</p>\n<p>This is an example of an email in HubSpot.</p>"
+                    },
+                    "id": "hs_email_body",
+                    "label": "Main Email Body",
+                    "name": "hs_email_body",
+                    "type": "rich_text"
+                  }
+                }
+              },
+              "createdAt": "2017-02-16T13:05:18.390Z",
+              "createdById": 2983922,
+              "from": {
+                "fromName": "Bruce Wayne",
+                "replyTo": "test@yahoo.com"
+              },
+              "id": "4613448134",
+              "isPublished": true,
+              "isTransactional": false,
+              "name": "Fail dmarc",
+              "sendOnPublish": true,
+              "state": "PUBLISHED",
+              "stats": {
+                "counters": {
+                  "bounce": 1,
+                  "click": 0,
+                  "delivered": 0,
+                  "open": 0,
+                  "sent": 1
+                },
+                "ratios": {
+                  "bounceratio": 100,
+                  "clickratio": 0,
+                  "openratio": 0
+                }
+              },
+              "subcategory": "batch",
+              "subject": "Subject",
+              "subscriptionDetails": {
+                "officeLocationId": "4701002382",
+                "subscriptionId": 1264909
+              },
+              "to": {
+                "contactIds": {
+                  "include": [
+                    51
+                  ]
+                },
+                "suppressGraymail": true
+              },
+              "type": "BATCH_EMAIL",
+              "updatedAt": "2017-02-16T13:08:24.853Z",
+              "updatedById": 2983922
+            }
+          ],
+          "total": 1
+        }
+      '''
+    }
+  }
+}

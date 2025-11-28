@@ -1,0 +1,296 @@
+arazzo: 1.0.0
+info:
+  title: LinkedIn OAuth 2.0 Authorization Code Flow
+  version: 1.0.0
+  description: |
+    This workflow implements the LinkedIn 3-legged OAuth 2.0 Authorization Code Flow.
+    It guides applications through requesting permission from LinkedIn members to access
+    their account data and making authenticated API calls on their behalf.
+
+sourceDescriptions:
+  - name: linkedinOAuth
+    type: openapi
+    url: https://api.linkedin.com/oauth/v2
+    
+  - name: linkedinAPI
+    type: openapi
+    url: https://api.linkedin.com/v2
+
+workflows:
+  - workflowId: linkedinAuthorizationCodeFlow
+    summary: Complete LinkedIn OAuth 2.0 Authorization Code Flow
+    description: |
+      Implements the full 3-legged OAuth flow for LinkedIn:
+      1. Direct user to authorization page
+      2. Exchange authorization code for access token
+      3. Make authenticated API requests
+      4. Refresh access tokens when needed
+    
+    inputs:
+      type: object
+      properties:
+        client_id:
+          type: string
+          description: Your application's Client ID from the LinkedIn Developer Portal
+        client_secret:
+          type: string
+          description: Your application's Client Secret (keep secure!)
+        redirect_uri:
+          type: string
+          format: uri
+          description: The callback URL registered in your application settings
+        scope:
+          type: string
+          description: Space-delimited list of permissions (e.g., "r_liteprofile r_emailaddress w_member_social")
+        state:
+          type: string
+          description: Unique string value to prevent CSRF attacks
+      required:
+        - client_id
+        - client_secret
+        - redirect_uri
+        - scope
+        - state
+
+    steps:
+      - stepId: requestAuthorizationCode
+        operationId: getAuthorizationCode
+        description: |
+          Direct the user's browser to LinkedIn's authorization page.
+          The user will authenticate and grant permissions to your application.
+        parameters:
+          - name: response_type
+            in: query
+            value: "code"
+          - name: client_id
+            in: query
+            value: $inputs.client_id
+          - name: redirect_uri
+            in: query
+            value: $inputs.redirect_uri
+          - name: state
+            in: query
+            value: $inputs.state
+          - name: scope
+            in: query
+            value: $inputs.scope
+        successCriteria:
+          - condition: $statusCode == 302
+            context: User is redirected to authorization page
+        outputs:
+          authorization_url: "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={$inputs.client_id}&redirect_uri={$inputs.redirect_uri}&state={$inputs.state}&scope={$inputs.scope}"
+
+      - stepId: handleAuthorizationCallback
+        description: |
+          After user approves, LinkedIn redirects to your redirect_uri with 
+          authorization code and state parameters. Validate the state matches
+          to prevent CSRF attacks.
+        inputs:
+          type: object
+          properties:
+            authorization_code:
+              type: string
+              description: The authorization code from the callback URL
+            returned_state:
+              type: string
+              description: The state value from the callback URL
+        successCriteria:
+          - condition: $inputs.returned_state == $workflow.inputs.state
+            type: simple
+            context: State parameter matches - CSRF check passed
+        onFailure:
+          - name: csrfDetected
+            type: end
+            statusCode: 401
+            description: State parameter mismatch indicates possible CSRF attack
+
+      - stepId: exchangeCodeForToken
+        operationId: getAccessToken
+        description: Exchange the authorization code for an access token
+        dependsOn:
+          - handleAuthorizationCallback
+        requestBody:
+          contentType: application/x-www-form-urlencoded
+          payload:
+            grant_type: "authorization_code"
+            code: $steps.handleAuthorizationCallback.inputs.authorization_code
+            client_id: $inputs.client_id
+            client_secret: $inputs.client_secret
+            redirect_uri: $inputs.redirect_uri
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: $response.body.access_token != null
+        outputs:
+          access_token: $response.body.access_token
+          expires_in: $response.body.expires_in
+          refresh_token: $response.body.refresh_token
+          refresh_token_expires_in: $response.body.refresh_token_expires_in
+          token_scope: $response.body.scope
+        onFailure:
+          - name: invalidAuthorizationCode
+            type: retry
+            retryAfter: 5
+            retryLimit: 3
+            statusCode: 401
+
+      - stepId: makeAuthenticatedRequest
+        operationId: getUserProfile
+        description: Make an authenticated API request using the access token
+        dependsOn:
+          - exchangeCodeForToken
+        parameters:
+          - name: Authorization
+            in: header
+            value: "Bearer {$steps.exchangeCodeForToken.outputs.access_token}"
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          user_profile: $response.body
+
+      - stepId: refreshTokenIfNeeded
+        operationId: refreshAccessToken
+        description: |
+          Refresh the access token before it expires (currently 60-day lifespan).
+          This step can be triggered when access_token is about to expire.
+        requestBody:
+          contentType: application/x-www-form-urlencoded
+          payload:
+            grant_type: "refresh_token"
+            refresh_token: $steps.exchangeCodeForToken.outputs.refresh_token
+            client_id: $inputs.client_id
+            client_secret: $inputs.client_secret
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: $response.body.access_token != null
+        outputs:
+          new_access_token: $response.body.access_token
+          new_expires_in: $response.body.expires_in
+          new_refresh_token: $response.body.refresh_token
+
+    outputs:
+      access_token: $steps.exchangeCodeForToken.outputs.access_token
+      refresh_token: $steps.exchangeCodeForToken.outputs.refresh_token
+      expires_in: $steps.exchangeCodeForToken.outputs.expires_in
+      user_profile: $steps.makeAuthenticatedRequest.outputs.user_profile
+
+  - workflowId: quickAuthorizationFlow
+    summary: Simplified OAuth flow for testing
+    description: |
+      A simplified version of the OAuth flow that focuses on getting
+      an access token quickly. Useful for development and testing.
+    
+    inputs:
+      type: object
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        redirect_uri:
+          type: string
+        authorization_code:
+          type: string
+          description: Pre-obtained authorization code
+      required:
+        - client_id
+        - client_secret
+        - redirect_uri
+        - authorization_code
+
+    steps:
+      - stepId: getToken
+        operationId: getAccessToken
+        description: Exchange authorization code for access token
+        requestBody:
+          contentType: application/x-www-form-urlencoded
+          payload:
+            grant_type: "authorization_code"
+            code: $inputs.authorization_code
+            client_id: $inputs.client_id
+            client_secret: $inputs.client_secret
+            redirect_uri: $inputs.redirect_uri
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          access_token: $response.body.access_token
+          expires_in: $response.body.expires_in
+
+    outputs:
+      access_token: $steps.getToken.outputs.access_token
+      expires_in: $steps.getToken.outputs.expires_in
+
+components:
+  parameters:
+    clientId:
+      name: client_id
+      in: query
+      description: The API Key value from your application configuration
+      required: true
+      
+    redirectUri:
+      name: redirect_uri
+      in: query
+      description: The URI users are sent back to after authorization
+      required: true
+      
+    scope:
+      name: scope
+      in: query
+      description: URL-encoded, space-delimited list of member permissions
+      required: true
+      
+    state:
+      name: state
+      in: query
+      description: Unique string value to prevent CSRF attacks
+      required: false
+
+  errors:
+    - name: user_cancelled_login
+      description: The member declined to log in to their LinkedIn account
+      statusCode: 401
+      
+    - name: user_cancelled_authorize
+      description: The member refused to authorize the permissions request
+      statusCode: 401
+      
+    - name: invalid_redirect_uri
+      description: Redirect URI doesn't match the registered URI
+      statusCode: 401
+      
+    - name: invalid_client_id
+      description: Client ID doesn't match the application
+      statusCode: 401
+      
+    - name: invalid_scope
+      description: Requested permissions are invalid or not assigned
+      statusCode: 401
+      
+    - name: authorization_code_expired
+      description: Authorization code has expired (30-minute lifespan)
+      statusCode: 400
+      
+    - name: missing_required_parameter
+      description: A required parameter is missing from the request
+      statusCode: 400
+
+  successActions:
+    - name: storeTokenSecurely
+      type: end
+      description: Store the access token and refresh token securely
+      
+    - name: scheduleTokenRefresh
+      type: goto
+      stepId: refreshTokenIfNeeded
+      description: Schedule token refresh before expiration (60-day lifespan)
+
+  failureActions:
+    - name: retryAuthorization
+      type: retry
+      retryAfter: 5
+      retryLimit: 3
+      
+    - name: requestNewAuthorization
+      type: goto
+      workflowId: linkedinAuthorizationCodeFlow
+      stepId: requestAuthorizationCode

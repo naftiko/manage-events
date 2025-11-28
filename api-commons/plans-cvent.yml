@@ -1,0 +1,67 @@
+- id: free
+  name: Free
+  description: Basic plan for trying out the service with limited features
+  entries:
+    - label: Monthly Cost
+      description: The monthly subscription cost for this plan
+      metric: currency
+      limit: 0
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$0"
+  elements:
+    - name: 1 user
+    - name: 1 event per year
+    - name: 5 diagrams per event
+    - name: 1 attendee list per diagram
+    - name: 5 collaborators
+    - name: 25 attendees per list
+    - name: 5 event space uploads per year
+
+- id: pro
+  name: Pro
+  description: Professional plan with expanded limits and features
+  entries:
+    - label: Monthly Cost
+      description: The monthly subscription cost for this plan
+      metric: currency
+      limit: 199
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$199"
+  elements:
+    - name: 1 user
+    - name: 12 events per year
+    - name: 5 diagrams per event
+    - name: 1 attendee list per diagram
+    - name: Unlimited collaborators
+    - name: 5 attendee lists per event
+    - name: 150 attendees per list
+    - name: 60 event space uploads per year
+
+- id: premium
+  name: Premium
+  description: Enterprise plan with unlimited features and customization options
+  entries:
+    - label: Annual Cost
+      description: The annual subscription cost for this plan
+      metric: currency
+      limit: 0
+      timeFrame: annually
+      geo: global
+      unit: 1
+      price: Contact us
+  elements:
+    - name: Customized number of users
+    - name: Unlimited events, diagrams, collaborators
+    - name: 1 attendee list per diagram
+    - name: Ability to delete diagrams
+    - name: Attendee management
+    - name: Unlimited event space uploads per year
+    - name: Integration with Cvent Registration
+    - name: 3D rendering
+    - name: Trainings
+    - name: Check-in attendees
+    - name: Customized add-ons

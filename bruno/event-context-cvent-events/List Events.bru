@@ -1,0 +1,35 @@
+meta {
+  name: List Events
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/events
+  body: none
+  auth: oauth2
+}
+
+params:query {
+  ~after: 
+  ~before: 
+  ~limit: 
+  ~token: 
+  ~sort: 
+  ~filter: 
+}
+
+auth:oauth2 {
+  grant_type: client_credentials
+  access_token_url: https://api-platform.cvent.com/ea/oauth2/token
+  refresh_token_url: {{oauth_refresh_url}}
+  client_id: {{oauth_client_id}}
+  client_secret: {{oauth_client_secret}}
+  scope: account/hooks:delete account/hooks:read account/hooks:write account/user-groups:delete account/user-groups:read account/user-groups:write account/users:delete account/users:read account/users:write appointments/appointment-attendees:read appointments/appointment-events:read appointments/appointment-types:read appointments/appointments:read appointments/appointments:write appointments/available-times:read appointments/locations:read attendee-insights/attendee-insights:read attendee-insights/scores:read attendee-insights/stats:read budget/budget-items:delete budget/budget-items:read budget/budget-items:write budget/budget-totals:read budget/cards:read budget/currency-conversion-rate:delete budget/currency-conversion-rate:read budget/currency-conversion-rate:write budget/payments:delete budget/payments:read budget/payments:write budget/transactions:delete budget/transactions:read budget/transactions:write bulk/bulk-jobs:read bulk/bulk-jobs:write business-transient/bids:read business-transient/proposals:read business-transient/supplier-brands:read business-transient/supplier-chains:read business-transient/supplier-properties:read business-transient/supplier-property-rooms:read business-transient/travel-accounts:read business-transient/travel-program-questions:read business-transient/travel-programs:read business-transient/travel-supplier-accounts:read compliance/communications:read compliance/communications:write email/bounces:read email/email-status:read email/emails:read eMarketing/campaigns:read emarketing/emarketing-email-status:read eMarketing/eMarketing-email-templates:read eMarketing/eMarketing-send-emails:write event/admission-items:read event/air-request:read event/attendance-durations:read event/attendee-activities-metadata:delete event/attendee-activities-metadata:read event/attendee-activities-metadata:write event/attendee-activities:read event/attendee-activities:write event/attendee-credits:read event/attendee-links:delete event/attendee-links:read event/attendee-links:write event/attendee-messages:read event/attendees:read event/attendees:write event/audience-segments:read event/audience-segments:write event/contact-groups:read event/contact-groups:write event/contact-types:read event/contacts:delete event/contacts:read event/contacts:write event/contacts:write-sensitive event/custom-fields:read event/custom-fields:write event/discounts:write event/donation-items:read event/event-discounts:read event/event-discounts:write event/event-email-status:read event/event-emails:read event/event-emails:write event/event-features:read event/event-features:write event/events:read event/events:write event/fee-items:read event/hotel-request:read event/invitation-lists:read event/meeting-request-forms:read event/meeting-requests:read event/meeting-requests:write event/orders:read event/players:read event/process-form-submissions:read event/program-items:delete event/program-items:read event/program-items:write event/quantity-items:read event/quantity-items:write event/registration-paths:read event/registration-types:read event/registration-types:write event/role-assignments:read event/session-attendance:read event/session-attendance:write event/session-categories:read event/session-categories:write event/session-enrollment:delete event/session-enrollment:read event/session-enrollment:write event/session-segments:read event/sessions:delete event/sessions:read event/sessions:write event/speaker-categories:read event/speaker-categories:write event/speakers:delete event/speakers:read event/speakers:write event/transactions:read event/transactions:write event/video-views:read event/videos:read event/videos:write event/webcasts:delete event/webcasts:read event/webcasts:write event/weblinks:read events-plus/hubs:read exhibitor/badges:read exhibitor/badges:write exhibitor/booth-staff:delete exhibitor/booth-staff:read exhibitor/booth-staff:write exhibitor/eliterature-requests:read exhibitor/exhibitor-admins:read exhibitor/exhibitor-admins:write exhibitor/exhibitor-answers:read exhibitor/exhibitor-answers:write exhibitor/exhibitor-categories:delete exhibitor/exhibitor-categories:read exhibitor/exhibitor-categories:write exhibitor/exhibitor-contents:delete exhibitor/exhibitor-contents:read exhibitor/exhibitor-contents:write exhibitor/exhibitor-questions:read exhibitor/exhibitors:delete exhibitor/exhibitors:read exhibitor/exhibitors:write exhibitor/lead-qualification-answers:read exhibitor/lead-qualification-questions:read exhibitor/leads:read exhibitor/registration-packs:delete exhibitor/registration-packs:read exhibitor/registration-packs:write exhibitor/sponsorship-levels:read file/file:read file/file:write housing/connections:write housing/hotel-room-rates:write housing/housing-event-available-nights:read housing/housing-event-hotels:read housing/housing-event-inventory:read housing/housing-event-room-types:read housing/housing-events:read housing/reservation-requests:delete housing/reservation-requests:read housing/reservation-requests:write housing/reservations-link:delete housing/reservations-link:write housing/reservations:delete housing/reservations:read housing/reservations:write onarrival/signatures:read proposal/proposals:write remote-printing/badge-print-jobs:read remote-printing/badge-print-jobs:write remote-printing/badge-printer-pools:read seating/assignments:read seating/event-seatings:read seating/seats:read seating/tables:read secure-ecommerce/card-tokens:write survey/questions:read survey/respondents:read survey/responses:read survey/standard-survey-email-templates:read survey/standard-survey-email:write survey/standard-survey-questions:read survey/standard-survey-respondents:read survey/standard-survey-respondents:write survey/standard-survey-responses:read survey/standard-survey-responses:write survey/standard-surveys:read survey/survey-questions:read survey/survey-respondents:read survey/survey-respondents:write survey/survey-responses:read survey/survey-responses:write survey/surveys:read
+  credentials_placement: header
+  credentials_id: 
+  token_placement: header
+  token_header_prefix: Bearer
+  auto_fetch_token: false
+  auto_refresh_token: true
+}

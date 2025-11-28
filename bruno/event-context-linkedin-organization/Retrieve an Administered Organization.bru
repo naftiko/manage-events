@@ -1,0 +1,15 @@
+meta {
+  name: Retrieve an Administered Organization
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/organizations/:organizationId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  organizationId: 
+}

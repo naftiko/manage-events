@@ -1,0 +1,89 @@
+- name: Free - Daily Calls
+  type: quota
+  limit: 1000
+  metric: requests
+  domains:
+    - api.example.com
+  timeframe: daily
+  description: Daily calls define how many requests you can make in a 24-hour period. Quota resets at 12 midnight (+0 GMT).
+  userMultiplied: false
+
+- name: Free - Calls per Second
+  type: rate
+  limit: 2
+  metric: requests
+  domains:
+    - api.example.com
+  timeframe: second
+  description: Calls per second define how many requests you can make in a 1-second window.
+  userMultiplied: false
+
+- name: Free - Max Burst
+  type: burst
+  limit: 1
+  metric: requests
+  domains:
+    - api.example.com
+  timeframe: instant
+  description: Max Burst defines how many requests you can make at once.
+  userMultiplied: false
+
+- name: Standard - Daily Calls
+  type: quota
+  limit: 15000
+  metric: requests
+  domains:
+    - api.example.com
+  timeframe: daily
+  description: Daily calls define how many requests you can make in a 24-hour period. Quota resets at 12 midnight (+0 GMT).
+  userMultiplied: false
+
+- name: Standard - Calls per Second
+  type: rate
+  limit: 10
+  metric: requests
+  domains:
+    - api.example.com
+  timeframe: second
+  description: Calls per second define how many requests you can make in a 1-second window.
+  userMultiplied: false
+
+- name: Standard - Max Burst
+  type: burst
+  limit: 10
+  metric: requests
+  domains:
+    - api.example.com
+  timeframe: instant
+  description: Max Burst defines how many requests you can make at once.
+  userMultiplied: false
+
+- name: Premium - Daily Calls
+  type: quota
+  limit: 500000
+  metric: requests
+  domains:
+    - api.example.com
+  timeframe: daily
+  description: Daily calls define how many requests you can make in a 24-hour period. Quota resets at 12 midnight (+0 GMT).
+  userMultiplied: false
+
+- name: Premium - Calls per Second
+  type: rate
+  limit: 25
+  metric: requests
+  domains:
+    - api.example.com
+  timeframe: second
+  description: Calls per second define how many requests you can make in a 1-second window.
+  userMultiplied: false
+
+- name: Premium - Max Burst
+  type: burst
+  limit: 25
+  metric: requests
+  domains:
+    - api.example.com
+  timeframe: instant
+  description: Max Burst defines how many requests you can make at once.
+  userMultiplied: false

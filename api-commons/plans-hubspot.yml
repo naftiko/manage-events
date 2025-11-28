@@ -1,0 +1,232 @@
+---
+- id: marketing-hub-free
+  name: Free
+  description: Start generating and emailing new leads, and measuring your success — for free
+  entries:
+    - label: Monthly Cost
+      description: Base monthly subscription cost
+      metric: subscription
+      limit: 0
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: Users
+      description: Number of included users
+      metric: users
+      limit: 2
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: HubSpot Credits
+      description: Monthly HubSpot Credits allocation
+      metric: credits
+      limit: 0
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: Marketing Contacts
+      description: Number of marketing contacts included
+      metric: contacts
+      limit: 0
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$0"
+  elements:
+    - name: Free Marketing tools
+    - name: Free Sales tools
+    - name: Free Service tools
+    - name: Free Content tools
+    - name: Free Data tools
+
+- id: marketing-hub-starter
+  name: Starter
+  description: Essential marketing, sales, service, content, and data management software
+  entries:
+    - label: Monthly Cost (Pay Monthly)
+      description: Base monthly subscription cost when paying monthly
+      metric: subscription
+      limit: 1
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$9/seat"
+    - label: Monthly Cost (Pay Annually)
+      description: Base monthly subscription cost when paying annually (best value)
+      metric: subscription
+      limit: 1
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$9/seat"
+    - label: Users
+      description: Minimum users included (per seat pricing)
+      metric: users
+      limit: 1
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$9/seat"
+    - label: HubSpot Credits
+      description: Monthly HubSpot Credits allocation
+      metric: credits
+      limit: 500
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: Marketing Contacts
+      description: Number of marketing contacts included
+      metric: contacts
+      limit: 1000
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$0"
+  elements:
+    - name: Free tools with increased limits
+    - name: Forms (HubSpot branding removed)
+    - name: Email marketing (HubSpot branding removed)
+    - name: Live chat (HubSpot branding removed)
+    - name: Simple marketing automation
+    - name: Ad management
+    - name: Ad retargeting
+    - name: CRM segments
+    - name: Cookie Management Tools
+
+- id: marketing-hub-professional
+  name: Professional
+  description: For marketing teams who want to effectively run omni-channel campaigns, automation, and reporting to build a scalable demand engine
+  entries:
+    - label: Monthly Cost (Pay Monthly)
+      description: Base monthly subscription cost when committing annually
+      metric: subscription
+      limit: 1
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$800"
+    - label: Monthly Cost (Pay Annually)
+      description: Base monthly subscription cost when paying annually (best value)
+      metric: subscription
+      limit: 1
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$800"
+    - label: Core Seats
+      description: Number of core seats included in base price
+      metric: seats
+      limit: 3
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: Additional Core Seats
+      description: Cost per additional core seat beyond included 3
+      metric: seats
+      limit: 999
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$45/seat"
+    - label: HubSpot Credits
+      description: Monthly HubSpot Credits allocation
+      metric: credits
+      limit: 3000
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: Marketing Contacts
+      description: Number of marketing contacts included
+      metric: contacts
+      limit: 2000
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: Professional Onboarding
+      description: Required one-time professional onboarding fee
+      metric: onboarding
+      limit: 1
+      timeFrame: one-time
+      geo: global
+      unit: 1
+      price: "$3,000"
+  elements:
+    - name: All Marketing Hub Starter features
+    - name: Social media
+    - name: Lead scoring
+    - name: Advanced personalization
+    - name: Teams
+    - name: Omni-channel marketing automation
+    - name: Custom reporting
+    - name: Breeze social post agent (Beta)
+    - name: Marketing studio (Beta)
+
+- id: marketing-hub-enterprise
+  name: Enterprise
+  description: For marketing organizations seeking power, flexibility, and governance to orchestrate data-driven customer journeys at scale and accelerate revenue growth
+  entries:
+    - label: Monthly Cost
+      description: Base monthly subscription cost
+      metric: subscription
+      limit: 1
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$3,600"
+    - label: Core Seats
+      description: Number of core seats included in base price
+      metric: seats
+      limit: 5
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: Additional Core Seats
+      description: Cost per additional core seat beyond included 5
+      metric: seats
+      limit: 999
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$75/seat"
+    - label: HubSpot Credits
+      description: Monthly HubSpot Credits allocation
+      metric: credits
+      limit: 5000
+      timeFrame: monthly
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: Marketing Contacts
+      description: Number of marketing contacts included
+      metric: contacts
+      limit: 10000
+      timeFrame: unlimited
+      geo: global
+      unit: 1
+      price: "$0"
+    - label: Enterprise Onboarding
+      description: Required one-time enterprise onboarding fee
+      metric: onboarding
+      limit: 1
+      timeFrame: one-time
+      geo: global
+      unit: 1
+      price: "$7,000"
+  elements:
+    - name: All Marketing Hub Professional features
+    - name: Organize teams
+    - name: Multi-touch revenue attribution
+    - name: Lookalike Lists (Beta)
+    - name: Customer journey analytics
+    - name: Limit access to content and data
+    - name: Journey automation (Beta)
+    - name: Breeze social post agent (Beta)
+    - name: Email approvals

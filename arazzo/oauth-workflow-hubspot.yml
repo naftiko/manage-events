@@ -1,0 +1,549 @@
+arazzo: 1.0.0
+info:
+  title: HubSpot OAuth 2.0 Workflow
+  version: 1.0.0
+  description: |
+    Complete workflow implementation for HubSpot's OAuth 2.0 Authorization Code Flow.
+    
+    This workflow guides applications through:
+    1. Initiating authorization and obtaining user consent
+    2. Exchanging authorization code for tokens
+    3. Making authenticated API requests
+    4. Refreshing expired access tokens
+    
+    The workflow integrates OAuth authentication with HubSpot's Marketing Emails API
+    to demonstrate a complete end-to-end integration.
+
+sourceDescriptions:
+  - name: hubspotOAuth
+    type: openapi
+    url: ./hubspot-oauth-openapi.yaml
+    
+  - name: hubspotMarketingEmails
+    type: openapi
+    url: ./hubspot-marketing-emails-openapi.yaml
+
+workflows:
+  - workflowId: hubspotOAuthFlow
+    summary: Complete HubSpot OAuth 2.0 Authorization Flow
+    description: |
+      Implements the full OAuth 2.0 Authorization Code Flow for HubSpot:
+      1. Build authorization URL and direct user to consent page
+      2. Handle authorization callback with code
+      3. Exchange authorization code for access and refresh tokens
+      4. Make authenticated API requests
+      5. Refresh access tokens when they expire (every 30 minutes)
+    
+    inputs:
+      type: object
+      properties:
+        client_id:
+          type: string
+          format: uuid
+          description: Your app's client ID from HubSpot Developer Portal
+        client_secret:
+          type: string
+          format: uuid
+          description: Your app's client secret (keep secure!)
+        redirect_uri:
+          type: string
+          format: uri
+          description: Your registered callback URL (HTTPS required for production)
+        scope:
+          type: string
+          description: Space-delimited scopes (e.g., "oauth crm.objects.contacts.read")
+          default: "oauth crm.objects.contacts.read"
+        optional_scope:
+          type: string
+          description: Optional scopes that can be dropped if unavailable
+        state:
+          type: string
+          description: Unique string for CSRF protection (will be generated if not provided)
+      required:
+        - client_id
+        - client_secret
+        - redirect_uri
+        - scope
+
+    steps:
+      - stepId: generateState
+        description: Generate a unique state value for CSRF protection if not provided
+        operationId: generateCsrfToken
+        outputs:
+          csrf_token: $inputs.state || $random.uuid
+
+      - stepId: buildAuthorizationUrl
+        description: |
+          Construct the authorization URL to redirect the user to HubSpot's 
+          OAuth consent page. The user will review and grant permissions.
+        dependsOn:
+          - generateState
+        outputs:
+          authorization_url: "https://app.hubspot.com/oauth/authorize?client_id={$inputs.client_id}&scope={$inputs.scope}&redirect_uri={$inputs.redirect_uri}&state={$steps.generateState.outputs.csrf_token}{$inputs.optional_scope ? '&optional_scope=' + $inputs.optional_scope : ''}"
+          state_for_validation: $steps.generateState.outputs.csrf_token
+        successCriteria:
+          - condition: $outputs.authorization_url != null
+            context: Authorization URL successfully constructed
+
+      - stepId: redirectUserToAuthorization
+        description: |
+          Redirect the user's browser to the authorization URL.
+          User will see HubSpot's consent screen and either approve or deny access.
+          
+          IMPORTANT: This step requires user interaction. Your application should:
+          1. Redirect the user to the authorization_url
+          2. Wait for the callback to your redirect_uri
+          3. Extract the 'code' and 'state' parameters from the callback URL
+        dependsOn:
+          - buildAuthorizationUrl
+        outputs:
+          user_instruction: "Redirect user to: {$steps.buildAuthorizationUrl.outputs.authorization_url}"
+
+      - stepId: handleAuthorizationCallback
+        description: |
+          Process the callback from HubSpot after user grants/denies access.
+          Validate the state parameter matches to prevent CSRF attacks.
+        dependsOn:
+          - redirectUserToAuthorization
+        inputs:
+          type: object
+          properties:
+            authorization_code:
+              type: string
+              description: The 'code' parameter from the callback URL
+            returned_state:
+              type: string
+              description: The 'state' parameter from the callback URL
+          required:
+            - authorization_code
+        successCriteria:
+          - condition: $inputs.returned_state == $steps.buildAuthorizationUrl.outputs.state_for_validation
+            type: simple
+            context: State parameter matches - CSRF check passed
+          - condition: $inputs.authorization_code != null
+            type: simple
+            context: Authorization code received successfully
+        outputs:
+          validated_code: $inputs.authorization_code
+        onFailure:
+          - name: csrfAttackDetected
+            type: end
+            description: State parameter mismatch indicates possible CSRF attack
+
+      - stepId: exchangeCodeForTokens
+        operationId: exchangeToken
+        operationPath: $sourceDescriptions.hubspotOAuth
+        description: |
+          Exchange the authorization code for access and refresh tokens.
+          The access token expires in 30 minutes (1800 seconds).
+        dependsOn:
+          - handleAuthorizationCallback
+        requestBody:
+          contentType: application/x-www-form-urlencoded
+          payload:
+            grant_type: "authorization_code"
+            client_id: $inputs.client_id
+            client_secret: $inputs.client_secret
+            redirect_uri: $inputs.redirect_uri
+            code: $steps.handleAuthorizationCallback.outputs.validated_code
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: $response.body.access_token != null
+          - condition: $response.body.refresh_token != null
+        outputs:
+          access_token: $response.body.access_token
+          refresh_token: $response.body.refresh_token
+          expires_in: $response.body.expires_in
+          token_created_at: $timestamp
+        onFailure:
+          - name: invalidAuthorizationCode
+            type: retry
+            retryAfter: 5
+            retryLimit: 1
+          - name: codeExpired
+            type: goto
+            workflowId: hubspotOAuthFlow
+            stepId: buildAuthorizationUrl
+            description: Authorization code expired, restart OAuth flow
+
+      - stepId: getMarketingEmails
+        operationId: getAllMarketingEmails
+        operationPath: $sourceDescriptions.hubspotMarketingEmails
+        description: |
+          Make an authenticated request to get marketing emails.
+          This demonstrates using the access token for API calls.
+        dependsOn:
+          - exchangeCodeForTokens
+        parameters:
+          - name: Authorization
+            in: header
+            value: "Bearer {$steps.exchangeCodeForTokens.outputs.access_token}"
+          - name: limit
+            in: query
+            value: 10
+          - name: includeStats
+            in: query
+            value: true
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          emails: $response.body.results
+          total_emails: $response.body.total
+          paging: $response.body.paging
+        onFailure:
+          - name: tokenExpiredOrInvalid
+            type: goto
+            stepId: refreshAccessToken
+            statusCode: 401
+
+      - stepId: checkTokenExpiration
+        description: |
+          Check if the access token is about to expire or has expired.
+          Access tokens expire after 30 minutes (1800 seconds).
+          Refresh proactively before expiration.
+        dependsOn:
+          - exchangeCodeForTokens
+        successCriteria:
+          - condition: $timestamp - $steps.exchangeCodeForTokens.outputs.token_created_at < 1500
+            type: simple
+            context: Token is still valid (less than 25 minutes old)
+        onFailure:
+          - name: tokenNeedsRefresh
+            type: goto
+            stepId: refreshAccessToken
+
+      - stepId: refreshAccessToken
+        operationId: exchangeToken
+        operationPath: $sourceDescriptions.hubspotOAuth
+        description: |
+          Refresh the access token using the refresh token.
+          This should be done before the access token expires (every 30 minutes).
+        requestBody:
+          contentType: application/x-www-form-urlencoded
+          payload:
+            grant_type: "refresh_token"
+            client_id: $inputs.client_id
+            client_secret: $inputs.client_secret
+            redirect_uri: $inputs.redirect_uri
+            refresh_token: $steps.exchangeCodeForTokens.outputs.refresh_token
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: $response.body.access_token != null
+        outputs:
+          new_access_token: $response.body.access_token
+          new_refresh_token: $response.body.refresh_token
+          new_expires_in: $response.body.expires_in
+          new_token_created_at: $timestamp
+        onFailure:
+          - name: refreshTokenInvalid
+            type: goto
+            workflowId: hubspotOAuthFlow
+            stepId: buildAuthorizationUrl
+            description: Refresh token invalid, need to reauthorize
+
+    outputs:
+      access_token: $steps.exchangeCodeForTokens.outputs.access_token
+      refresh_token: $steps.exchangeCodeForTokens.outputs.refresh_token
+      expires_in: $steps.exchangeCodeForTokens.outputs.expires_in
+      marketing_emails: $steps.getMarketingEmails.outputs.emails
+      total_emails: $steps.getMarketingEmails.outputs.total_emails
+
+  - workflowId: quickTokenExchange
+    summary: Quick token exchange for existing authorization code
+    description: |
+      Simplified workflow for exchanging an authorization code when you 
+      already have one (useful for testing or when handling callbacks directly).
+    
+    inputs:
+      type: object
+      properties:
+        client_id:
+          type: string
+          format: uuid
+        client_secret:
+          type: string
+          format: uuid
+        redirect_uri:
+          type: string
+          format: uri
+        authorization_code:
+          type: string
+          description: Pre-obtained authorization code from OAuth callback
+      required:
+        - client_id
+        - client_secret
+        - redirect_uri
+        - authorization_code
+
+    steps:
+      - stepId: exchangeCode
+        operationId: exchangeToken
+        operationPath: $sourceDescriptions.hubspotOAuth
+        description: Exchange authorization code for tokens
+        requestBody:
+          contentType: application/x-www-form-urlencoded
+          payload:
+            grant_type: "authorization_code"
+            client_id: $inputs.client_id
+            client_secret: $inputs.client_secret
+            redirect_uri: $inputs.redirect_uri
+            code: $inputs.authorization_code
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          access_token: $response.body.access_token
+          refresh_token: $response.body.refresh_token
+          expires_in: $response.body.expires_in
+
+    outputs:
+      access_token: $steps.exchangeCode.outputs.access_token
+      refresh_token: $steps.exchangeCode.outputs.refresh_token
+      expires_in: $steps.exchangeCode.outputs.expires_in
+
+  - workflowId: refreshTokenWorkflow
+    summary: Refresh an expired access token
+    description: |
+      Standalone workflow for refreshing an access token using a refresh token.
+      Use this when your access token has expired and you need a new one.
+    
+    inputs:
+      type: object
+      properties:
+        client_id:
+          type: string
+          format: uuid
+        client_secret:
+          type: string
+          format: uuid
+        redirect_uri:
+          type: string
+          format: uri
+        refresh_token:
+          type: string
+          description: The refresh token from a previous token exchange
+      required:
+        - client_id
+        - client_secret
+        - redirect_uri
+        - refresh_token
+
+    steps:
+      - stepId: refreshToken
+        operationId: exchangeToken
+        operationPath: $sourceDescriptions.hubspotOAuth
+        description: Get a new access token using the refresh token
+        requestBody:
+          contentType: application/x-www-form-urlencoded
+          payload:
+            grant_type: "refresh_token"
+            client_id: $inputs.client_id
+            client_secret: $inputs.client_secret
+            redirect_uri: $inputs.redirect_uri
+            refresh_token: $inputs.refresh_token
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          new_access_token: $response.body.access_token
+          new_refresh_token: $response.body.refresh_token
+          new_expires_in: $response.body.expires_in
+
+    outputs:
+      access_token: $steps.refreshToken.outputs.new_access_token
+      refresh_token: $steps.refreshToken.outputs.new_refresh_token
+      expires_in: $steps.refreshToken.outputs.new_expires_in
+
+  - workflowId: authenticatedMarketingEmailsWorkflow
+    summary: Fetch marketing emails with automatic token refresh
+    description: |
+      Complete workflow that fetches marketing emails with automatic token 
+      refresh handling. If the access token is expired, it will automatically 
+      refresh it and retry the request.
+    
+    inputs:
+      type: object
+      properties:
+        client_id:
+          type: string
+          format: uuid
+        client_secret:
+          type: string
+          format: uuid
+        redirect_uri:
+          type: string
+          format: uri
+        access_token:
+          type: string
+          description: Current access token
+        refresh_token:
+          type: string
+          description: Refresh token for getting new access token
+        limit:
+          type: integer
+          description: Number of emails to retrieve
+          default: 10
+        includeStats:
+          type: boolean
+          description: Include email statistics
+          default: true
+      required:
+        - client_id
+        - client_secret
+        - redirect_uri
+        - access_token
+        - refresh_token
+
+    steps:
+      - stepId: fetchEmails
+        operationId: getAllMarketingEmails
+        operationPath: $sourceDescriptions.hubspotMarketingEmails
+        description: Fetch marketing emails using the access token
+        parameters:
+          - name: Authorization
+            in: header
+            value: "Bearer {$inputs.access_token}"
+          - name: limit
+            in: query
+            value: $inputs.limit
+          - name: includeStats
+            in: query
+            value: $inputs.includeStats
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          emails: $response.body.results
+          total: $response.body.total
+          paging: $response.body.paging
+        onFailure:
+          - name: tokenExpired
+            type: goto
+            stepId: refreshAndRetry
+            statusCode: 401
+
+      - stepId: refreshAndRetry
+        description: Refresh the access token and retry the email fetch
+        dependsOn:
+          - fetchEmails
+        reusableAction: $workflows.refreshTokenWorkflow
+        inputs:
+          client_id: $workflow.inputs.client_id
+          client_secret: $workflow.inputs.client_secret
+          redirect_uri: $workflow.inputs.redirect_uri
+          refresh_token: $workflow.inputs.refresh_token
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          new_access_token: $outputs.access_token
+
+      - stepId: retryFetchEmails
+        operationId: getAllMarketingEmails
+        operationPath: $sourceDescriptions.hubspotMarketingEmails
+        description: Retry fetching emails with the new access token
+        dependsOn:
+          - refreshAndRetry
+        parameters:
+          - name: Authorization
+            in: header
+            value: "Bearer {$steps.refreshAndRetry.outputs.new_access_token}"
+          - name: limit
+            in: query
+            value: $inputs.limit
+          - name: includeStats
+            in: query
+            value: $inputs.includeStats
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          emails: $response.body.results
+          total: $response.body.total
+          paging: $response.body.paging
+
+    outputs:
+      emails: $steps.fetchEmails.outputs.emails || $steps.retryFetchEmails.outputs.emails
+      total: $steps.fetchEmails.outputs.total || $steps.retryFetchEmails.outputs.total
+      new_access_token: $steps.refreshAndRetry.outputs.new_access_token
+      new_refresh_token: $steps.refreshAndRetry.outputs.new_refresh_token
+
+components:
+  parameters:
+    authorizationHeader:
+      name: Authorization
+      in: header
+      description: Bearer token for authenticated requests
+      
+  inputs:
+    oauthCredentials:
+      type: object
+      properties:
+        client_id:
+          type: string
+          format: uuid
+        client_secret:
+          type: string
+          format: uuid
+        redirect_uri:
+          type: string
+          format: uri
+
+  successActions:
+    - name: storeTokensSecurely
+      type: end
+      description: |
+        Store the access token and refresh token securely in your database.
+        NEVER expose tokens in client-side code or logs.
+      
+    - name: scheduleTokenRefresh
+      type: goto
+      stepId: refreshAccessToken
+      description: |
+        Schedule automatic token refresh before the 30-minute expiration.
+        Recommended to refresh at 25 minutes (1500 seconds).
+
+  failureActions:
+    - name: reauthorizeUser
+      type: goto
+      workflowId: hubspotOAuthFlow
+      stepId: buildAuthorizationUrl
+      description: Restart the OAuth flow to get new authorization
+      
+    - name: logError
+      type: end
+      description: Log the error and notify administrators
+
+x-hubspot-best-practices:
+  security:
+    - Store client_secret securely (use environment variables)
+    - Never expose client_secret in client-side code
+    - Always validate the state parameter to prevent CSRF attacks
+    - Store tokens in secure, encrypted storage
+    - Use HTTPS for all redirect URIs in production
+    
+  token-management:
+    - Access tokens expire after 30 minutes (1800 seconds)
+    - Refresh tokens proactively before expiration (at 25 minutes)
+    - Handle token refresh failures by reauthorizing the user
+    - Store both access_token and refresh_token from each response
+    
+  error-handling:
+    - Implement proper retry logic for transient failures
+    - Handle expired authorization codes by restarting OAuth flow
+    - Gracefully handle user denial of permissions
+    - Log errors with correlation IDs for debugging
+    
+  scopes:
+    - Request only the minimum scopes your app needs
+    - Use optional_scope for nice-to-have permissions
+    - Document which scopes are required vs optional
+    - Handle cases where users don't have access to requested scopes
+
+x-workflow-examples:
+  - name: Complete OAuth Flow
+    description: Full flow from authorization to making API calls
+    workflowId: hubspotOAuthFlow
+    
+  - name: Token Refresh Only
+    description: Refresh an expired access token
+    workflowId: refreshTokenWorkflow
+    
+  - name: Resilient API Calls
+    description: Make API calls with automatic token refresh
+    workflowId: authenticatedMarketingEmailsWorkflow
