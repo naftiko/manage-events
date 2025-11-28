@@ -35,7 +35,7 @@ This repository is currently broken down into the following folders that help su
 - use-case - The use case being applied as part of this aggregate capability.
 
 ## Schemas
-All of the JSON Schema are stored locally in this folder for development and learning purposes, but all schema are centralized via the schema repository to ensure their reuse across each of the capabilities and use cases being developed as part of this work.
+All of the JSON Schema are stored locally in this folder for development and learning purposes, but all schema are centralized via the [schema repository](https://github.com/naftiko/schema) to ensure their reuse across each of the capabilities and use cases being developed as part of this work.
 
 ## Changes
 I am rapidly iterating upon this set of capabilities as part of ongoing Cvent conversations, helping evolve and strengthen our AI Context use case. To help capture the changes I will try to do bulk updates via commits and PRs, but will wrap with an issue for logging purposes.
