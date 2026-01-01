@@ -1,5 +1,5 @@
 # Event Context
-This is an exploratory proof of concept to explore what and end-to-end use case for Cvent could look like--assembling all the existing standards in a single place to help inform what the capability schema might look like to support our pilot customers use case, while providing governance along the way.
+This is an exploratory proof of concept to explore what and end-to-end event management capability could look like--assembling all the existing standards in a single place to help inform what the capability schema might look like to support our ai context use case, while providing governance along the way.
 
 ## Use Case
 This is an application for our AI Context use cases, leveraging the use case schema being developed to drive use case conversations, as well as how they are applied to each individual capability.
