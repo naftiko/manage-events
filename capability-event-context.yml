@@ -8,7 +8,7 @@ naftiko:
 
 info:
 
-  name: Event AI Context 
+  name: Manage Events
   description: This is an aggregate capability for managing AI context.
 
   icon: https://example.com/event-icon.jpg

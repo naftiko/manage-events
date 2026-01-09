@@ -1,4 +1,4 @@
-# Event Context
+# Manage Event
 This is an exploratory proof of concept to explore what and end-to-end event management capability could look like--assembling all the existing standards in a single place to help inform what the capability schema might look like to support our ai context use case, while providing governance along the way.
 
 ## Use Case
