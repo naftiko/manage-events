@@ -27,6 +27,7 @@ This repository is currently broken down into the following folders that help su
 - agent-2-agent - Using A2A cards for any of the individual agents.
 - api-commons - Using two API commons schema for plans and rate limits.
 - arazzo - Using Arazzo for the oauth workflows and eventually events.
+- backstage - Backstage software catalog system and APIs artifacts.
 - bruno - Every HTTP adapter is setup and tested using Bruno client.
 - diagrams - Produced a diagram to help illustrate how capability works.
 - model-context-protocol - Generating MCP servers from each OpenAPI.
