@@ -1,0 +1,271 @@
+protocolVersions:
+  - '1.0'
+name: Exhibitors Agent
+description: >-
+  An AI agent that helps users query and manage event exhibitors through the
+  Cvent API. It retrieves exhibitor information including company details,
+  sponsorship levels, booth assignments, categories, contact information,
+  branding assets, and social media profiles for events.
+version: 1.0.0
+provider:
+  organization: Cvent
+  url: https://www.cvent.com
+documentationUrl: https://developer.cvent.com/documentation
+iconUrl: https://www.cvent.com/favicon.ico
+supportedInterfaces:
+  - url: https://api-platform.cvent.com/ea
+    protocolBinding: HTTP+JSON
+  - url: https://api-platform-eur.cvent.com/ea
+    protocolBinding: HTTP+JSON
+capabilities:
+  streaming: false
+  pushNotifications: false
+  stateTransitionHistory: false
+  extensions: []
+supportsExtendedAgentCard: false
+defaultInputModes:
+  - text/plain
+  - application/json
+defaultOutputModes:
+  - application/json
+  - text/plain
+securitySchemes:
+  oauth2_client_credentials:
+    oauth2SecurityScheme:
+      description: OAuth2 Client Credentials Flow for server-to-server authentication
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+  oauth2_authorization_code:
+    oauth2SecurityScheme:
+      description: OAuth2 Authorization Code Flow for user-delegated authentication
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+security:
+  - oauth2_client_credentials:
+      - exhibitor/exhibitors:read
+  - oauth2_authorization_code:
+      - exhibitor/exhibitors:read
+skills:
+  - id: list_exhibitors
+    name: List Event Exhibitors
+    description: >-
+      Retrieves a paginated list of exhibitors associated with a specific event.
+      Returns comprehensive exhibitor information including company details,
+      sponsorship levels, booth assignments, and contact information.
+    tags:
+      - exhibitors
+      - events
+      - sponsors
+      - vendors
+      - booths
+      - list
+      - cvent
+    examples:
+      - List all exhibitors for event ID abc-123
+      - Show me the exhibitors at our trade show
+      - Who are the vendors participating in the conference?
+      - Get all sponsors and exhibitors for the annual summit
+    inputModes:
+      - text/plain
+      - application/json
+    outputModes:
+      - application/json
+  - id: filter_exhibitors_by_visibility
+    name: Filter Exhibitors by Visibility
+    description: >-
+      Filters exhibitors based on their visibility status. Can show or hide
+      exhibitors that are marked as hidden from public view.
+    tags:
+      - exhibitors
+      - filter
+      - hidden
+      - visibility
+      - public
+    examples:
+      - Show only visible exhibitors
+      - List hidden exhibitors for the event
+      - Which exhibitors are not publicly visible?
+      - Find exhibitors that are hidden from attendees
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: filter_exhibitors_by_status
+    name: Filter Exhibitors by Deletion Status
+    description: >-
+      Filters exhibitors based on their deletion status. Can retrieve active
+      exhibitors or include deleted records.
+    tags:
+      - exhibitors
+      - filter
+      - deleted
+      - active
+      - status
+    examples:
+      - Show only active exhibitors
+      - List deleted exhibitors
+      - Which exhibitors have been removed?
+      - Find exhibitors that were deleted from the event
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: get_exhibitor_details
+    name: Get Exhibitor Details
+    description: >-
+      Retrieves comprehensive details for exhibitors including company
+      information, description, website, contact details, address, and social
+      media profiles.
+    tags:
+      - exhibitors
+      - details
+      - company
+      - contact
+      - profile
+      - information
+    examples:
+      - Get full details for Acme Technology Solutions
+      - What information do we have about this exhibitor?
+      - Show me the exhibitor's contact details
+      - What is the exhibitor's website and email?
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: get_sponsorship_info
+    name: Get Sponsorship Information
+    description: >-
+      Retrieves sponsorship level information for exhibitors. Shows which tier
+      or package each exhibitor has purchased (e.g., Platinum, Gold, Silver
+      sponsors).
+    tags:
+      - exhibitors
+      - sponsors
+      - sponsorship
+      - tiers
+      - levels
+      - packages
+    examples:
+      - Who are the Platinum sponsors?
+      - List exhibitors by sponsorship level
+      - What sponsorship tier is this company?
+      - Show me all Gold sponsors for the event
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: get_booth_assignments
+    name: Get Booth Assignments
+    description: >-
+      Retrieves booth location and assignment information for exhibitors. Shows
+      booth names, numbers, and physical locations within the event venue.
+    tags:
+      - exhibitors
+      - booths
+      - locations
+      - floor-plan
+      - assignments
+      - venue
+    examples:
+      - Where is Acme's booth located?
+      - List all booth assignments for exhibitors
+      - Which exhibitors are in Hall A?
+      - Show me booth locations for the trade show floor
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: get_exhibitor_categories
+    name: Get Exhibitor Categories
+    description: >-
+      Retrieves category classifications for exhibitors. Shows how exhibitors
+      are organized by industry, product type, or service category.
+    tags:
+      - exhibitors
+      - categories
+      - classification
+      - industry
+      - segments
+    examples:
+      - List exhibitors in the Technology category
+      - What categories of exhibitors are at this event?
+      - Show me all Software vendors
+      - Which exhibitors are in Event Services?
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: get_exhibitor_branding
+    name: Get Exhibitor Branding Assets
+    description: >-
+      Retrieves branding assets for exhibitors including profile logos and
+      banner images with their URLs and file IDs.
+    tags:
+      - exhibitors
+      - branding
+      - logos
+      - banners
+      - images
+      - assets
+    examples:
+      - Get the logo for this exhibitor
+      - Show me exhibitor banner images
+      - What branding assets does this company have?
+      - List exhibitors with profile logos
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: get_exhibitor_social_media
+    name: Get Exhibitor Social Media
+    description: >-
+      Retrieves social media profile links for exhibitors including Twitter,
+      LinkedIn, Facebook, Instagram, and YouTube.
+    tags:
+      - exhibitors
+      - social-media
+      - twitter
+      - linkedin
+      - facebook
+      - instagram
+    examples:
+      - What are this exhibitor's social media links?
+      - Get the LinkedIn page for Acme Technology
+      - Show me exhibitors' Twitter handles
+      - List social media profiles for all exhibitors
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: filter_exhibitors_by_date
+    name: Filter Exhibitors by Date
+    description: >-
+      Filters exhibitors based on when they were created or last modified.
+      Supports before and after date queries.
+    tags:
+      - exhibitors
+      - filter
+      - date
+      - created
+      - modified
+      - recent
+    examples:
+      - Show exhibitors added this week
+      - List recently modified exhibitor records
+      - Which exhibitors were created after January 1st?
+      - Find exhibitors updated in the last 30 days
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json

@@ -1,0 +1,582 @@
+{
+	"info": {
+		"_postman_id": "a671d31a-bde1-442a-8165-2ec39612522c",
+		"name": "Cvent Events API",
+		"description": "Needs a description.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35240",
+		"_collection_link": "https://api-evangelist.postman.co/workspace/Capabilities-Working~0e59032e-d676-4e90-be81-48adc3c04507/collection/35240-a671d31a-bde1-442a-8165-2ec39612522c?action=share&source=collection_link&creator=35240"
+	},
+	"item": [
+		{
+			"name": "events",
+			"item": [
+				{
+					"name": "List Events",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "event/events:read event/events:write",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://api-platform.cvent.com/ea/oauth2/token",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/events?after=2017-01-02T02:00:00Z&before=2017-01-02T02:00:00Z&limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a&sort=start:DESC&filter=status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events"
+							],
+							"query": [
+								{
+									"key": "after",
+									"value": "2017-01-02T02:00:00Z",
+									"description": "Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store."
+								},
+								{
+									"key": "before",
+									"value": "2017-01-02T02:00:00Z",
+									"description": "Used to query records that have been added or updated before this time point."
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"description": "The maximum number of records to return per page."
+								},
+								{
+									"key": "token",
+									"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+									"description": "The continuation token returned from a previous class. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+								},
+								{
+									"key": "sort",
+									"value": "start:DESC",
+									"description": "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * start\n"
+								},
+								{
+									"key": "filter",
+									"value": "status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+									"description": "A filter query string narrows search results and supports the combination of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\nThese are the comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n  * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * contains a value: contains\n\nThe following fields are filterable:\n  * id (eq|ne)\n  * start (eq|ne|lt|le|gt|ge)\n  * end (eq|ne|lt|le|gt|ge)\n  * status (eq|ne)\n  * eventStatus (eq|ne) **Note:** Events with a status of `Deleted` are available\n    for approximately 24 hours after deletion. After this, they are\n    removed and no longer appear in search results.\n  * format (eq|ne)\n  * title (eq|ne|contains) **Note:** Contains filters must be between 3 and 15 characters.\n  * code (eq|ne)\n  * description (eq|ne)\n  * launchAfter (eq|ne|lt|le|gt|ge)\n  * created (eq|ne|lt|le|gt|ge)\n  * lastModified (eq|ne|lt|le|gt|ge)\n  * closeAfter (eq|ne|lt|le|gt|ge)\n  * archiveAfter (eq|ne|lt|le|gt|ge)\n  * capacity (eq|ne|lt|le|gt|ge)\n  * stakeholder.firstName (eq|ne)\n  * stakeholder.lastName (eq|ne)\n  * stakeholder.email (eq|ne)\n  * stakeholder.company (eq|ne)\n  * stakeholder.title (eq|ne)\n  * stakeholder.workPhone (eq|ne)\n  * note (eq|ne)\n  * virtual (eq|ne)\n  * planner.firstName (eq|ne)\n  * planner.lastName (eq|ne)\n  * planner.email (eq|ne)\n  * venue.address.city (eq|ne)\n  * venue.address.region (eq|ne)\n  * venue.address.regionCode (eq|ne)\n  * venue.address.country (eq|ne)\n  * venue.address.countryCode (eq|ne)\n  * customField.{uuid of custom field} (eq|ne|lt|le|gt|ge|sw|contains)\n"
+								}
+							]
+						},
+						"description": "Gets a paginated list of events.\n"
+					},
+					"response": [
+						{
+							"name": "success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/events?after=2017-01-02T02:00:00Z&before=2017-01-02T02:00:00Z&limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a&sort=start:DESC&filter=status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "after",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store."
+										},
+										{
+											"key": "before",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated before this time point."
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "The maximum number of records to return per page."
+										},
+										{
+											"key": "token",
+											"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+											"description": "The continuation token returned from a previous class. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+										},
+										{
+											"key": "sort",
+											"value": "start:DESC",
+											"description": "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * start\n"
+										},
+										{
+											"key": "filter",
+											"value": "status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+											"description": "A filter query string narrows search results and supports the combination of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\nThese are the comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n  * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * contains a value: contains\n\nThe following fields are filterable:\n  * id (eq|ne)\n  * start (eq|ne|lt|le|gt|ge)\n  * end (eq|ne|lt|le|gt|ge)\n  * status (eq|ne)\n  * eventStatus (eq|ne) **Note:** Events with a status of `Deleted` are available\n    for approximately 24 hours after deletion. After this, they are\n    removed and no longer appear in search results.\n  * format (eq|ne)\n  * title (eq|ne|contains) **Note:** Contains filters must be between 3 and 15 characters.\n  * code (eq|ne)\n  * description (eq|ne)\n  * launchAfter (eq|ne|lt|le|gt|ge)\n  * created (eq|ne|lt|le|gt|ge)\n  * lastModified (eq|ne|lt|le|gt|ge)\n  * closeAfter (eq|ne|lt|le|gt|ge)\n  * archiveAfter (eq|ne|lt|le|gt|ge)\n  * capacity (eq|ne|lt|le|gt|ge)\n  * stakeholder.firstName (eq|ne)\n  * stakeholder.lastName (eq|ne)\n  * stakeholder.email (eq|ne)\n  * stakeholder.company (eq|ne)\n  * stakeholder.title (eq|ne)\n  * stakeholder.workPhone (eq|ne)\n  * note (eq|ne)\n  * virtual (eq|ne)\n  * planner.firstName (eq|ne)\n  * planner.lastName (eq|ne)\n  * planner.email (eq|ne)\n  * venue.address.city (eq|ne)\n  * venue.address.region (eq|ne)\n  * venue.address.regionCode (eq|ne)\n  * venue.address.country (eq|ne)\n  * venue.address.countryCode (eq|ne)\n  * customField.{uuid of custom field} (eq|ne|lt|le|gt|ge|sw|contains)\n"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"paging\": {\n    \"previousToken\": null,\n    \"nextToken\": \"2b3c4d5e6f7g8h9i10j11k12l\",\n    \"currentToken\": \"1a2b3c4d5e6f7g8h9i10j11k\",\n    \"limit\": 100,\n    \"totalCount\": 2,\n    \"_links\": {\n      \"self\": {\n        \"href\": \"?token=1a2b3c4d5e6f7g8h9i10j11k\"\n      },\n      \"next\": {\n        \"href\": \"?token=2b3c4d5e6f7g8h9i10j11k12l\"\n      }\n    }\n  },\n  \"data\": [\n    {\n      \"id\": \"9463c74e-18c6-401a-a710-ae0f485bf059\",\n      \"title\": \"Cvent Connect 2024\",\n      \"code\": \"R5NP4NJYB3D\",\n      \"format\": \"Hybrid\",\n      \"description\": \"Cvent annual user conference featuring industry leaders and innovative solutions.\",\n      \"start\": \"2024-06-03T09:00:00.000Z\",\n      \"end\": \"2024-06-05T17:00:00.000Z\",\n      \"closeAfter\": \"2024-06-01T23:59:00.000Z\",\n      \"archiveAfter\": \"2024-09-05T12:00:00.000Z\",\n      \"launchAfter\": \"2024-01-15T12:00:00.000Z\",\n      \"timezone\": \"America/New_York\",\n      \"venues\": [\n        {\n          \"name\": \"Capital Convention Center\",\n          \"address\": {\n            \"address1\": \"123 Convention Way\",\n            \"city\": \"Washington\",\n            \"region\": \"District of Columbia\",\n            \"regionCode\": \"DC\",\n            \"postalCode\": \"20001\",\n            \"country\": \"United States of America\",\n            \"countryCode\": \"US\"\n          }\n        }\n      ],\n      \"phone\": \"555-555-5555\",\n      \"note\": \"This event will need some coordination with external systems.\",\n      \"defaultLocale\": \"en-US\",\n      \"languages\": [\n        \"en-US\",\n        \"es-ES\"\n      ],\n      \"currency\": \"USD\",\n      \"registrationSecurityLevel\": \"Public\",\n      \"status\": \"Active\",\n      \"eventStatus\": \"Upcoming\",\n      \"planningStatus\": \"Confirmed\",\n      \"testMode\": false,\n      \"capacity\": 5000,\n      \"planners\": [\n        {\n          \"prefix\": \"Ms.\",\n          \"firstName\": \"Sarah\",\n          \"lastName\": \"Johnson\",\n          \"company\": \"Cvent Inc\",\n          \"title\": \"Senior Event Planner\",\n          \"email\": \"sjohnson@cvent.com\"\n        }\n      ],\n      \"stakeholders\": [\n        {\n          \"firstName\": \"Michael\",\n          \"lastName\": \"Williams\",\n          \"company\": \"Cvent Inc\",\n          \"title\": \"VP of Events\",\n          \"email\": \"mwilliams@cvent.com\",\n          \"workPhone\": \"555-555-1234\"\n        }\n      ],\n      \"customFields\": [\n        {\n          \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n          \"name\": \"Event Category\",\n          \"type\": \"SingleSelect\",\n          \"value\": [\n            \"Technology Conference\"\n          ]\n        }\n      ],\n      \"type\": \"Conference\",\n      \"_links\": {\n        \"invitation\": {\n          \"href\": \"https://cvent.com/events/cvent-connect-2024/invitation\"\n        },\n        \"agenda\": {\n          \"href\": \"https://cvent.com/events/cvent-connect-2024/agenda\"\n        },\n        \"summary\": {\n          \"href\": \"https://cvent.com/events/cvent-connect-2024/summary\"\n        },\n        \"registration\": {\n          \"href\": \"https://cvent.com/events/cvent-connect-2024/register\"\n        }\n      },\n      \"created\": \"2023-10-15T10:00:00Z\",\n      \"lastModified\": \"2024-01-20T14:30:00Z\",\n      \"createdBy\": \"Sarah Johnson\",\n      \"lastModifiedBy\": \"Sarah Johnson\"\n    },\n    {\n      \"id\": \"b574d85f-29d7-512b-b821-bf1f596cf160\",\n      \"title\": \"Q1 Sales Kickoff\",\n      \"code\": \"X7KM9PLQC2R\",\n      \"format\": \"Virtual\",\n      \"description\": \"Annual sales team kickoff meeting for Q1 planning and strategy.\",\n      \"start\": \"2024-01-15T13:00:00.000Z\",\n      \"end\": \"2024-01-15T17:00:00.000Z\",\n      \"closeAfter\": \"2024-01-14T23:59:00.000Z\",\n      \"archiveAfter\": \"2024-04-15T12:00:00.000Z\",\n      \"launchAfter\": \"2023-12-01T12:00:00.000Z\",\n      \"timezone\": \"America/Los_Angeles\",\n      \"phone\": \"555-555-6789\",\n      \"note\": \"Internal event - requires VPN access for remote attendees.\",\n      \"defaultLocale\": \"en-US\",\n      \"languages\": [\n        \"en-US\"\n      ],\n      \"currency\": \"USD\",\n      \"registrationSecurityLevel\": \"Private\",\n      \"status\": \"Completed\",\n      \"eventStatus\": \"Completed\",\n      \"planningStatus\": \"Completed\",\n      \"testMode\": false,\n      \"capacity\": 500,\n      \"planners\": [\n        {\n          \"firstName\": \"David\",\n          \"lastName\": \"Chen\",\n          \"company\": \"Cvent Inc\",\n          \"title\": \"Event Coordinator\",\n          \"email\": \"dchen@cvent.com\"\n        }\n      ],\n      \"type\": \"Meeting\",\n      \"_links\": {\n        \"invitation\": {\n          \"href\": \"https://cvent.com/events/q1-sales-kickoff/invitation\"\n        },\n        \"summary\": {\n          \"href\": \"https://cvent.com/events/q1-sales-kickoff/summary\"\n        }\n      },\n      \"created\": \"2023-11-01T09:00:00Z\",\n      \"lastModified\": \"2024-01-16T08:00:00Z\",\n      \"createdBy\": \"David Chen\",\n      \"lastModifiedBy\": \"David Chen\"\n    }\n  ]\n}"
+						},
+						{
+							"name": "empty",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/events?after=2017-01-02T02:00:00Z&before=2017-01-02T02:00:00Z&limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a&sort=start:DESC&filter=status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "after",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store."
+										},
+										{
+											"key": "before",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated before this time point."
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "The maximum number of records to return per page."
+										},
+										{
+											"key": "token",
+											"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+											"description": "The continuation token returned from a previous class. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+										},
+										{
+											"key": "sort",
+											"value": "start:DESC",
+											"description": "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * start\n"
+										},
+										{
+											"key": "filter",
+											"value": "status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+											"description": "A filter query string narrows search results and supports the combination of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\nThese are the comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n  * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * contains a value: contains\n\nThe following fields are filterable:\n  * id (eq|ne)\n  * start (eq|ne|lt|le|gt|ge)\n  * end (eq|ne|lt|le|gt|ge)\n  * status (eq|ne)\n  * eventStatus (eq|ne) **Note:** Events with a status of `Deleted` are available\n    for approximately 24 hours after deletion. After this, they are\n    removed and no longer appear in search results.\n  * format (eq|ne)\n  * title (eq|ne|contains) **Note:** Contains filters must be between 3 and 15 characters.\n  * code (eq|ne)\n  * description (eq|ne)\n  * launchAfter (eq|ne|lt|le|gt|ge)\n  * created (eq|ne|lt|le|gt|ge)\n  * lastModified (eq|ne|lt|le|gt|ge)\n  * closeAfter (eq|ne|lt|le|gt|ge)\n  * archiveAfter (eq|ne|lt|le|gt|ge)\n  * capacity (eq|ne|lt|le|gt|ge)\n  * stakeholder.firstName (eq|ne)\n  * stakeholder.lastName (eq|ne)\n  * stakeholder.email (eq|ne)\n  * stakeholder.company (eq|ne)\n  * stakeholder.title (eq|ne)\n  * stakeholder.workPhone (eq|ne)\n  * note (eq|ne)\n  * virtual (eq|ne)\n  * planner.firstName (eq|ne)\n  * planner.lastName (eq|ne)\n  * planner.email (eq|ne)\n  * venue.address.city (eq|ne)\n  * venue.address.region (eq|ne)\n  * venue.address.regionCode (eq|ne)\n  * venue.address.country (eq|ne)\n  * venue.address.countryCode (eq|ne)\n  * customField.{uuid of custom field} (eq|ne|lt|le|gt|ge|sw|contains)\n"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"paging\": {\n    \"currentToken\": \"1a2b3c4d5e6f7g8h9i10j11k\",\n    \"limit\": 100,\n    \"totalCount\": 0,\n    \"_links\": {\n      \"self\": {\n        \"href\": \"?token=1a2b3c4d5e6f7g8h9i10j11k\"\n      }\n    }\n  },\n  \"data\": []\n}"
+						},
+						{
+							"name": "badRequest",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/events?after=2017-01-02T02:00:00Z&before=2017-01-02T02:00:00Z&limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a&sort=start:DESC&filter=status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "after",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store."
+										},
+										{
+											"key": "before",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated before this time point."
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "The maximum number of records to return per page."
+										},
+										{
+											"key": "token",
+											"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+											"description": "The continuation token returned from a previous class. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+										},
+										{
+											"key": "sort",
+											"value": "start:DESC",
+											"description": "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * start\n"
+										},
+										{
+											"key": "filter",
+											"value": "status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+											"description": "A filter query string narrows search results and supports the combination of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\nThese are the comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n  * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * contains a value: contains\n\nThe following fields are filterable:\n  * id (eq|ne)\n  * start (eq|ne|lt|le|gt|ge)\n  * end (eq|ne|lt|le|gt|ge)\n  * status (eq|ne)\n  * eventStatus (eq|ne) **Note:** Events with a status of `Deleted` are available\n    for approximately 24 hours after deletion. After this, they are\n    removed and no longer appear in search results.\n  * format (eq|ne)\n  * title (eq|ne|contains) **Note:** Contains filters must be between 3 and 15 characters.\n  * code (eq|ne)\n  * description (eq|ne)\n  * launchAfter (eq|ne|lt|le|gt|ge)\n  * created (eq|ne|lt|le|gt|ge)\n  * lastModified (eq|ne|lt|le|gt|ge)\n  * closeAfter (eq|ne|lt|le|gt|ge)\n  * archiveAfter (eq|ne|lt|le|gt|ge)\n  * capacity (eq|ne|lt|le|gt|ge)\n  * stakeholder.firstName (eq|ne)\n  * stakeholder.lastName (eq|ne)\n  * stakeholder.email (eq|ne)\n  * stakeholder.company (eq|ne)\n  * stakeholder.title (eq|ne)\n  * stakeholder.workPhone (eq|ne)\n  * note (eq|ne)\n  * virtual (eq|ne)\n  * planner.firstName (eq|ne)\n  * planner.lastName (eq|ne)\n  * planner.email (eq|ne)\n  * venue.address.city (eq|ne)\n  * venue.address.region (eq|ne)\n  * venue.address.regionCode (eq|ne)\n  * venue.address.country (eq|ne)\n  * venue.address.countryCode (eq|ne)\n  * customField.{uuid of custom field} (eq|ne|lt|le|gt|ge|sw|contains)\n"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 400,\n  \"message\": \"Bad Request\",\n  \"details\": \"Invalid filter syntax. The filter must adhere to the pattern: field comparisonType value\"\n}"
+						},
+						{
+							"name": "invalidFilter",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/events?after=2017-01-02T02:00:00Z&before=2017-01-02T02:00:00Z&limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a&sort=start:DESC&filter=status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "after",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store."
+										},
+										{
+											"key": "before",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated before this time point."
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "The maximum number of records to return per page."
+										},
+										{
+											"key": "token",
+											"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+											"description": "The continuation token returned from a previous class. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+										},
+										{
+											"key": "sort",
+											"value": "start:DESC",
+											"description": "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * start\n"
+										},
+										{
+											"key": "filter",
+											"value": "status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+											"description": "A filter query string narrows search results and supports the combination of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\nThese are the comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n  * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * contains a value: contains\n\nThe following fields are filterable:\n  * id (eq|ne)\n  * start (eq|ne|lt|le|gt|ge)\n  * end (eq|ne|lt|le|gt|ge)\n  * status (eq|ne)\n  * eventStatus (eq|ne) **Note:** Events with a status of `Deleted` are available\n    for approximately 24 hours after deletion. After this, they are\n    removed and no longer appear in search results.\n  * format (eq|ne)\n  * title (eq|ne|contains) **Note:** Contains filters must be between 3 and 15 characters.\n  * code (eq|ne)\n  * description (eq|ne)\n  * launchAfter (eq|ne|lt|le|gt|ge)\n  * created (eq|ne|lt|le|gt|ge)\n  * lastModified (eq|ne|lt|le|gt|ge)\n  * closeAfter (eq|ne|lt|le|gt|ge)\n  * archiveAfter (eq|ne|lt|le|gt|ge)\n  * capacity (eq|ne|lt|le|gt|ge)\n  * stakeholder.firstName (eq|ne)\n  * stakeholder.lastName (eq|ne)\n  * stakeholder.email (eq|ne)\n  * stakeholder.company (eq|ne)\n  * stakeholder.title (eq|ne)\n  * stakeholder.workPhone (eq|ne)\n  * note (eq|ne)\n  * virtual (eq|ne)\n  * planner.firstName (eq|ne)\n  * planner.lastName (eq|ne)\n  * planner.email (eq|ne)\n  * venue.address.city (eq|ne)\n  * venue.address.region (eq|ne)\n  * venue.address.regionCode (eq|ne)\n  * venue.address.country (eq|ne)\n  * venue.address.countryCode (eq|ne)\n  * customField.{uuid of custom field} (eq|ne|lt|le|gt|ge|sw|contains)\n"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 400,\n  \"message\": \"Bad Request\",\n  \"details\": \"Unknown filter field: invalidField. Please refer to the API documentation for valid filter fields.\"\n}"
+						},
+						{
+							"name": "Bad or expired token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/events?after=2017-01-02T02:00:00Z&before=2017-01-02T02:00:00Z&limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a&sort=start:DESC&filter=status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "after",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store."
+										},
+										{
+											"key": "before",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated before this time point."
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "The maximum number of records to return per page."
+										},
+										{
+											"key": "token",
+											"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+											"description": "The continuation token returned from a previous class. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+										},
+										{
+											"key": "sort",
+											"value": "start:DESC",
+											"description": "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * start\n"
+										},
+										{
+											"key": "filter",
+											"value": "status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+											"description": "A filter query string narrows search results and supports the combination of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\nThese are the comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n  * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * contains a value: contains\n\nThe following fields are filterable:\n  * id (eq|ne)\n  * start (eq|ne|lt|le|gt|ge)\n  * end (eq|ne|lt|le|gt|ge)\n  * status (eq|ne)\n  * eventStatus (eq|ne) **Note:** Events with a status of `Deleted` are available\n    for approximately 24 hours after deletion. After this, they are\n    removed and no longer appear in search results.\n  * format (eq|ne)\n  * title (eq|ne|contains) **Note:** Contains filters must be between 3 and 15 characters.\n  * code (eq|ne)\n  * description (eq|ne)\n  * launchAfter (eq|ne|lt|le|gt|ge)\n  * created (eq|ne|lt|le|gt|ge)\n  * lastModified (eq|ne|lt|le|gt|ge)\n  * closeAfter (eq|ne|lt|le|gt|ge)\n  * archiveAfter (eq|ne|lt|le|gt|ge)\n  * capacity (eq|ne|lt|le|gt|ge)\n  * stakeholder.firstName (eq|ne)\n  * stakeholder.lastName (eq|ne)\n  * stakeholder.email (eq|ne)\n  * stakeholder.company (eq|ne)\n  * stakeholder.title (eq|ne)\n  * stakeholder.workPhone (eq|ne)\n  * note (eq|ne)\n  * virtual (eq|ne)\n  * planner.firstName (eq|ne)\n  * planner.lastName (eq|ne)\n  * planner.email (eq|ne)\n  * venue.address.city (eq|ne)\n  * venue.address.region (eq|ne)\n  * venue.address.regionCode (eq|ne)\n  * venue.address.country (eq|ne)\n  * venue.address.countryCode (eq|ne)\n  * customField.{uuid of custom field} (eq|ne|lt|le|gt|ge|sw|contains)\n"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 401,\n  \"message\": \"Unauthorized\",\n  \"details\": \"The access token is invalid or has expired. Please obtain a new token.\"\n}"
+						},
+						{
+							"name": "You do not have access to the resource",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/events?after=2017-01-02T02:00:00Z&before=2017-01-02T02:00:00Z&limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a&sort=start:DESC&filter=status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "after",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store."
+										},
+										{
+											"key": "before",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated before this time point."
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "The maximum number of records to return per page."
+										},
+										{
+											"key": "token",
+											"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+											"description": "The continuation token returned from a previous class. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+										},
+										{
+											"key": "sort",
+											"value": "start:DESC",
+											"description": "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * start\n"
+										},
+										{
+											"key": "filter",
+											"value": "status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+											"description": "A filter query string narrows search results and supports the combination of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\nThese are the comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n  * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * contains a value: contains\n\nThe following fields are filterable:\n  * id (eq|ne)\n  * start (eq|ne|lt|le|gt|ge)\n  * end (eq|ne|lt|le|gt|ge)\n  * status (eq|ne)\n  * eventStatus (eq|ne) **Note:** Events with a status of `Deleted` are available\n    for approximately 24 hours after deletion. After this, they are\n    removed and no longer appear in search results.\n  * format (eq|ne)\n  * title (eq|ne|contains) **Note:** Contains filters must be between 3 and 15 characters.\n  * code (eq|ne)\n  * description (eq|ne)\n  * launchAfter (eq|ne|lt|le|gt|ge)\n  * created (eq|ne|lt|le|gt|ge)\n  * lastModified (eq|ne|lt|le|gt|ge)\n  * closeAfter (eq|ne|lt|le|gt|ge)\n  * archiveAfter (eq|ne|lt|le|gt|ge)\n  * capacity (eq|ne|lt|le|gt|ge)\n  * stakeholder.firstName (eq|ne)\n  * stakeholder.lastName (eq|ne)\n  * stakeholder.email (eq|ne)\n  * stakeholder.company (eq|ne)\n  * stakeholder.title (eq|ne)\n  * stakeholder.workPhone (eq|ne)\n  * note (eq|ne)\n  * virtual (eq|ne)\n  * planner.firstName (eq|ne)\n  * planner.lastName (eq|ne)\n  * planner.email (eq|ne)\n  * venue.address.city (eq|ne)\n  * venue.address.region (eq|ne)\n  * venue.address.regionCode (eq|ne)\n  * venue.address.country (eq|ne)\n  * venue.address.countryCode (eq|ne)\n  * customField.{uuid of custom field} (eq|ne|lt|le|gt|ge|sw|contains)\n"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 403,\n  \"message\": \"Access Forbidden\",\n  \"details\": \"You do not have the required scope: event/events:read\"\n}"
+						},
+						{
+							"name": "Too many requests",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/events?after=2017-01-02T02:00:00Z&before=2017-01-02T02:00:00Z&limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a&sort=start:DESC&filter=status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "after",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated after this time point. Default to the beginning of time of the data store."
+										},
+										{
+											"key": "before",
+											"value": "2017-01-02T02:00:00Z",
+											"description": "Used to query records that have been added or updated before this time point."
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "The maximum number of records to return per page."
+										},
+										{
+											"key": "token",
+											"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+											"description": "The continuation token returned from a previous class. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+										},
+										{
+											"key": "sort",
+											"value": "start:DESC",
+											"description": "The sort order passed as a parameter, used to control the order of the\nsearch results as a priority ordered list of sorts\n\nThere are two orders:\n  * ascending: ASC\n  * descending: DESC\n\nThe following fields are sortable:\n  * start\n"
+										},
+										{
+											"key": "filter",
+											"value": "status eq 'Accepted' or status eq 'Pending' and (id eq 'abc' or id eq 'def')",
+											"description": "A filter query string narrows search results and supports the combination of logical and comparison operators.\nThe filter adheres to the pattern filter='field' comparisonType 'value'.\nThese are the comparison types that can be used in filter expressions:\n  * equal: eq\n  * not equal: ne\n  * greater than: gt\n  * greater or equal: ge\n  * less than: lt\n  * less than or equal: le\n  * contains a value: contains\n\nThe following fields are filterable:\n  * id (eq|ne)\n  * start (eq|ne|lt|le|gt|ge)\n  * end (eq|ne|lt|le|gt|ge)\n  * status (eq|ne)\n  * eventStatus (eq|ne) **Note:** Events with a status of `Deleted` are available\n    for approximately 24 hours after deletion. After this, they are\n    removed and no longer appear in search results.\n  * format (eq|ne)\n  * title (eq|ne|contains) **Note:** Contains filters must be between 3 and 15 characters.\n  * code (eq|ne)\n  * description (eq|ne)\n  * launchAfter (eq|ne|lt|le|gt|ge)\n  * created (eq|ne|lt|le|gt|ge)\n  * lastModified (eq|ne|lt|le|gt|ge)\n  * closeAfter (eq|ne|lt|le|gt|ge)\n  * archiveAfter (eq|ne|lt|le|gt|ge)\n  * capacity (eq|ne|lt|le|gt|ge)\n  * stakeholder.firstName (eq|ne)\n  * stakeholder.lastName (eq|ne)\n  * stakeholder.email (eq|ne)\n  * stakeholder.company (eq|ne)\n  * stakeholder.title (eq|ne)\n  * stakeholder.workPhone (eq|ne)\n  * note (eq|ne)\n  * virtual (eq|ne)\n  * planner.firstName (eq|ne)\n  * planner.lastName (eq|ne)\n  * planner.email (eq|ne)\n  * venue.address.city (eq|ne)\n  * venue.address.region (eq|ne)\n  * venue.address.regionCode (eq|ne)\n  * venue.address.country (eq|ne)\n  * venue.address.countryCode (eq|ne)\n  * customField.{uuid of custom field} (eq|ne|lt|le|gt|ge|sw|contains)\n"
+										}
+									]
+								}
+							},
+							"status": "Too Many Requests",
+							"code": 429,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 429,\n  \"message\": \"Limit Exceeded\",\n  \"details\": \"You have exceeded the rate limit. Please retry after 60 seconds.\",\n  \"retryAfter\": 60\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api-platform-eur.cvent.com/ea"
+		}
+	]
+}

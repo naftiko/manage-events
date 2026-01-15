@@ -1,0 +1,1113 @@
+{
+	"info": {
+		"_postman_id": "934fb604-8004-4b18-96ce-e0ff9de717ae",
+		"name": "LinkedIn Find Profile by VanityName API",
+		"description": "API to retrieve basic profile fields for a LinkedIn member by their vanity name.\n\n**Note:** The use of this API is restricted to those developers approved by LinkedIn \nand subject to applicable data restrictions in their agreements.\n\nThe vanityName is used to represent the public profile URL in the format: \nwww.linkedin.com/in/{vanityName}. Each LinkedIn profile has a unique vanityName.\n\n**Usage Restrictions:**\n- You cannot \"browse members\" by VanityNames\n- Should only be used to identify profiles from known vanityNames for approved use cases\n- Access to profile data is subject to the relevant members' privacy settings\n- Application limit of 500 requests per day\n\n\nContact Support:\n Name: LinkedIn Developer Support",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35240",
+		"_collection_link": "https://api-evangelist.postman.co/workspace/Capabilities-Working~0e59032e-d676-4e90-be81-48adc3c04507/collection/35240-934fb604-8004-4b18-96ce-e0ff9de717ae?action=share&source=collection_link&creator=35240"
+	},
+	"item": [
+		{
+			"name": "people",
+			"item": [
+				{
+					"name": "Find Profile by VanityName",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"people"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "vanityName",
+									"description": "Query type parameter, must be set to \"vanityName\""
+								},
+								{
+									"key": "vanityName",
+									"value": "a-sample-vanity-name",
+									"description": "The vanity name of the LinkedIn member to retrieve"
+								}
+							]
+						},
+						"description": "Returns basic profile fields for the LinkedIn member that matches the vanityName.\nRequires an access token for application authenticated call.\n"
+					},
+					"response": [
+						{
+							"name": "fullProfile",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"elements\": [\n    {\n      \"id\": \"xo11w_WomY\",\n      \"vanityName\": \"a-sample-vanity-name\",\n      \"firstName\": {\n        \"localized\": {\n          \"en_US\": \"First\"\n        },\n        \"preferredLocale\": {\n          \"country\": \"US\",\n          \"language\": \"en\"\n        }\n      },\n      \"localizedFirstName\": \"First\",\n      \"lastName\": {\n        \"localized\": {\n          \"en_US\": \"Last\"\n        },\n        \"preferredLocale\": {\n          \"country\": \"US\",\n          \"language\": \"en\"\n        }\n      },\n      \"localizedLastName\": \"Last\",\n      \"headline\": {\n        \"localized\": {\n          \"en_US\": \"Software Engineer at LinkedIn\"\n        },\n        \"preferredLocale\": {\n          \"country\": \"US\",\n          \"language\": \"en\"\n        }\n      },\n      \"localizedHeadline\": \"Software Engineer at LinkedIn\",\n      \"profilePicture\": {\n        \"displayImage\": \"urn:li:digitalmediaAsset:C4D03AQGsitRwG8U8ZQ\"\n      },\n      \"positions\": {\n        \"47301314\": {\n          \"id\": 47301314,\n          \"title\": {\n            \"localized\": {\n              \"en_US\": \"Software Engineer\"\n            },\n            \"preferredLocale\": {\n              \"country\": \"US\",\n              \"language\": \"en\"\n            }\n          },\n          \"localizedTitle\": \"Software Engineer\",\n          \"company\": \"urn:li:organization:12345\",\n          \"companyName\": {\n            \"localized\": {\n              \"en_US\": \"LinkedIn\"\n            },\n            \"preferredLocale\": {\n              \"country\": \"US\",\n              \"language\": \"en\"\n            }\n          },\n          \"localizedCompanyName\": \"LinkedIn\",\n          \"created\": 1551295846540,\n          \"lastModified\": 1551295846540\n        }\n      },\n      \"positionsOrder\": [\n        47301314\n      ]\n    }\n  ],\n  \"paging\": {\n    \"count\": 10,\n    \"start\": 0,\n    \"links\": []\n  }\n}"
+						},
+						{
+							"name": "minimalProfile",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"elements\": [\n    {\n      \"id\": \"abc123XYZ\",\n      \"vanityName\": \"john-doe-minimal\",\n      \"firstName\": {\n        \"localized\": {\n          \"en_US\": \"John\"\n        },\n        \"preferredLocale\": {\n          \"country\": \"US\",\n          \"language\": \"en\"\n        }\n      },\n      \"localizedFirstName\": \"John\",\n      \"lastName\": {\n        \"localized\": {\n          \"en_US\": \"Doe\"\n        },\n        \"preferredLocale\": {\n          \"country\": \"US\",\n          \"language\": \"en\"\n        }\n      },\n      \"localizedLastName\": \"Doe\"\n    }\n  ],\n  \"paging\": {\n    \"count\": 10,\n    \"start\": 0,\n    \"links\": []\n  }\n}"
+						},
+						{
+							"name": "profileWithMultiplePositions",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"elements\": [\n    {\n      \"id\": \"def456ABC\",\n      \"vanityName\": \"jane-smith-engineer\",\n      \"firstName\": {\n        \"localized\": {\n          \"en_US\": \"Jane\"\n        },\n        \"preferredLocale\": {\n          \"country\": \"US\",\n          \"language\": \"en\"\n        }\n      },\n      \"localizedFirstName\": \"Jane\",\n      \"lastName\": {\n        \"localized\": {\n          \"en_US\": \"Smith\"\n        },\n        \"preferredLocale\": {\n          \"country\": \"US\",\n          \"language\": \"en\"\n        }\n      },\n      \"localizedLastName\": \"Smith\",\n      \"headline\": {\n        \"localized\": {\n          \"en_US\": \"Senior Engineering Manager at Google\"\n        },\n        \"preferredLocale\": {\n          \"country\": \"US\",\n          \"language\": \"en\"\n        }\n      },\n      \"localizedHeadline\": \"Senior Engineering Manager at Google\",\n      \"profilePicture\": {\n        \"displayImage\": \"urn:li:digitalmediaAsset:C4D03AQJaneSmithPhoto\"\n      },\n      \"positions\": {\n        \"76543210\": {\n          \"id\": 76543210,\n          \"title\": {\n            \"localized\": {\n              \"en_US\": \"Junior Developer\"\n            },\n            \"preferredLocale\": {\n              \"country\": \"US\",\n              \"language\": \"en\"\n            }\n          },\n          \"localizedTitle\": \"Junior Developer\",\n          \"company\": \"urn:li:organization:9999\",\n          \"companyName\": {\n            \"localized\": {\n              \"en_US\": \"Startup Inc\"\n            },\n            \"preferredLocale\": {\n              \"country\": \"US\",\n              \"language\": \"en\"\n            }\n          },\n          \"localizedCompanyName\": \"Startup Inc\",\n          \"created\": 1420070400000,\n          \"lastModified\": 1483142400000\n        },\n        \"87654321\": {\n          \"id\": 87654321,\n          \"title\": {\n            \"localized\": {\n              \"en_US\": \"Software Engineer\"\n            },\n            \"preferredLocale\": {\n              \"country\": \"US\",\n              \"language\": \"en\"\n            }\n          },\n          \"localizedTitle\": \"Software Engineer\",\n          \"company\": \"urn:li:organization:1035\",\n          \"companyName\": {\n            \"localized\": {\n              \"en_US\": \"Microsoft\"\n            },\n            \"preferredLocale\": {\n              \"country\": \"US\",\n              \"language\": \"en\"\n            }\n          },\n          \"localizedCompanyName\": \"Microsoft\",\n          \"created\": 1483228800000,\n          \"lastModified\": 1609372800000\n        },\n        \"98765432\": {\n          \"id\": 98765432,\n          \"title\": {\n            \"localized\": {\n              \"en_US\": \"Senior Engineering Manager\"\n            },\n            \"preferredLocale\": {\n              \"country\": \"US\",\n              \"language\": \"en\"\n            }\n          },\n          \"localizedTitle\": \"Senior Engineering Manager\",\n          \"company\": \"urn:li:organization:1441\",\n          \"companyName\": {\n            \"localized\": {\n              \"en_US\": \"Google\"\n            },\n            \"preferredLocale\": {\n              \"country\": \"US\",\n              \"language\": \"en\"\n            }\n          },\n          \"localizedCompanyName\": \"Google\",\n          \"created\": 1609459200000,\n          \"lastModified\": 1609459200000\n        }\n      },\n      \"positionsOrder\": [\n        98765432,\n        87654321,\n        76543210\n      ]\n    }\n  ],\n  \"paging\": {\n    \"count\": 10,\n    \"start\": 0,\n    \"links\": []\n  }\n}"
+						},
+						{
+							"name": "profileNotFound",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"elements\": [],\n  \"paging\": {\n    \"count\": 10,\n    \"start\": 0,\n    \"links\": []\n  }\n}"
+						},
+						{
+							"name": "missingQueryParam",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 400,\n  \"message\": \"Required parameter 'q' is missing\",\n  \"serviceErrorCode\": 100,\n  \"code\": \"MISSING_PARAMETER\"\n}"
+						},
+						{
+							"name": "missingVanityName",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 400,\n  \"message\": \"Required parameter 'vanityName' is missing\",\n  \"serviceErrorCode\": 100,\n  \"code\": \"MISSING_PARAMETER\"\n}"
+						},
+						{
+							"name": "invalidQueryType",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 400,\n  \"message\": \"Invalid value for parameter 'q'. Expected 'vanityName'.\",\n  \"serviceErrorCode\": 101,\n  \"code\": \"INVALID_PARAMETER_VALUE\"\n}"
+						},
+						{
+							"name": "invalidVanityNameFormat",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 400,\n  \"message\": \"Invalid vanityName format. VanityName must contain only alphanumeric characters and hyphens.\",\n  \"serviceErrorCode\": 102,\n  \"code\": \"INVALID_PARAMETER_FORMAT\"\n}"
+						},
+						{
+							"name": "missingAccessToken",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 401,\n  \"message\": \"Empty oauth2 access token\",\n  \"serviceErrorCode\": 65600,\n  \"code\": \"UNAUTHORIZED\"\n}"
+						},
+						{
+							"name": "invalidAccessToken",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 401,\n  \"message\": \"Invalid access token\",\n  \"serviceErrorCode\": 65601,\n  \"code\": \"INVALID_ACCESS_TOKEN\"\n}"
+						},
+						{
+							"name": "expiredAccessToken",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 401,\n  \"message\": \"Access token has expired\",\n  \"serviceErrorCode\": 65602,\n  \"code\": \"EXPIRED_ACCESS_TOKEN\"\n}"
+						},
+						{
+							"name": "insufficientPermissions",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 403,\n  \"message\": \"Insufficient permissions to access this resource. Required scope: r_compliance_2l\",\n  \"serviceErrorCode\": 65603,\n  \"code\": \"INSUFFICIENT_SCOPE\"\n}"
+						},
+						{
+							"name": "applicationNotApproved",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 403,\n  \"message\": \"Your application is not approved to use the Find Profile by VanityName API. Please contact LinkedIn Developer Support.\",\n  \"serviceErrorCode\": 65604,\n  \"code\": \"APPLICATION_NOT_APPROVED\"\n}"
+						},
+						{
+							"name": "memberPrivacyRestriction",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 403,\n  \"message\": \"Access denied due to member's privacy settings\",\n  \"serviceErrorCode\": 65605,\n  \"code\": \"PRIVACY_RESTRICTION\"\n}"
+						},
+						{
+							"name": "profileNotFound",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"No profile found with vanityName: unknown-vanity-name\",\n  \"serviceErrorCode\": 65700,\n  \"code\": \"RESOURCE_NOT_FOUND\"\n}"
+						},
+						{
+							"name": "personIdMismatch",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"The personId is not associated with this application\",\n  \"serviceErrorCode\": 65701,\n  \"code\": \"PERSON_ID_MISMATCH\"\n}"
+						},
+						{
+							"name": "profileDeactivated",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 404,\n  \"message\": \"The member's profile has been deactivated\",\n  \"serviceErrorCode\": 65702,\n  \"code\": \"PROFILE_DEACTIVATED\"\n}"
+						},
+						{
+							"name": "dailyLimitExceeded",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Too Many Requests",
+							"code": 429,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 429,\n  \"message\": \"Application daily limit of 500 requests exceeded. Limit resets at midnight UTC.\",\n  \"serviceErrorCode\": 65800,\n  \"code\": \"DAILY_LIMIT_EXCEEDED\"\n}"
+						},
+						{
+							"name": "rateLimitExceeded",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Too Many Requests",
+							"code": 429,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 429,\n  \"message\": \"Rate limit exceeded. Please wait before making additional requests.\",\n  \"serviceErrorCode\": 65801,\n  \"code\": \"RATE_LIMIT_EXCEEDED\"\n}"
+						},
+						{
+							"name": "Internal Server Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 500,\n  \"message\": \"Internal server error. Please try again later.\",\n  \"serviceErrorCode\": 0,\n  \"code\": \"INTERNAL_ERROR\"\n}"
+						},
+						{
+							"name": "Service Unavailable",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/people?q=vanityName&vanityName=a-sample-vanity-name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"people"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "vanityName",
+											"description": "Query type parameter, must be set to \"vanityName\""
+										},
+										{
+											"key": "vanityName",
+											"value": "a-sample-vanity-name",
+											"description": "The vanity name of the LinkedIn member to retrieve"
+										}
+									]
+								}
+							},
+							"status": "Service Unavailable",
+							"code": 503,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": 503,\n  \"message\": \"Service temporarily unavailable. Please try again later.\",\n  \"serviceErrorCode\": 65900,\n  \"code\": \"SERVICE_UNAVAILABLE\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "scope",
+				"value": "r_compliance_2l",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://www.linkedin.com/oauth/v2/accessToken",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://www.linkedin.com/oauth/v2/authorization",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.linkedin.com/v2"
+		}
+	]
+}

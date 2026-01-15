@@ -1,0 +1,1505 @@
+openapi: 3.1.0
+info:
+  title: Cvent Attendees API
+  description: Needs a description.
+  version: 1.0.0
+servers:
+  - url: https://api-platform-eur.cvent.com/ea
+  - url: https://api-platform.cvent.com/ea
+paths:
+  /attendees:
+    get:
+      security:
+        - OAuth2.clientCredentials:
+            - event/attendees:read
+        - OAuth2.authorizationCode:
+            - event/attendees:read
+      summary: List Attendees
+      description: Gets a paginated list of attendees in your account.
+      operationId: listAttendees
+      parameters:
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/expand'
+        - $ref: '#/components/parameters/sort7'
+        - $ref: '#/components/parameters/includeDeletedGuests'
+        - name: filter
+          in: query
+          required: false
+          description: >-
+            A filter query string narrows search results and supports the
+            combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter='field' comparisonType
+            'value'.
+
+            These are the comparison types that can be used in filter
+            expressions:
+              * equal: eq
+              * not equal: ne
+              * greater than: gt
+              * greater or equal: ge
+              * less than: lt
+              * less than or equal: le
+              * starts with: sw
+              * is null: is null
+              * is not null: is not null
+              * is empty: is empty
+              * is not empty: is not empty
+
+            The following fields are filterable:
+              * event.id (eq|ne)
+              * id (eq|ne)
+              * confirmationNumber (eq|ne)
+              * checkedIn (eq|ne)
+              * checkIn (eq|ne|lt|le|gt|ge)
+              * checkOut (eq|ne|lt|le|gt|ge)
+              * registrationPath.id (eq|ne)
+              * invitationList.id (eq|ne)
+              * registrationType.id (eq|ne|is null|is not null|is empty|is not empty)
+              * referenceId (eq|ne)
+              * externalReference.type (eq)
+              * externalReference.id (eq)
+              * externalReference.referenceId (eq)
+              * note (eq|ne)
+              * guest (eq|ne)
+              * group.leader (eq|ne)
+              * group.id(eq|ne)
+              * unsubscribed (eq|ne)
+              * registeredAt (eq|ne|lt|le|gt|ge)
+              * registrationLastModified (eq|ne|lt|le|gt|ge)
+              * invitedBy (eq|ne)
+              * responseMethod (eq|ne)
+              * status (eq|ne)
+              * lastModified (eq|ne|lt|le|gt|ge)
+              * created (eq|ne|lt|le|gt|ge)
+              * contact.id (eq|ne)
+              * visibility (eq|ne)
+              * contact.title (eq|ne|sw)
+              * contact.company (eq|ne|sw)
+              * contact.firstName (eq|ne|sw)
+              * contact.lastName (eq|ne|sw)
+              * answers.question.{question id} (eq|ne)
+              * contact.email (eq|ne|sw)
+              * attendeeLastModified (eq|ne|lt|le|gt|ge)
+              * appointmentGroup.id (eq|ne)
+              * contact.deleted (eq|ne)
+              * primaryId (eq|ne)
+              * deletedGuest (eq|ne)
+
+            Note:
+              * lastModified: Will be updated when any field in the response has changed. Used by the 'before' and 'after' filters.
+              * attendeeLastModified: Will be updated only when some field other than contact.* has changed. Not used by the 'before' and 'after' filters.
+              * deletedGuest: Filter returns guests marked as deleted. This filter works only when the query parameter `includeDeletedGuests` is true. True indicates the request should include deleted guests in the response.
+          schema:
+            type: string
+            example: >-
+              contact.id eq '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3' or checkedIn
+              eq 'true'
+      tags:
+        - Attendees
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of attendees.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/attendee-paginated-response'
+              examples:
+                success:
+                  $ref: '#/components/examples/AttendeeListSuccessExample'
+        '400':
+          $ref: '#/components/responses/BadRequest1'
+        '401':
+          $ref: '#/components/responses/Unauthorized1'
+        '403':
+          $ref: '#/components/responses/Forbidden1'
+        '429':
+          $ref: '#/components/responses/TooManyRequests1'
+      deprecated: false
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+components:
+  examples:
+    AttendeeListSuccessExample:
+      summary: Successful attendee list response
+      description: Example response showing a paginated list of attendees
+      value:
+        paging:
+          previousToken: null
+          nextToken: 2b3c4d5e6f7g8h9i10j11k12l
+          currentToken: 1a2b3c4d5e6f7g8h9i10j11k
+          limit: 100
+          totalCount: 2
+          _links:
+            self:
+              href: '?token=1a2b3c4d5e6f7g8h9i10j11k'
+            next:
+              href: '?token=2b3c4d5e6f7g8h9i10j11k12l'
+        data:
+          - id: 'd97d28b6-cf35-4d6c-90eb-bb10fef1d1ce'
+            event:
+              id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+            confirmationNumber: 'VNNDLJ6DKVK'
+            contact:
+              id: '04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+              firstName: 'Henry'
+              lastName: 'Potterfield'
+              middleName: 'A'
+              nickname: 'Harry'
+              email: 'h.potterfield@test.com'
+              company: 'Cvent Inc.'
+              title: 'Event Planner'
+              prefix: 'Dr.'
+              deleted: false
+              _links:
+                self:
+                  href: '/contacts/04ca6ae2-0dc3-487b-953e-86d6abbdf7d3'
+            checkedIn: true
+            checkIn: '2018-01-13T02:00:00Z'
+            checkOut: '2018-01-13T06:00:00Z'
+            duration: 14400000
+            registrationPath:
+              id: 'f1e2d3c4-b5a6-7890-1234-567890abcdef'
+              code: 'REG'
+              name: 'Standard Registration'
+            invitationList:
+              id: 'b2c3d4e5-f6a7-8901-2345-678901bcdef0'
+              name: 'VIP Invitees'
+            webLinks:
+              acceptRegistration: 'https://example.com/123ABC?i=abcdefghijklmnopqrstuv'
+              declineRegistration: 'https://example.com/123ABC?i=abcdefghijklmnopqrstuv'
+            registrationType:
+              id: 'c3d4e5f6-a7b8-9012-3456-789012cdef01'
+              code: 'MU'
+              name: 'Meet up'
+            referenceId: 'refid-plannerside'
+            externalReferences:
+              - type: 'Salesforce'
+                id: '0000X123sfjhooks'
+                referenceId: '000X123jhooks'
+            note: 'Would like to sit near the front of the room for sessions.'
+            guest: false
+            deletedGuest: false
+            group:
+              id: 'd4e5f6a7-b8c9-0123-4567-890123def012'
+              member: true
+              leader: false
+            unsubscribed: false
+            status: 'Accepted'
+            registeredAt: '2018-01-10T10:00:00Z'
+            registrationLastModified: '2018-01-12T15:30:00Z'
+            invitedBy: 'Planner-Invited'
+            responseMethod: 'Self-Responded'
+            answers:
+              - question:
+                  id: '60f1d05b-e3ee-4d70-a7f3-0edb9a76af4a'
+                value:
+                  - 'Choice A'
+            admissionItem:
+              id: 'e5f6a7b8-c9d0-1234-5678-901234ef0123'
+              code: 'GA'
+              name: 'General Admission'
+            visibility: 'Public'
+            bio: 'In west Philadelphia, born and raised, on the playground is where I spent most of my days.'
+            websiteUrl: 'https://www.example.com'
+            allowPushNotifications: true
+            allowAppointmentPushNotifications: false
+            testRecord: false
+            attendeeLastModified: '2018-01-13T02:00:00Z'
+            appointmentGroups:
+              - id: 'bf183d50-56ad-454b-8b9f-06d8e923e1fd'
+            credit: 10
+            created: '2018-01-10T10:00:00Z'
+            createdBy: 'hporter'
+            lastModified: '2018-01-13T02:00:00Z'
+            lastModifiedBy: 'hporter'
+          - id: 'e8f9a0b1-c2d3-4e5f-6a7b-8c9d0e1f2a3b'
+            event:
+              id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+            confirmationNumber: 'XKKM7J9PLWQ'
+            contact:
+              id: '15db7bf3-1ec4-598c-a64e-57de7bbdf8e4'
+              firstName: 'Jane'
+              lastName: 'Smith'
+              email: 'j.smith@test.com'
+              company: 'Acme Corp'
+              title: 'Marketing Manager'
+              deleted: false
+              _links:
+                self:
+                  href: '/contacts/15db7bf3-1ec4-598c-a64e-57de7bbdf8e4'
+            checkedIn: false
+            registrationPath:
+              id: 'f1e2d3c4-b5a6-7890-1234-567890abcdef'
+              code: 'REG'
+              name: 'Standard Registration'
+            registrationType:
+              id: 'c3d4e5f6-a7b8-9012-3456-789012cdef01'
+              code: 'MU'
+              name: 'Meet up'
+            guest: false
+            deletedGuest: false
+            unsubscribed: false
+            status: 'Accepted'
+            registeredAt: '2018-01-11T14:00:00Z'
+            registrationLastModified: '2018-01-11T14:00:00Z'
+            invitedBy: 'Weblink'
+            responseMethod: 'Self-Responded'
+            visibility: 'Private'
+            allowPushNotifications: false
+            allowAppointmentPushNotifications: false
+            testRecord: false
+            attendeeLastModified: '2018-01-11T14:00:00Z'
+            created: '2018-01-11T14:00:00Z'
+            createdBy: 'system'
+            lastModified: '2018-01-11T14:00:00Z'
+            lastModifiedBy: 'system'
+    BadRequestExample:
+      summary: Bad request error
+      description: Example response when the request is malformed or contains invalid parameters
+      value:
+        code: 400
+        message: Bad Request
+        details: 'Invalid filter syntax. Expected format: field operator value'
+    UnauthorizedExample:
+      summary: Unauthorized error
+      description: Example response when authentication token is missing, invalid, or expired
+      value:
+        code: 401
+        message: Unauthorized
+        details: 'The access token is invalid or has expired'
+    ForbiddenExample:
+      summary: Forbidden error
+      description: Example response when the authenticated user lacks permission to access the resource
+      value:
+        code: 403
+        message: Access Forbidden
+        details: 'You do not have the required scope: event/attendees:read'
+    TooManyRequestsExample:
+      summary: Rate limit exceeded error
+      description: Example response when the API rate limit has been exceeded
+      value:
+        code: 429
+        message: Limit Exceeded
+        details: 'Rate limit exceeded. Please retry after 60 seconds'
+        retryAfter: 60
+  schemas:
+    attendee-paginated-response:
+      title: AttendeePaginatedResponse
+      description: >-
+        The response from a request to get the list of attendees. This includes
+        the paging object as well as the collection of attendees.
+      required:
+        - paging
+        - data
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/attendee'
+          description: Collection of attendees.
+    paging.json:
+      title: Paging
+      required:
+        - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: >-
+            The pagination token for the previous page, if one exists. You can
+            use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: >-
+            The pagination token for the next page. If this value is present in
+            the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: >-
+            The total number of records available. This field may return blank,
+            even if there are more records. To confirm if there are more
+            records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
+    link.json:
+      title: Link
+      required:
+        - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: '?token=90c5f062-76ad-4ea4-aa53-00eb698d9262'
+    attendee:
+      title: Attendee
+      description: An event attendee.
+      type: object
+      x-extends:
+        $ref: '#/components/schemas/audit.json'
+      allOf:
+        - $ref: '#/components/schemas/audit.json'
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of attendee in the given event.
+        event:
+          description: The attendee's associated event.
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The event ID.
+        confirmationNumber:
+          type: string
+          description: >-
+            The confirmation number is a code unique to each attendee. Cvent
+            assigns one to the attendee upon registration for the event. Serves
+            as proof of registration.
+          maxLength: 18
+          example: VNNDLJ6DKVK
+        contact:
+          $ref: '#/components/schemas/attendee-contact-info.json'
+        checkedIn:
+          type: boolean
+          description: True indicates the attendee checked in to the event.
+          maxLength: 18
+          example: true
+        checkin:
+          type: string
+          format: date-time
+          description: >-
+            The date time when attendee was checked in to an event. Note: this
+            field is deprecated. Please use the `checkIn` field instead.
+          example: '2018-01-13T02:00:00Z'
+          deprecated: true
+        checkIn:
+          type: string
+          format: date-time
+          description: >-
+            The ISO 8601 zoned date time when attendee was checked in to an
+            event.
+          example: '2018-01-13T02:00:00Z'
+        checkOut:
+          type: string
+          format: date-time
+          description: >-
+            The ISO 8601 zoned date time when attendee checked out from an
+            event.
+          example: '2018-01-13T02:00:00Z'
+        duration:
+          type: integer
+          description: >-
+            The duration, in milliseconds, the attendee was present at the
+            event.
+          example: 4000
+        registrationPath:
+          $ref: '#/components/schemas/lookup.json'
+        invitationList:
+          $ref: '#/components/schemas/id-name.json'
+        webLinks:
+          $ref: '#/components/schemas/attendee-web-links.json'
+        registrationType:
+          $ref: '#/components/schemas/lookup.json'
+        referenceId:
+          type: string
+          description: >-
+            The reference ID of an attendee. A planner determined string used to
+            track which link attendee's used to reach the event registration.
+          maxLength: 100
+          example: refid-plannerside
+        externalReferences:
+          type: array
+          description: The details of an attendee in an external systems.
+          items:
+            $ref: '#/components/schemas/external-reference.json'
+        note:
+          type: string
+          description: >-
+            A planner created note for an attendee, used to track details about
+            the attendee.
+          maxLength: 300
+          example: Would like to sit near the front of the room for sessions.
+        guest:
+          type: boolean
+          description: True indicates the attendee is a guest of another attendee.
+          example: true
+        deletedGuest:
+          type: boolean
+          description: True indicates this attendee is a deleted guest.
+          example: false
+          readOnly: true
+        primaryId:
+          type: string
+          format: uuid
+          description: >-
+            The ID of the primary attendee to whom this guest attendee is
+            associated. Only applicable if this attendee is a guest.
+        group:
+          $ref: '#/components/schemas/attendee-group.json'
+        administrator:
+          $ref: '#/components/schemas/uuid.json'
+        unsubscribed:
+          type: boolean
+          description: >-
+            True indicates this attendee is unsubscribed from this event's
+            emails. They'll still recieve emails triggered by their own actions
+            (like registration modification).
+          example: false
+        status:
+          $ref: '#/components/schemas/attendee-status.json'
+        registeredAt:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when attendee was registered.
+          example: '2018-01-13T02:00:00Z'
+        registrationLastModified:
+          type: string
+          format: date-time
+          description: >-
+            The ISO 8601 zoned date time when attendee's registration was
+            modified. This field is updated when there are changes to the
+            registration, such as adding or removing products.
+          example: '2018-01-13T02:00:00Z'
+        registrationCancelledAt:
+          type: string
+          format: date-time
+          description: >-
+            The ISO 8601 zoned date time when attendee registration was
+            cancelled.
+          example: '2018-01-13T02:00:00Z'
+        invitedBy:
+          $ref: '#/components/schemas/attendee-invited-by.json'
+        responseMethod:
+          $ref: '#/components/schemas/attendee-response-method.json'
+        questions:
+          type: array
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/custom-field'
+          description: >-
+            A list of answers to contact custom fields. Note: This field is
+            deprecated. Answers to custom contact fields can be found in the
+            'contact' model, `customFields` field instead.
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/attendee-answer.json'
+          description: The list of answers to the registration questions.
+          readOnly: true
+        admissionItem:
+          description: Contains details related to the attendee's admission item.
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/lookup.json'
+            - description: Contains details related to the attendee's admission item.
+        visibility:
+          $ref: '#/components/schemas/attendee-visibility.json'
+        bio:
+          type: string
+          description: The attendee's biographical writeup.
+          maxLength: 2500
+          example: >-
+            In west Philadelphia, born and raised, on the playground is where I
+            spent most of my days.
+        showPopupNotification:
+          deprecated: true
+          type: boolean
+          description: >-
+            Notification setting in the Attendee Hub app or website. Note: This
+            field is deprecated. Use `allowPushNotification` field instead.
+          example: false
+        websiteUrl:
+          type: string
+          description: An attendee's website URL, appears on their profile.
+          format: uri
+          example: https://www.example.com
+          readOnly: true
+        allowPushNotifications:
+          type: boolean
+          description: >-
+            True indicates attendee will recieve push notifications for
+            session-schedule changes, promotions and other event activities in
+            the Attendee Hub app.
+          example: false
+          readOnly: true
+        allowAppointmentPushNotifications:
+          type: boolean
+          description: >-
+            True indicaites attendee will recieve push notifications for
+            appointments related activities in the Attendee Hub app.
+          example: false
+          readOnly: true
+        testRecord:
+          type: boolean
+          description: >-
+            True indicates this attendee record was created as part of a test
+            scenario.
+          example: false
+          readOnly: true
+        attendeeLastModified:
+          type: string
+          format: date-time
+          description: >-
+            The ISO 8601 zoned date-time indicates when the attendee's
+            non-contact properties were modified. Updates to the attendee's
+            contact properties do not update this field. This field is updated
+            when planners or attendees make changes to the attendee record, such
+            as flagging as a participant. It is not updated for registration or
+            product changes.
+          example: '2018-01-13T02:00:00Z'
+        appointmentGroups:
+          type: array
+          description: >-
+            List of appointment groups associated with attendee. These control
+            permissions and visibility in appointments associated with the
+            event.
+          minItems: 0
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/appointment-group.json'
+          readOnly: true
+        credit:
+          description: The amount of credit associated with the attendee.
+          type: number
+          example: 10
+    audit.json:
+      title: Audit
+      description: Audit information for a record.
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2017-01-02T02:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: hporter
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was last updated.
+          readOnly: true
+          example: '2019-02-12T03:00:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: hporter
+    attendee-contact-info.json:
+      title: AttendeeContactInfo
+      description: Information about attendee contact added to an event.
+      type: object
+      allOf:
+        - title: AttendeeContact
+          description: An Attendee Contact
+          type: object
+          allOf:
+            - title: AttendeeContactAudit
+              description: >-
+                Audit information for an attendee record. To get contact audit
+                data, please use [Get
+                Contact](/documentation#tag/Contacts/operation/getContactById).
+              type: object
+              properties:
+                created:
+                  type: string
+                  format: date-time
+                  description: >-
+                    The ISO 8601 zoned date time when an attendee record was
+                    created. Note: This field is deprecated. Please use the [Get
+                    Contact](/documentation#tag/Contacts/operation/getContactById)
+                    or [List
+                    Contact](/documentation#tag/Contacts/operation/listContacts)
+                    endpoints for contact audit details.
+                  readOnly: true
+                  example: '2017-01-02T02:00:00Z'
+                  deprecated: true
+                createdBy:
+                  type: string
+                  description: >-
+                    The identifier of the user that created this attendee
+                    record. Note: This field is deprecated. Please use the [Get
+                    Contact](/documentation#tag/Contacts/operation/getContactById)
+                    or [List
+                    Contact](/documentation#tag/Contacts/operation/listContacts)
+                    endpoints for contact audit details.
+                  readOnly: true
+                  example: hporter
+                  deprecated: true
+                lastModified:
+                  type: string
+                  format: date-time
+                  description: >-
+                    The ISO 8601 zoned date time when this attendee record was
+                    updated. Note: This field is deprecated. Please use the [Get
+                    Contact](/documentation#tag/Contacts/operation/getContactById)
+                    or [List
+                    Contact](/documentation#tag/Contacts/operation/listContacts)
+                    endpoints for contact audit details.
+                  readOnly: true
+                  example: '2019-02-12T03:00:00Z'
+                  deprecated: true
+                lastModifiedBy:
+                  type: string
+                  description: >-
+                    The identifier of the user that last updated this attendee
+                    record. Note: This field is deprecated. Please use the [Get
+                    Contact](/documentation#tag/Contacts/operation/getContactById)
+                    or [List
+                    Contact](/documentation#tag/Contacts/operation/listContacts)
+                    endpoints for contact audit details.
+                  readOnly: true
+                  example: hporter
+                  deprecated: true
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The id of contact
+            firstName:
+              type: string
+              description: The first name of the contact
+              maxLength: 30
+              example: Henry
+            lastName:
+              type: string
+              description: The last name of the contact
+              maxLength: 50
+              example: Potterfield
+            middleName:
+              type: string
+              description: The middle name of the contact
+              maxLength: 30
+              example: A
+            nickname:
+              type: string
+              description: The nickname of the contact.
+              maxLength: 30
+              example: Harry
+            email:
+              type: string
+              format: email
+              description: The email address of the contact
+              minLength: 6
+              maxLength: 80
+              example: h.potterfield@test.com
+            ccEmail:
+              type: string
+              format: email
+              description: >-
+                An alternate email address of the contact that will be cc'd on
+                all email communications
+              minLength: 6
+              maxLength: 80
+              example: h.porter@tesing.com
+            gender:
+              $ref: '#/components/schemas/gender.json'
+            company:
+              type: string
+              description: The company/organization the contact belongs to.
+              minLength: 1
+              example: Cvent Inc.
+            designation:
+              type: string
+              description: The designation of the contact
+              maxLength: 30
+              example: Event
+            title:
+              type: string
+              description: The job title of the contact
+              maxLength: 100
+              example: Event Planner
+            type:
+              $ref: '#/components/schemas/attendee-contact-type.json'
+            membership:
+              $ref: '#/components/schemas/attendee-contact-membership.json'
+            primaryAddressType:
+              $ref: '#/components/schemas/address-type.json'
+            homeAddress:
+              $ref: '#/components/schemas/address.json4'
+            homePhone:
+              type: string
+              description: Home phone number
+              maxLength: 30
+              example: 555-555-5555
+            homeFax:
+              type: string
+              description: Home FAX number
+              maxLength: 30
+              example: 555-555-5555
+            workAddress:
+              $ref: '#/components/schemas/address.json4'
+            workPhone:
+              type: string
+              description: Work phone number
+              maxLength: 30
+              example: 555-555-5555
+            workFax:
+              type: string
+              description: Work FAX number
+              maxLength: 30
+              example: 555-555-5555
+            optOut:
+              type: object
+              description: Opt-out choices.
+              properties:
+                optedOut:
+                  type: boolean
+                  default: false
+                  description: >-
+                    True indicates a contact has opted-out of receiving system
+                    generated emails.
+                  example: false
+            customFields:
+              type: array
+              items:
+                $ref: '#/components/schemas/custom-field'
+              description: Collection of custom fields.
+              readOnly: true
+            sourceId:
+              description: >-
+                This is a ID for the contact in an external system. NOTE: This
+                value is expected to be unique for each contact within an
+                account. Consider adding the external system name has part of
+                the ID
+              type: string
+              maxLength: 50
+              example: system-a-00000000-0000-0000-0000-000000000000
+            mobilePhone:
+              type: string
+              description: Mobile phone number
+              maxLength: 30
+              example: 555-555-5555
+            compliance:
+              type: array
+              items:
+                $ref: '#/components/schemas/compliance.json'
+              description: >-
+                Detail related to compliance with the contact's privacy rights
+                under various legislation.
+              readOnly: true
+            prefix:
+              type: string
+              description: >-
+                Used to denote what is traditionally a title of an individual.
+                For example, Mr., Mrs., Dr., etc.
+              maxLength: 30
+              example: Dr.
+            pager:
+              type: string
+              description: The pager number of the contact.
+              maxLength: 30
+              example: 555-555-5555
+            deleted:
+              type: boolean
+              description: True indicates a contact is deleted.
+              default: false
+              example: false
+              readOnly: true
+            headline:
+              type: string
+              description: >-
+                The headline of the contact's profile, which summarizes their
+                professional experience and qualities.
+              readOnly: true
+              example: >-
+                Marketing Director Crafting Memorable Campaigns that Engage
+                Audiences and Elevate Brands
+            personalWebsite:
+              type: string
+              description: A contact's personal website URL.
+              format: uri
+              example: https://www.example.com
+              readOnly: true
+            biography:
+              type: string
+              description: A contact's biographical writeup.
+              example: >-
+                I am a marketing professional with experience in event planning
+                and brand strategy.
+              readOnly: true
+            pronoun:
+              type: string
+              description: >-
+                Represents the preferred pronoun of a contact. Deprecated. Use
+                `pronouns` instead.
+              example: he/him/she/her/they/them
+              readOnly: true
+              deprecated: true
+            pronouns:
+              type: string
+              description: Represents the preferred pronouns of a contact.
+              example: he/him/she/her/they/them
+              readOnly: true
+      properties:
+        _links:
+          $ref: '#/components/schemas/contact-links.json'
+    contact-links.json:
+      title: ContactLinks
+      description: Links related to a contact resource.
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/link.json'
+    gender.json:
+      title: Gender
+      enum:
+        - Male
+        - Female
+        - Unknown
+      type: string
+      description: The gender of the contact.
+      example: Male
+    attendee-contact-type.json:
+      title: AttendeeContactType
+      description: The type of contact.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the contact type.
+        name:
+          type: string
+          description: The name of the contact type.
+          example: VIP
+    attendee-contact-membership.json:
+      title: AttendeeContactMembership
+      description: Membership information for a contact.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The membership ID.
+          example: MEM-12345
+        expirationDate:
+          type: string
+          format: date
+          description: The expiration date of the membership.
+          example: '2025-12-31'
+    address-type.json:
+      title: AddressType
+      enum:
+        - Home
+        - Work
+      type: string
+      description: The type of address.
+      example: Work
+    address.json4:
+      title: Address
+      description: A physical address.
+      type: object
+      properties:
+        address1:
+          type: string
+          description: Address line 1
+          maxLength: 100
+          example: 123 Main Street
+        address2:
+          type: string
+          description: Address line 2
+          maxLength: 100
+          example: Suite 400
+        address3:
+          type: string
+          description: Address line 3
+          maxLength: 100
+          example: Building A
+        city:
+          type: string
+          description: City
+          maxLength: 50
+          example: Tysons
+        state:
+          type: string
+          description: State or province
+          maxLength: 50
+          example: VA
+        postalCode:
+          type: string
+          description: Postal or ZIP code
+          maxLength: 20
+          example: '22102'
+        country:
+          type: string
+          description: Country
+          maxLength: 50
+          example: United States
+        countryCode:
+          type: string
+          description: ISO 3166-1 alpha-2 country code
+          maxLength: 2
+          example: US
+    compliance.json:
+      title: Compliance
+      description: Compliance information for a contact.
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of compliance regulation.
+          example: GDPR
+        status:
+          type: string
+          description: The compliance status.
+          example: Consented
+        consentDate:
+          type: string
+          format: date-time
+          description: The date consent was given.
+          example: '2020-01-15T10:30:00Z'
+    lookup.json:
+      title: Lookup
+      description: Lookup response object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        code:
+          type: string
+          description: Code / Abbreviation of the lookup item.
+          maxLength: 30
+          example: MU
+        name:
+          type: string
+          description: Name of the lookup item.
+          maxLength: 30
+          example: Meet up
+    uuid-property:
+      type: string
+      format: uuid
+      description: A universally unique identifier.
+      example: d97d28b6-cf35-4d6c-90eb-bb10fef1d1ce
+    id-name.json:
+      title: NamedObject
+      description: A Named object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+        name:
+          type: string
+          description: Name of the object
+          example: Sample Object name
+    attendee-web-links.json:
+      title: AttendeeWebLinks
+      description: Web links for an attendee.
+      type: object
+      properties:
+        acceptRegistration:
+          type: string
+          format: uri
+          description: >-
+            This shortened URL, when used, allows you to accept the
+            registration.
+          example: https://example.com/123ABC?i=abcdefghijklmnopqrstuv
+        declineRegistration:
+          type: string
+          format: uri
+          description: >-
+            This shortened URL, when used, allows you to decline the
+            registration.
+          example: https://example.com/123ABC?i=abcdefghijklmnopqrstuv
+    external-reference.json:
+      title: ExternalReference
+      description: An external reference.
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/external-reference-type.json'
+        id:
+          type: string
+          description: The identifier of the external system.
+          example: 0000X123sfjhooks
+        referenceId:
+          type: string
+          description: The identifier of an attendee in the external system.
+          example: 000X123jhooks
+    external-reference-type.json:
+      title: ExternalReferenceType
+      enum:
+        - Salesforce
+        - Marketo
+        - Eloqua
+        - HubSpot
+        - Custom
+      type: string
+      description: The type of external reference system.
+      example: Salesforce
+    attendee-group.json:
+      title: AttendeeGroup
+      description: An attendee group.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Attendee group ID.
+          readOnly: true
+          example: d97d28b6-cf35-4d6c-90eb-bb10fef1d1ce
+        member:
+          type: boolean
+          description: True indicates the attendee is a member of the attendee group.
+          example: true
+        leader:
+          type: boolean
+          description: True indicates the attendee is a group leader.
+          example: true
+    uuid.json:
+      title: UUID
+      description: >-
+        The reference to the related entity. Contains only the ID of the related
+        entity.
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid-property'
+    attendee-status.json:
+      title: AttendeeStatus
+      enum:
+        - No Response
+        - Accepted
+        - Declined
+        - Visited
+        - Waitlisted
+        - Cancelled
+        - Pending Approval
+        - Denied Approval
+      type: string
+      description: This is used to denote the status of an attendee.
+      example: Accepted
+    attendee-invited-by.json:
+      title: AttendeeInvitedBy
+      enum:
+        - Planner-Invited
+        - No Invitation
+        - Guest-Invited
+        - Alternate Campaign
+        - Weblink
+        - Import
+        - Historical Import
+        - API Invited
+      type: string
+      description: Method by which the attendee was invited to the event.
+      example: Planner-Invited
+    attendee-response-method.json:
+      title: AttendeeResponseMethod
+      enum:
+        - Administrator Responded
+        - Administrator Responded Widget
+        - API-Responded
+        - Appointments Event Website
+        - Cvent Salesforce App
+        - Cvent Salesforce App - Campaign Page
+        - Cvent Salesforce App - Contact Page
+        - Cvent Salesforce App - Event Page
+        - Cvent Salesforce App - Lead Page
+        - Cvent Salesforce App - Person Account Page
+        - Cvent Salesforce App - Recommendation Widget
+        - External Registration
+        - Group Leader Responded
+        - Group Leader Responded Widget
+        - Historical Import
+        - Imported
+        - No Response
+        - On-site Responded
+        - Planner-Imported
+        - Planner-Responded
+        - Post Event
+        - Self-Responded
+        - Self-Responded Mobile
+        - Self-Responded Widget
+      type: string
+      description: >-
+        Represents the method by which an attendee registered for the event.
+
+
+        - Administrator Responded: The invitee was registered by another contact
+        acting as their administrator.
+
+        - API-Responded: The invitee was registered through a custom process
+        configured via an API integration.
+
+        - Appointments Event Website: The invitee registered via an appointments
+        event website.
+
+        - Cvent Salesforce App: The invitee registered through an action in the
+        Cvent Salesforce App.
+
+        - External Registration: The attendee was registered through an external
+        integration, such as Marketo.
+
+        - Group Leader Responded: The invitee was registered by a group leader
+        and added to a group.
+
+        - Historical Import: The invitee's registration was imported into the
+        event as historical data.
+
+        - Imported: The invitee's registration was imported into the event.
+
+        - No Response: The invitee has not registered.
+
+        - On-site Responded: The invitee registered onsite using OnArrival's
+        Kiosk Mode.
+
+        - Planner-Imported: An account user imported the invitee's registration
+        into the event.
+
+        - Planner-Responded: An account user registered the invitee from the
+        Cvent back-end or the planner-side of the OnArrival app.
+
+        - Post Event: The invitee was registered by an account user after the
+        event's end date or while the event was in Completed status.
+
+        - Self-Responded: The invitee registered themselves through a weblink or
+        invitation.
+
+
+        Note: The responseMethod can only be set if the invitee's status is No
+        Response.
+      example: Self-Responded
+    custom-field:
+      title: CustomField
+      description: A Custom Field
+      required:
+        - id
+        - value
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique ID representing this custom field.
+          format: uuid
+        name:
+          type: string
+          description: The actual text of the custom field.
+          example: What is a your favorite color?
+          readOnly: true
+        type:
+          description: The type of data collected by a custom field.
+          type: string
+          allOf:
+            - title: CustomFieldType
+              enum:
+                - AutoIncrement
+                - ConsentQuestion
+                - Currency
+                - Decimal
+                - Date
+                - DateTime
+                - Email
+                - FileUpload
+                - FreeText
+                - General
+                - MultiChoice
+                - MultiSelect
+                - Number
+                - OpenEndedDateTime
+                - OpenEndedText
+                - SingleChoice
+                - SingleSelect
+                - USPhoneNumber
+                - Unknown
+              type: string
+              description: The type of data collected by a custom field.
+              example: General
+            - readOnly: true
+              example: MultiSelect
+        value:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            description: A question answer value
+          description: The set of answers or possible answers to a question.
+          example:
+            - Choice C
+            - Choice A
+        order:
+          type: integer
+          description: The order of this question in the bigger list of questions.
+          example: 1
+          readOnly: true
+    attendee-answer.json:
+      title: AttendeeAnswer
+      description: An attendee's answer to registration questions.
+      required:
+        - question
+        - value
+      type: object
+      properties:
+        question:
+          type: object
+          properties:
+            id:
+              description: The ID of the question.
+              type: string
+              format: uuid
+              example: 60f1d05b-e3ee-4d70-a7f3-0edb9a76af4a
+          description: The registration question.
+        value:
+          type: array
+          items:
+            type: string
+            example: '1234'
+          description: The set of answers to the given question.
+    attendee-visibility.json:
+      title: AttendeeVisibility
+      enum:
+        - Private
+        - Public
+      type: string
+      description: >-
+        Denotes the visibility of the attendee profile to other attendees.
+        Private: Their profile is not visible. Public: Their profile is visible.
+      example: Private
+    appointment-group.json:
+      title: AppointmentGroup
+      description: An appointment group.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the appointment group.
+          format: uuid
+          example: bf183d50-56ad-454b-8b9f-06d8e923e1fd
+    error-response:
+      title: ErrorResponse
+      description: Standard error response object.
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        details:
+          type: string
+          description: Additional details about the error.
+          example: Invalid filter syntax
+  parameters:
+    after:
+      name: after
+      required: false
+      description: >-
+        Used to query records that have been added or updated after this time
+        point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    before:
+      name: before
+      required: false
+      in: query
+      description: >-
+        Used to query records that have been added or updated before this time
+        point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    token:
+      name: token
+      in: query
+      description: >
+        The continuation token returned from a previous class. This must be a
+        valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    expand:
+      name: expand
+      in: query
+      required: false
+      description: >
+        This endpoint allows you to request additional information as an
+        expanded response using the expand query parameter.
+
+        The expanded entity is retrieved and displayed inline for each specified
+        expand value.
+
+
+        An object contains the ID of a related object in its response
+        properties. You can expand these objects,
+
+        along with others, in line using the expand query parameter.
+
+
+        You can expand multiple objects at the same time by identifying multiple
+        items in the expand array.
+
+
+        The respective scopes for each expansion are required.
+
+
+        The following fields are expandable:
+          * answers.question
+            * **Scope**: event/events:read
+            * **Reference**: <a href="#operation/getEventQuestions">List Event Questions</a>
+          * registrationType
+            * **Scope**: event/registration-types:read
+            * **Reference**: <a href="#operation/listRegistrationTypes">List Registration Types</a>
+      example:
+        - answers.question
+        - registrationType
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - answers.question
+            - registrationType
+    sort7:
+      in: query
+      name: sort
+      required: false
+      description: >
+        The `sort` query parameter sorts items in the list of results and
+        organizes them according to your preference.
+
+        There are two orders:
+          * ascending: ASC
+          * descending: DESC
+
+        The following fields are sortable:
+          * contact.firstName
+          * contact.lastName
+          * contact.title
+          * contact.company
+          * registeredAt
+          * checkIn
+      schema:
+        example: contact.company:DESC,contact.title:ASC
+        type: string
+    includeDeletedGuests:
+      in: query
+      name: includeDeletedGuests
+      required: false
+      description: This allows users to include deleted guests in the response.
+      schema:
+        type: boolean
+        default: false
+  responses:
+    BadRequest1:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            badRequest:
+              $ref: '#/components/examples/BadRequestExample'
+    Unauthorized1:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden1:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            forbidden:
+              $ref: '#/components/examples/ForbiddenExample'
+    TooManyRequests1:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            tooManyRequests:
+              $ref: '#/components/examples/TooManyRequestsExample'
+  securitySchemes:
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/events:read: Allows the reading of events
+            event/registration-types:read: Allows the reading of registration types
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/attendees:read: Allows the reading of attendees.
+            event/attendees:write: Allows the creation of an attendee in an event.
+            event/events:read: Allows the reading of events
+            event/registration-types:read: Allows the reading of registration types

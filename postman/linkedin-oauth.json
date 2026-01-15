@@ -1,0 +1,2443 @@
+{
+	"info": {
+		"_postman_id": "737f541d-ba9e-49a3-af05-a9344e66313a",
+		"name": "LinkedIn OAuth 2.0 API",
+		"description": "LinkedIn's Authorization Code Flow (3-legged OAuth) API for requesting permission from LinkedIn members to access their account data.\n\nThis API allows applications to:\n- Request authorization from LinkedIn members\n- Exchange authorization codes for access tokens\n- Make authenticated API calls on behalf of members\n- Refresh access tokens\n\nThe level of access is explicitly requested using the scope parameter during the authorization process.\n\n\nContact Support:\n Name: LinkedIn Developer Support",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35240",
+		"_collection_link": "https://api-evangelist.postman.co/workspace/Capabilities-Working~0e59032e-d676-4e90-be81-48adc3c04507/collection/35240-737f541d-ba9e-49a3-af05-a9344e66313a?action=share&source=collection_link&creator=35240"
+	},
+	"item": [
+		{
+			"name": "oauth",
+			"item": [
+				{
+					"name": "v2",
+					"item": [
+						{
+							"name": "authorization",
+							"item": [
+								{
+									"name": "Request Authorization Code",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/oauth/v2/authorization?response_type=code&client_id=86your_client_id&redirect_uri=https://dev.example.com/auth/linkedin/callback&state=DCEeFWf45A53sdfKef424&scope=r_liteprofile%20r_emailaddress%20w_member_social&enable_extended_login=true",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"oauth",
+												"v2",
+												"authorization"
+											],
+											"query": [
+												{
+													"key": "response_type",
+													"value": "code",
+													"description": "The value of this field should always be `code`"
+												},
+												{
+													"key": "client_id",
+													"value": "86your_client_id",
+													"description": "The API Key value generated when you registered your application"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://dev.example.com/auth/linkedin/callback",
+													"description": "The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.\n\nRequirements:\n- Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)\n- Must use HTTPS (except localhost for testing)\n- Parameters are ignored\n- Cannot include a # fragment\n"
+												},
+												{
+													"key": "state",
+													"value": "DCEeFWf45A53sdfKef424",
+													"description": "A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks."
+												},
+												{
+													"key": "scope",
+													"value": "r_liteprofile%20r_emailaddress%20w_member_social",
+													"description": "URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.\n\nAvailable scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.\n"
+												},
+												{
+													"key": "enable_extended_login",
+													"value": "true",
+													"description": "Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers"
+												}
+											]
+										},
+										"description": "Direct the member's browser to LinkedIn's OAuth 2.0 authorization page where the member either accepts or denies your application's permission request.\n\nThe member may first be asked to log in to LinkedIn. Once authenticated, they will see a consent screen identifying your application and the permissions being requested.\n\n**Important:** Social login (Google/Apple) and passkey login are currently supported on desktop and Android web browsers only. To enable these on other platforms, include the query parameter `enable_extended_login=true`.\n"
+									},
+									"response": [
+										{
+											"name": "Redirect to the specified redirect_uri with authorization code or error.\n\n**Success:** Redirects with `code` and `state` parameters\n**Failure:** Redirects with `error`, `error_description`, and `state` parameters\n",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/authorization?response_type=code&client_id=86your_client_id&redirect_uri=https://dev.example.com/auth/linkedin/callback&state=DCEeFWf45A53sdfKef424&scope=r_liteprofile%20r_emailaddress%20w_member_social&enable_extended_login=true",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"authorization"
+													],
+													"query": [
+														{
+															"key": "response_type",
+															"value": "code",
+															"description": "The value of this field should always be `code`"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The API Key value generated when you registered your application"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.\n\nRequirements:\n- Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)\n- Must use HTTPS (except localhost for testing)\n- Parameters are ignored\n- Cannot include a # fragment\n"
+														},
+														{
+															"key": "state",
+															"value": "DCEeFWf45A53sdfKef424",
+															"description": "A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks."
+														},
+														{
+															"key": "scope",
+															"value": "r_liteprofile%20r_emailaddress%20w_member_social",
+															"description": "URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.\n\nAvailable scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.\n"
+														},
+														{
+															"key": "enable_extended_login",
+															"value": "true",
+															"description": "Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers"
+														}
+													]
+												}
+											},
+											"status": "Found",
+											"code": 302,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Location",
+													"value": "https://dev.example.com/auth/linkedin/callback?code=AQTQmah11lalyH65DAIivsjsAQV5P&state=DCEeFWf45A53sdfKef424",
+													"description": {
+														"content": "Redirect URL with query parameters",
+														"type": "text/plain"
+													}
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "missingResponseType",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/authorization?response_type=code&client_id=86your_client_id&redirect_uri=https://dev.example.com/auth/linkedin/callback&state=DCEeFWf45A53sdfKef424&scope=r_liteprofile%20r_emailaddress%20w_member_social&enable_extended_login=true",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"authorization"
+													],
+													"query": [
+														{
+															"key": "response_type",
+															"value": "code",
+															"description": "The value of this field should always be `code`"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The API Key value generated when you registered your application"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.\n\nRequirements:\n- Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)\n- Must use HTTPS (except localhost for testing)\n- Parameters are ignored\n- Cannot include a # fragment\n"
+														},
+														{
+															"key": "state",
+															"value": "DCEeFWf45A53sdfKef424",
+															"description": "A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks."
+														},
+														{
+															"key": "scope",
+															"value": "r_liteprofile%20r_emailaddress%20w_member_social",
+															"description": "URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.\n\nAvailable scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.\n"
+														},
+														{
+															"key": "enable_extended_login",
+															"value": "true",
+															"description": "Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"A required parameter \\\"response_type\\\" is missing\"\n}"
+										},
+										{
+											"name": "missingClientId",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/authorization?response_type=code&client_id=86your_client_id&redirect_uri=https://dev.example.com/auth/linkedin/callback&state=DCEeFWf45A53sdfKef424&scope=r_liteprofile%20r_emailaddress%20w_member_social&enable_extended_login=true",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"authorization"
+													],
+													"query": [
+														{
+															"key": "response_type",
+															"value": "code",
+															"description": "The value of this field should always be `code`"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The API Key value generated when you registered your application"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.\n\nRequirements:\n- Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)\n- Must use HTTPS (except localhost for testing)\n- Parameters are ignored\n- Cannot include a # fragment\n"
+														},
+														{
+															"key": "state",
+															"value": "DCEeFWf45A53sdfKef424",
+															"description": "A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks."
+														},
+														{
+															"key": "scope",
+															"value": "r_liteprofile%20r_emailaddress%20w_member_social",
+															"description": "URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.\n\nAvailable scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.\n"
+														},
+														{
+															"key": "enable_extended_login",
+															"value": "true",
+															"description": "Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"A required parameter \\\"client_id\\\" is missing\"\n}"
+										},
+										{
+											"name": "missingRedirectUri",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/authorization?response_type=code&client_id=86your_client_id&redirect_uri=https://dev.example.com/auth/linkedin/callback&state=DCEeFWf45A53sdfKef424&scope=r_liteprofile%20r_emailaddress%20w_member_social&enable_extended_login=true",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"authorization"
+													],
+													"query": [
+														{
+															"key": "response_type",
+															"value": "code",
+															"description": "The value of this field should always be `code`"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The API Key value generated when you registered your application"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.\n\nRequirements:\n- Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)\n- Must use HTTPS (except localhost for testing)\n- Parameters are ignored\n- Cannot include a # fragment\n"
+														},
+														{
+															"key": "state",
+															"value": "DCEeFWf45A53sdfKef424",
+															"description": "A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks."
+														},
+														{
+															"key": "scope",
+															"value": "r_liteprofile%20r_emailaddress%20w_member_social",
+															"description": "URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.\n\nAvailable scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.\n"
+														},
+														{
+															"key": "enable_extended_login",
+															"value": "true",
+															"description": "Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"A required parameter \\\"redirect_uri\\\" is missing\"\n}"
+										},
+										{
+											"name": "missingScope",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/authorization?response_type=code&client_id=86your_client_id&redirect_uri=https://dev.example.com/auth/linkedin/callback&state=DCEeFWf45A53sdfKef424&scope=r_liteprofile%20r_emailaddress%20w_member_social&enable_extended_login=true",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"authorization"
+													],
+													"query": [
+														{
+															"key": "response_type",
+															"value": "code",
+															"description": "The value of this field should always be `code`"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The API Key value generated when you registered your application"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.\n\nRequirements:\n- Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)\n- Must use HTTPS (except localhost for testing)\n- Parameters are ignored\n- Cannot include a # fragment\n"
+														},
+														{
+															"key": "state",
+															"value": "DCEeFWf45A53sdfKef424",
+															"description": "A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks."
+														},
+														{
+															"key": "scope",
+															"value": "r_liteprofile%20r_emailaddress%20w_member_social",
+															"description": "URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.\n\nAvailable scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.\n"
+														},
+														{
+															"key": "enable_extended_login",
+															"value": "true",
+															"description": "Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"A required parameter \\\"scope\\\" is missing\"\n}"
+										},
+										{
+											"name": "invalidRedirectUri",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/authorization?response_type=code&client_id=86your_client_id&redirect_uri=https://dev.example.com/auth/linkedin/callback&state=DCEeFWf45A53sdfKef424&scope=r_liteprofile%20r_emailaddress%20w_member_social&enable_extended_login=true",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"authorization"
+													],
+													"query": [
+														{
+															"key": "response_type",
+															"value": "code",
+															"description": "The value of this field should always be `code`"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The API Key value generated when you registered your application"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.\n\nRequirements:\n- Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)\n- Must use HTTPS (except localhost for testing)\n- Parameters are ignored\n- Cannot include a # fragment\n"
+														},
+														{
+															"key": "state",
+															"value": "DCEeFWf45A53sdfKef424",
+															"description": "A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks."
+														},
+														{
+															"key": "scope",
+															"value": "r_liteprofile%20r_emailaddress%20w_member_social",
+															"description": "URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.\n\nAvailable scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.\n"
+														},
+														{
+															"key": "enable_extended_login",
+															"value": "true",
+															"description": "Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers"
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"redirect_uri_mismatch\",\n  \"error_description\": \"Redirect URI passed in the request does not match the redirect URI added to the developer application\"\n}"
+										},
+										{
+											"name": "invalidClientId",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/authorization?response_type=code&client_id=86your_client_id&redirect_uri=https://dev.example.com/auth/linkedin/callback&state=DCEeFWf45A53sdfKef424&scope=r_liteprofile%20r_emailaddress%20w_member_social&enable_extended_login=true",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"authorization"
+													],
+													"query": [
+														{
+															"key": "response_type",
+															"value": "code",
+															"description": "The value of this field should always be `code`"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The API Key value generated when you registered your application"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.\n\nRequirements:\n- Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)\n- Must use HTTPS (except localhost for testing)\n- Parameters are ignored\n- Cannot include a # fragment\n"
+														},
+														{
+															"key": "state",
+															"value": "DCEeFWf45A53sdfKef424",
+															"description": "A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks."
+														},
+														{
+															"key": "scope",
+															"value": "r_liteprofile%20r_emailaddress%20w_member_social",
+															"description": "URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.\n\nAvailable scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.\n"
+														},
+														{
+															"key": "enable_extended_login",
+															"value": "true",
+															"description": "Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers"
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_client\",\n  \"error_description\": \"Client ID passed in the request does not match the client ID of the developer application\"\n}"
+										},
+										{
+											"name": "invalidScope",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/authorization?response_type=code&client_id=86your_client_id&redirect_uri=https://dev.example.com/auth/linkedin/callback&state=DCEeFWf45A53sdfKef424&scope=r_liteprofile%20r_emailaddress%20w_member_social&enable_extended_login=true",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"authorization"
+													],
+													"query": [
+														{
+															"key": "response_type",
+															"value": "code",
+															"description": "The value of this field should always be `code`"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The API Key value generated when you registered your application"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.\n\nRequirements:\n- Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)\n- Must use HTTPS (except localhost for testing)\n- Parameters are ignored\n- Cannot include a # fragment\n"
+														},
+														{
+															"key": "state",
+															"value": "DCEeFWf45A53sdfKef424",
+															"description": "A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks."
+														},
+														{
+															"key": "scope",
+															"value": "r_liteprofile%20r_emailaddress%20w_member_social",
+															"description": "URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.\n\nAvailable scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.\n"
+														},
+														{
+															"key": "enable_extended_login",
+															"value": "true",
+															"description": "Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers"
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_scope\",\n  \"error_description\": \"Permissions passed in the request is invalid\"\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "accessToken",
+							"item": [
+								{
+									"name": "Exchange Authorization Code for Access Token",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "grant_type",
+													"value": "authorization_code",
+													"description": "The value of this field should always be `authorization_code`"
+												},
+												{
+													"key": "code",
+													"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+													"description": "The authorization code received from the authorization endpoint"
+												},
+												{
+													"key": "client_id",
+													"value": "86your_client_id",
+													"description": "The Client ID value generated in your application settings"
+												},
+												{
+													"key": "client_secret",
+													"value": "your_client_secret",
+													"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://dev.example.com/auth/linkedin/callback",
+													"description": "The same redirect_uri value that you passed in the authorization request"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/oauth/v2/accessToken",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"oauth",
+												"v2",
+												"accessToken"
+											]
+										},
+										"description": "Exchange the authorization code received from the authorization endpoint for an access token.\n\nThe authorization code has a 30-minute lifespan and must be used immediately. Access tokens are issued with a 60-day lifespan.\n"
+									},
+									"response": [
+										{
+											"name": "standardToken",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"access_token\": \"AQUvlL_DYEzvT2wz1QJiEPeLioeA\",\n  \"expires_in\": 5184000,\n  \"scope\": \"r_liteprofile r_emailaddress\"\n}"
+										},
+										{
+											"name": "tokenWithRefresh",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"access_token\": \"AQUvlL_DYEzvT2wz1QJiEPeLioeA\",\n  \"expires_in\": 5184000,\n  \"refresh_token\": \"AQVaBCdEfGhIjKlMnOpQrStUvWxYz\",\n  \"refresh_token_expires_in\": 31536000,\n  \"scope\": \"r_liteprofile r_emailaddress w_member_social\"\n}"
+										},
+										{
+											"name": "limitedScope",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"access_token\": \"AQUvlL_DYEzvT2wz1QJiEPeLioeA\",\n  \"expires_in\": 5184000,\n  \"scope\": \"r_liteprofile\"\n}"
+										},
+										{
+											"name": "missingRedirectUri",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"A required parameter \\\"redirect_uri\\\" is missing\"\n}"
+										},
+										{
+											"name": "missingCode",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"A required parameter \\\"code\\\" is missing\"\n}"
+										},
+										{
+											"name": "missingGrantType",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"A required parameter \\\"grant_type\\\" is missing\"\n}"
+										},
+										{
+											"name": "missingClientId",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"A required parameter \\\"client_id\\\" is missing\"\n}"
+										},
+										{
+											"name": "missingClientSecret",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"A required parameter \\\"client_secret\\\" is missing\"\n}"
+										},
+										{
+											"name": "invalidRedirectUri",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_redirect_uri\",\n  \"error_description\": \"Unable to retrieve access token: appid/redirect uri/code verifier does not match authorization code. Or authorization code expired. Or external member binding exists\"\n}"
+										},
+										{
+											"name": "expiredCode",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_grant\",\n  \"error_description\": \"The authorization code has expired\"\n}"
+										},
+										{
+											"name": "unsupportedGrantType",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"unsupported_grant_type\",\n  \"error_description\": \"Grant type \\\"client_credentials\\\" is not supported\"\n}"
+										},
+										{
+											"name": "invalidCode",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_grant\",\n  \"error_description\": \"Unable to retrieve access token: authorization code not found\"\n}"
+										},
+										{
+											"name": "invalidClientCredentials",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"invalid_client\",\n  \"error_description\": \"Client authentication failed\"\n}"
+										},
+										{
+											"name": "Rate limit exceeded",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Too Many Requests",
+											"code": 429,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"rate_limit_exceeded\",\n  \"error_description\": \"Rate limit for token requests exceeded. Please wait before retrying.\",\n  \"status\": 429,\n  \"serviceErrorCode\": 65604\n}"
+										},
+										{
+											"name": "Internal server error",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Internal Server Error",
+											"code": 500,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"server_error\",\n  \"error_description\": \"An internal server error occurred. Please try again later.\",\n  \"status\": 500,\n  \"serviceErrorCode\": 65500\n}"
+										},
+										{
+											"name": "Service unavailable",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"description": "The value of this field should always be `authorization_code`"
+														},
+														{
+															"key": "code",
+															"value": "AQTQmah11lalyH65DAIivsjsAQV5P",
+															"description": "The authorization code received from the authorization endpoint"
+														},
+														{
+															"key": "client_id",
+															"value": "86your_client_id",
+															"description": "The Client ID value generated in your application settings"
+														},
+														{
+															"key": "client_secret",
+															"value": "your_client_secret",
+															"description": "The Secret Key value generated in your application settings. Keep this value secure!"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "https://dev.example.com/auth/linkedin/callback",
+															"description": "The same redirect_uri value that you passed in the authorization request"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/oauth/v2/accessToken",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"oauth",
+														"v2",
+														"accessToken"
+													]
+												}
+											},
+											"status": "Service Unavailable",
+											"code": 503,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"error\": \"service_unavailable\",\n  \"error_description\": \"LinkedIn services are temporarily unavailable. Please try again later.\",\n  \"status\": 503,\n  \"serviceErrorCode\": 65503\n}"
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "v2",
+			"item": [
+				{
+					"name": "me",
+					"item": [
+						{
+							"name": "Get Current Member Profile",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "r_liteprofile r_emailaddress r_basicprofile w_member_social r_organization_social w_organization_social rw_organization_admin r_ads r_ads_reporting rw_ads r_1st_connections_size",
+											"type": "string"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "https://www.linkedin.com/oauth/v2/authorization",
+											"type": "string"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "https://www.linkedin.com/oauth/v2/accessToken",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://www.linkedin.com/oauth/v2/authorization",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/v2/me",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v2",
+										"me"
+									]
+								},
+								"description": "Retrieve the authenticated member's profile information.\n\nThis is an example of making an authenticated API request using the access token obtained from the OAuth flow.\n"
+							},
+							"response": [
+								{
+									"name": "fullProfile",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"urn:li:person:abc123XYZ\",\n  \"firstName\": {\n    \"localized\": {\n      \"en_US\": \"John\"\n    },\n    \"preferredLocale\": {\n      \"country\": \"US\",\n      \"language\": \"en\"\n    }\n  },\n  \"lastName\": {\n    \"localized\": {\n      \"en_US\": \"Doe\"\n    },\n    \"preferredLocale\": {\n      \"country\": \"US\",\n      \"language\": \"en\"\n    }\n  },\n  \"profilePicture\": {\n    \"displayImage\": \"urn:li:digitalmediaAsset:C4D03AQGsitRwG8U8ZQ\"\n  },\n  \"headline\": {\n    \"localized\": {\n      \"en_US\": \"Senior Software Engineer at Tech Company\"\n    },\n    \"preferredLocale\": {\n      \"country\": \"US\",\n      \"language\": \"en\"\n    }\n  }\n}"
+								},
+								{
+									"name": "minimalProfile",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"urn:li:person:abc123XYZ\",\n  \"firstName\": {\n    \"localized\": {\n      \"en_US\": \"John\"\n    },\n    \"preferredLocale\": {\n      \"country\": \"US\",\n      \"language\": \"en\"\n    }\n  },\n  \"lastName\": {\n    \"localized\": {\n      \"en_US\": \"Doe\"\n    },\n    \"preferredLocale\": {\n      \"country\": \"US\",\n      \"language\": \"en\"\n    }\n  }\n}"
+								},
+								{
+									"name": "Bad Request - Invalid request parameters",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"invalid_request\",\n  \"error_description\": \"Invalid request format\",\n  \"status\": 400,\n  \"serviceErrorCode\": 65601\n}"
+								},
+								{
+									"name": "missingToken",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"unauthorized\",\n  \"error_description\": \"Empty oauth2 access token\",\n  \"status\": 401,\n  \"serviceErrorCode\": 65600\n}"
+								},
+								{
+									"name": "invalidToken",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"invalid_token\",\n  \"error_description\": \"The access token is invalid\",\n  \"status\": 401,\n  \"serviceErrorCode\": 65600\n}"
+								},
+								{
+									"name": "expiredToken",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"expired_token\",\n  \"error_description\": \"Access token has expired\",\n  \"status\": 401,\n  \"serviceErrorCode\": 65600\n}"
+								},
+								{
+									"name": "insufficientScope",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"insufficient_scope\",\n  \"error_description\": \"The access token does not have the required scope to access this resource. Required scope: r_liteprofile\",\n  \"status\": 403,\n  \"serviceErrorCode\": 65602\n}"
+								},
+								{
+									"name": "memberRestricted",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"access_denied\",\n  \"error_description\": \"The member has restricted access to their profile information\",\n  \"status\": 403,\n  \"serviceErrorCode\": 65603\n}"
+								},
+								{
+									"name": "Not Found - Member profile not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"not_found\",\n  \"error_description\": \"The requested resource was not found\",\n  \"status\": 404,\n  \"serviceErrorCode\": 65605\n}"
+								},
+								{
+									"name": "Rate limit exceeded",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Too Many Requests",
+									"code": 429,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"rate_limit_exceeded\",\n  \"error_description\": \"API rate limit exceeded. Please wait before making additional requests.\",\n  \"status\": 429,\n  \"serviceErrorCode\": 65604\n}"
+								},
+								{
+									"name": "Internal server error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"server_error\",\n  \"error_description\": \"An internal server error occurred. Please try again later.\",\n  \"status\": 500,\n  \"serviceErrorCode\": 65500\n}"
+								},
+								{
+									"name": "Service unavailable",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/v2/me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"v2",
+												"me"
+											]
+										}
+									},
+									"status": "Service Unavailable",
+									"code": 503,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"error\": \"service_unavailable\",\n  \"error_description\": \"LinkedIn services are temporarily unavailable. Please try again later.\",\n  \"status\": 503,\n  \"serviceErrorCode\": 65503\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "scope",
+				"value": "r_liteprofile r_emailaddress r_basicprofile w_member_social r_organization_social w_organization_social rw_organization_admin r_ads r_ads_reporting rw_ads r_1st_connections_size",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "https://www.linkedin.com/oauth/v2/authorization",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://www.linkedin.com/oauth/v2/accessToken",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://www.linkedin.com/oauth/v2/authorization",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://www.linkedin.com"
+		}
+	]
+}

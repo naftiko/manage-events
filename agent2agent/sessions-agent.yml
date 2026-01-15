@@ -1,0 +1,145 @@
+protocolVersions:
+  - '1.0'
+name: Sessions Agent
+description: >-
+  An AI agent that helps users query session locations for events through the
+  Cvent API. It retrieves information about conference rooms, ballrooms,
+  exhibition halls, breakout rooms, and other venue spaces where event sessions
+  take place.
+version: 1.0.0
+provider:
+  organization: Cvent
+  url: https://www.cvent.com
+documentationUrl: https://developer.cvent.com/documentation
+iconUrl: https://www.cvent.com/favicon.ico
+supportedInterfaces:
+  - url: https://api-platform.cvent.com/ea
+    protocolBinding: HTTP+JSON
+  - url: https://api-platform-eur.cvent.com/ea
+    protocolBinding: HTTP+JSON
+capabilities:
+  streaming: false
+  pushNotifications: false
+  stateTransitionHistory: false
+  extensions: []
+supportsExtendedAgentCard: false
+defaultInputModes:
+  - text/plain
+  - application/json
+defaultOutputModes:
+  - application/json
+  - text/plain
+securitySchemes:
+  oauth2_client_credentials:
+    oauth2SecurityScheme:
+      description: OAuth2 Client Credentials Flow for server-to-server authentication
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/sessions:read: Allows reading of sessions
+            event/sessions:write: Allows creation of a session in an event
+            event/sessions:delete: Allows deletion of a session in an event
+  oauth2_authorization_code:
+    oauth2SecurityScheme:
+      description: OAuth2 Authorization Code Flow for user-delegated authentication
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/sessions:read: Allows reading of sessions
+            event/sessions:write: Allows creation of a session in an event
+            event/sessions:delete: Allows deletion of a session in an event
+security:
+  - oauth2_client_credentials:
+      - event/sessions:read
+  - oauth2_authorization_code:
+      - event/sessions:read
+skills:
+  - id: list_session_locations
+    name: List Session Locations
+    description: >-
+      Retrieves a paginated list of session locations for a specific event.
+      Returns location IDs, codes, and names for all defined session spaces such
+      as conference rooms, ballrooms, exhibition halls, and breakout rooms.
+    tags:
+      - sessions
+      - locations
+      - venues
+      - rooms
+      - spaces
+      - events
+      - cvent
+    examples:
+      - List all session locations for event ID abc-123
+      - What rooms are available for sessions at this event?
+      - Show me the venue spaces for the conference
+      - Where are the sessions being held?
+    inputModes:
+      - text/plain
+      - application/json
+    outputModes:
+      - application/json
+  - id: find_session_room
+    name: Find Session Room
+    description: >-
+      Searches for specific session locations by name or code. Helps users
+      identify the correct room or space for a particular session.
+    tags:
+      - sessions
+      - rooms
+      - search
+      - find
+      - lookup
+    examples:
+      - Find Conference Room A
+      - What is the code for the Grand Ballroom?
+      - Is there an Exhibition Hall at this event?
+      - Look up the breakout room locations
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: get_venue_layout
+    name: Get Venue Layout Overview
+    description: >-
+      Provides an overview of all session locations to help understand the
+      event's venue layout and room organization.
+    tags:
+      - sessions
+      - venue
+      - layout
+      - overview
+      - floor-plan
+      - organization
+    examples:
+      - Give me an overview of all session rooms
+      - What does the venue layout look like?
+      - How many session locations are there?
+      - List all the different spaces at the event
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+      - text/plain
+  - id: get_location_by_code
+    name: Get Location by Code
+    description: >-
+      Retrieves session location details using the location code abbreviation.
+      Useful when working with shorthand room identifiers.
+    tags:
+      - sessions
+      - locations
+      - code
+      - abbreviation
+      - identifier
+    examples:
+      - What room is ConfA?
+      - Look up location code BallroomMain
+      - Which room has the code ExhibitHall?
+      - Translate room code to full name
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json

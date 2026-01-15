@@ -1,0 +1,405 @@
+{
+	"info": {
+		"_postman_id": "6e10a997-d33c-488f-93a3-d06e78440c4e",
+		"name": "Cvent Authentication API",
+		"description": "Combined API specification for Cvent Authorization, Token, and Token Validation endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35240",
+		"_collection_link": "https://api-evangelist.postman.co/workspace/Capabilities-Working~0e59032e-d676-4e90-be81-48adc3c04507/collection/35240-6e10a997-d33c-488f-93a3-d06e78440c4e?action=share&source=collection_link&creator=35240"
+	},
+	"item": [
+		{
+			"name": "oauth2",
+			"item": [
+				{
+					"name": "authorize",
+					"item": [
+						{
+							"name": "Authorize",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/oauth2/authorize?response_type=code&client_id=ad398u21ijw3s9w3939&redirect_uri=https://example.com/redirect&state=STATE&scope=event/events:read event/attendees:read",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"oauth2",
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "response_type",
+											"value": "code",
+											"description": "The response type must be code. Indicates the client wants an authorization code (authorization code grant flow).\n\n**Note:** *implicit flow* or the *token* value is not supported at this time.\n"
+										},
+										{
+											"key": "client_id",
+											"value": "ad398u21ijw3s9w3939",
+											"description": "The OAuth2 Client application ID.\n\nMust be a pre-registered client created in the developer portal.\n"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "https://example.com/redirect",
+											"description": "The URL to which the authentication server redirects the browser after authorization has been granted by the user.\n\nA redirect URI must:\n\n* Be an absolute URI.\n* Be pre-registered with a client.\n* **NOT** include a fragment component.\n* Wildcards are **NOT** supported\n\nRequires HTTPS over HTTP except for http://localhost for testing purposes only.\n\n**Note:** App callback URLs such as *com.myclientapp://myclient/redirect* are also supported.\n"
+										},
+										{
+											"key": "state",
+											"value": "STATE",
+											"description": "An opaque value the client application adds to the initial request. The authorization server\nincludes this value when redirecting back to the client.\n\nThis value must be used by the client to prevent CSRF attacks.\n\n**Optional** but strongly recommended.\n"
+										},
+										{
+											"key": "scope",
+											"value": "event/events:read event/attendees:read",
+											"description": "Can be a combination of any scopes associated with a client. Scopes must be separated by spaces.\nAny scope used must be pre-associated with the client or it will be ignored at runtime.\n\n**Note:** If the client doesn't request any scopes, the authentication server uses all\nscopes associated with the client.\n"
+										}
+									]
+								},
+								"description": "The /oauth2/authorize endpoint only supports HTTPS GET. The client typically makes this request through a browser.\n\nThe authorization server requires HTTPS instead of HTTP as the protocol when accessing the authorization endpoint\nexcept for http://localhost for testing purposes only.\n"
+							},
+							"response": [
+								{
+									"name": "Redirect back to calling application.",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/oauth2/authorize?response_type=code&client_id=ad398u21ijw3s9w3939&redirect_uri=https://example.com/redirect&state=STATE&scope=event/events:read event/attendees:read",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"oauth2",
+												"authorize"
+											],
+											"query": [
+												{
+													"key": "response_type",
+													"value": "code",
+													"description": "The response type must be code. Indicates the client wants an authorization code (authorization code grant flow).\n\n**Note:** *implicit flow* or the *token* value is not supported at this time.\n"
+												},
+												{
+													"key": "client_id",
+													"value": "ad398u21ijw3s9w3939",
+													"description": "The OAuth2 Client application ID.\n\nMust be a pre-registered client created in the developer portal.\n"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://example.com/redirect",
+													"description": "The URL to which the authentication server redirects the browser after authorization has been granted by the user.\n\nA redirect URI must:\n\n* Be an absolute URI.\n* Be pre-registered with a client.\n* **NOT** include a fragment component.\n* Wildcards are **NOT** supported\n\nRequires HTTPS over HTTP except for http://localhost for testing purposes only.\n\n**Note:** App callback URLs such as *com.myclientapp://myclient/redirect* are also supported.\n"
+												},
+												{
+													"key": "state",
+													"value": "STATE",
+													"description": "An opaque value the client application adds to the initial request. The authorization server\nincludes this value when redirecting back to the client.\n\nThis value must be used by the client to prevent CSRF attacks.\n\n**Optional** but strongly recommended.\n"
+												},
+												{
+													"key": "scope",
+													"value": "event/events:read event/attendees:read",
+													"description": "Can be a combination of any scopes associated with a client. Scopes must be separated by spaces.\nAny scope used must be pre-associated with the client or it will be ignored at runtime.\n\n**Note:** If the client doesn't request any scopes, the authentication server uses all\nscopes associated with the client.\n"
+												}
+											]
+										}
+									},
+									"status": "Found",
+									"code": 302,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Location",
+											"value": "https://example.com/redirect?code=SplxlOBeZQQYbYS6WxSbIA&state=xyz123,The user has been successfully authenticated and an authorization code has been issued.",
+											"description": {
+												"content": "**Positive Response**\n\nThe authentication server redirects back to your app with the authorization code and state.\nThe code and state must be returned in the query string parameters.\n\n**Negative Responses**\n\n- If client_id and redirect_uri are valid but there are other problems with the request parameters\n(for example, if response_type is not included), the authentication server redirects the error to\nclient's redirect_uri.\n  - Location: https://client_redirect_uri?error=invalid_request\n\n- If the client requests 'code' in response_type but does not have permission for these requests,\nthe authorization server should return unauthorized_client to client's redirect_uri.\n  - Location: https://client_redirect_uri?error=unauthorized_client\n\n- If the client requests invalid, unknown, malformed scope, the authorization server should return\ninvalid_scope to the client's redirect_uri, as follows.\n  - Location: https://client_redirect_uri?error=invalid_scope\n\n- If there is any unexpected error in the server, the authentication server should return\nserver_error to client's redirect_uri. It should not be the HTTP 500 error displayed to\nthe end user in the browser, because this error doesn't get sent to the client.\n  - Location: https://client_redirect_uri?error=server_error\n\n- In the rare case where authentication server encounters an exception in the communication\nprotocol while making any connection to an external identity provider, the authentication\nserver redirects the error to the client's redirect_uri with either of the following messages.\n  - Location: https://client_redirect_uri?error=invalid_request&error_description=Connection+reset\n  - Location: https://client_redirect_uri?error=invalid_request&error_description=Read+timed+out\n",
+												"type": "text/plain"
+											}
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "token-validation",
+			"item": [
+				{
+					"name": "Validate Token",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "account/hooks:delete account/hooks:read account/hooks:write account/user-groups:delete account/user-groups:read account/user-groups:write account/users:delete account/users:read account/users:write appointments/appointment-attendees:read appointments/appointment-events:read appointments/appointment-types:read appointments/appointments:read appointments/appointments:write appointments/available-times:read appointments/locations:read attendee-insights/attendee-insights:read attendee-insights/scores:read attendee-insights/stats:read budget/budget-items:delete budget/budget-items:read budget/budget-items:write budget/budget-totals:read budget/cards:read budget/currency-conversion-rate:delete budget/currency-conversion-rate:read budget/currency-conversion-rate:write budget/payments:delete budget/payments:read budget/payments:write budget/transactions:delete budget/transactions:read budget/transactions:write bulk/bulk-jobs:read bulk/bulk-jobs:write business-transient/bids:read business-transient/proposals:read business-transient/supplier-brands:read business-transient/supplier-chains:read business-transient/supplier-properties:read business-transient/supplier-property-rooms:read business-transient/travel-accounts:read business-transient/travel-program-questions:read business-transient/travel-programs:read business-transient/travel-supplier-accounts:read compliance/communications:read compliance/communications:write email/bounces:read email/email-status:read email/emails:read eMarketing/campaigns:read emarketing/emarketing-email-status:read eMarketing/eMarketing-email-templates:read eMarketing/eMarketing-send-emails:write event/admission-items:read event/air-request:read event/attendance-durations:read event/attendee-activities-metadata:delete event/attendee-activities-metadata:read event/attendee-activities-metadata:write event/attendee-activities:read event/attendee-activities:write event/attendee-credits:read event/attendee-links:delete event/attendee-links:read event/attendee-links:write event/attendee-messages:read event/attendees:read event/attendees:write event/audience-segments:read event/audience-segments:write event/contact-groups:read event/contact-groups:write event/contact-types:read event/contacts:delete event/contacts:read event/contacts:write event/contacts:write-sensitive event/custom-fields:read event/custom-fields:write event/discounts:write event/donation-items:read event/event-discounts:read event/event-discounts:write event/event-email-status:read event/event-emails:read event/event-emails:write event/event-features:read event/event-features:write event/events:read event/events:write event/fee-items:read event/hotel-request:read event/invitation-lists:read event/meeting-request-forms:read event/meeting-requests:read event/meeting-requests:write event/orders:read event/players:read event/process-form-submissions:read event/program-items:delete event/program-items:read event/program-items:write event/quantity-items:read event/quantity-items:write event/registration-paths:read event/registration-types:read event/registration-types:write event/role-assignments:read event/session-attendance:read event/session-attendance:write event/session-categories:read event/session-categories:write event/session-enrollment:delete event/session-enrollment:read event/session-enrollment:write event/session-segments:read event/sessions:delete event/sessions:read event/sessions:write event/speaker-categories:read event/speaker-categories:write event/speakers:delete event/speakers:read event/speakers:write event/transactions:read event/transactions:write event/video-views:read event/videos:read event/videos:write event/webcasts:delete event/webcasts:read event/webcasts:write event/weblinks:read events-plus/hubs:read exhibitor/badges:read exhibitor/badges:write exhibitor/booth-staff:delete exhibitor/booth-staff:read exhibitor/booth-staff:write exhibitor/eliterature-requests:read exhibitor/exhibitor-admins:read exhibitor/exhibitor-admins:write exhibitor/exhibitor-answers:read exhibitor/exhibitor-answers:write exhibitor/exhibitor-categories:delete exhibitor/exhibitor-categories:read exhibitor/exhibitor-categories:write exhibitor/exhibitor-contents:delete exhibitor/exhibitor-contents:read exhibitor/exhibitor-contents:write exhibitor/exhibitor-questions:read exhibitor/exhibitors:delete exhibitor/exhibitors:read exhibitor/exhibitors:write exhibitor/lead-qualification-answers:read exhibitor/lead-qualification-questions:read exhibitor/leads:read exhibitor/registration-packs:delete exhibitor/registration-packs:read exhibitor/registration-packs:write exhibitor/sponsorship-levels:read file/file:read file/file:write housing/connections:write housing/hotel-room-rates:write housing/housing-event-available-nights:read housing/housing-event-hotels:read housing/housing-event-inventory:read housing/housing-event-room-types:read housing/housing-events:read housing/reservation-requests:delete housing/reservation-requests:read housing/reservation-requests:write housing/reservations-link:delete housing/reservations-link:write housing/reservations:delete housing/reservations:read housing/reservations:write onarrival/signatures:read proposal/proposals:write remote-printing/badge-print-jobs:read remote-printing/badge-print-jobs:write remote-printing/badge-printer-pools:read seating/assignments:read seating/event-seatings:read seating/seats:read seating/tables:read secure-ecommerce/card-tokens:write survey/questions:read survey/respondents:read survey/responses:read survey/standard-survey-email-templates:read survey/standard-survey-email:write survey/standard-survey-questions:read survey/standard-survey-respondents:read survey/standard-survey-respondents:write survey/standard-survey-responses:read survey/standard-survey-responses:write survey/standard-surveys:read survey/survey-questions:read survey/survey-respondents:read survey/survey-respondents:write survey/survey-responses:read survey/survey-responses:write survey/surveys:read",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://api-platform.cvent.com/ea/oauth2/token",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/token-validation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"token-validation"
+							]
+						},
+						"description": "Verifies presented authentication token is valid."
+					},
+					"response": [
+						{
+							"name": "validToken",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/token-validation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"token-validation"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"valid\": true\n}"
+						},
+						{
+							"name": "invalidToken",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/token-validation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"token-validation"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"valid\": false\n}"
+						},
+						{
+							"name": "Bad request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/token-validation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"token-validation"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 400,\n  \"message\": \"Bad Request\",\n  \"details\": \"The request could not be understood by the server due to malformed syntax.\"\n}"
+						},
+						{
+							"name": "Bad or expired token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/token-validation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"token-validation"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 401,\n  \"message\": \"Unauthorized\",\n  \"details\": \"The access token is invalid or has expired. Please obtain a new token.\"\n}"
+						},
+						{
+							"name": "You do not have access to the resource",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/token-validation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"token-validation"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 403,\n  \"message\": \"Access Forbidden\",\n  \"details\": \"You do not have sufficient permissions to access this resource.\"\n}"
+						},
+						{
+							"name": "Too many requests",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/token-validation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"token-validation"
+									]
+								}
+							},
+							"status": "Too Many Requests",
+							"code": 429,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 429,\n  \"message\": \"Limit Exceeded\",\n  \"details\": \"You have exceeded the rate limit. Please retry after 60 seconds.\",\n  \"retryAfter\": 60\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api-platform-eur.cvent.com/ea"
+		}
+	]
+}

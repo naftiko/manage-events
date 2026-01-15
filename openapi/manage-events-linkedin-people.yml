@@ -1,0 +1,717 @@
+openapi: 3.1.0
+info:
+  title: LinkedIn Find Profile by VanityName API
+  description: |
+    API to retrieve basic profile fields for a LinkedIn member by their vanity name.
+    
+    **Note:** The use of this API is restricted to those developers approved by LinkedIn 
+    and subject to applicable data restrictions in their agreements.
+    
+    The vanityName is used to represent the public profile URL in the format: 
+    www.linkedin.com/in/{vanityName}. Each LinkedIn profile has a unique vanityName.
+    
+    **Usage Restrictions:**
+    - You cannot "browse members" by VanityNames
+    - Should only be used to identify profiles from known vanityNames for approved use cases
+    - Access to profile data is subject to the relevant members' privacy settings
+    - Application limit of 500 requests per day
+  version: 2.0.0
+  contact:
+    name: LinkedIn Developer Support
+    url: https://developer.linkedin.com
+  termsOfService: https://www.linkedin.com/legal/api-terms-of-use
+
+servers:
+  - url: https://api.linkedin.com/v2
+    description: LinkedIn API v2 Production Server
+
+security:
+  - OAuth2: [r_compliance_2l]
+
+paths:
+  /people:
+    get:
+      summary: Find Profile by VanityName
+      description: |
+        Returns basic profile fields for the LinkedIn member that matches the vanityName.
+        Requires an access token for application authenticated call.
+      operationId: getProfileByVanityName
+      tags:
+        - Profiles
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [vanityName]
+          description: Query type parameter, must be set to "vanityName"
+        - name: vanityName
+          in: query
+          required: true
+          schema:
+            type: string
+            example: a-sample-vanity-name
+          description: The vanity name of the LinkedIn member to retrieve
+      responses:
+        '200':
+          description: Successful response with profile data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+              examples:
+                fullProfile:
+                  $ref: '#/components/examples/ProfileResponseFull'
+                minimalProfile:
+                  $ref: '#/components/examples/ProfileResponseMinimal'
+                profileWithMultiplePositions:
+                  $ref: '#/components/examples/ProfileResponseMultiplePositions'
+                profileNotFound:
+                  $ref: '#/components/examples/ProfileResponseEmpty'
+        '400':
+          description: Bad Request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                missingQueryParam:
+                  $ref: '#/components/examples/ErrorMissingQueryParam'
+                missingVanityName:
+                  $ref: '#/components/examples/ErrorMissingVanityName'
+                invalidQueryType:
+                  $ref: '#/components/examples/ErrorInvalidQueryType'
+                invalidVanityNameFormat:
+                  $ref: '#/components/examples/ErrorInvalidVanityNameFormat'
+        '401':
+          description: Unauthorized - Invalid or missing access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                missingAccessToken:
+                  $ref: '#/components/examples/ErrorMissingAccessToken'
+                invalidAccessToken:
+                  $ref: '#/components/examples/ErrorInvalidAccessToken'
+                expiredAccessToken:
+                  $ref: '#/components/examples/ErrorExpiredAccessToken'
+        '403':
+          description: Forbidden - Insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                insufficientPermissions:
+                  $ref: '#/components/examples/ErrorInsufficientPermissions'
+                applicationNotApproved:
+                  $ref: '#/components/examples/ErrorApplicationNotApproved'
+                memberPrivacyRestriction:
+                  $ref: '#/components/examples/ErrorMemberPrivacyRestriction'
+        '404':
+          description: Not Found - Profile not found or personId used with different application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                profileNotFound:
+                  $ref: '#/components/examples/ErrorProfileNotFound'
+                personIdMismatch:
+                  $ref: '#/components/examples/ErrorPersonIdMismatch'
+                profileDeactivated:
+                  $ref: '#/components/examples/ErrorProfileDeactivated'
+        '429':
+          description: Too Many Requests - Application daily limit of 500 exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                dailyLimitExceeded:
+                  $ref: '#/components/examples/ErrorDailyLimitExceeded'
+                rateLimitExceeded:
+                  $ref: '#/components/examples/ErrorRateLimitExceeded'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                internalServerError:
+                  $ref: '#/components/examples/ErrorInternalServer'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                serviceUnavailable:
+                  $ref: '#/components/examples/ErrorServiceUnavailable'
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      description: |
+        OAuth 2.0 authentication. Requires r_compliance_2l permission.
+        This is a private permission granted to select developers.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://www.linkedin.com/oauth/v2/authorization
+          tokenUrl: https://www.linkedin.com/oauth/v2/accessToken
+          scopes:
+            r_compliance_2l: Compliance permission to allow access of APIs without member involvement
+
+  schemas:
+    ProfileResponse:
+      type: object
+      properties:
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Profile'
+        paging:
+          $ref: '#/components/schemas/Paging'
+
+    Profile:
+      type: object
+      description: LinkedIn member profile information
+      properties:
+        id:
+          type: string
+          description: |
+            A unique identifying value for the member (personId).
+            Can also be referenced as an URN such as urn:li:person:{personId}.
+            This value is linked to your specific application.
+          example: xo11w_WomY
+        vanityName:
+          type: string
+          description: |
+            The vanity name of the member used for the public profile URL: 
+            www.linkedin.com/in/{vanityName}
+          example: a-sample-vanity-name
+        firstName:
+          $ref: '#/components/schemas/MultiLocaleString'
+        localizedFirstName:
+          type: string
+          description: Localized version of the firstName field
+          example: First
+        lastName:
+          $ref: '#/components/schemas/MultiLocaleString'
+        localizedLastName:
+          type: string
+          description: Localized version of the lastName field
+          example: Last
+        maidenName:
+          $ref: '#/components/schemas/MultiLocaleString'
+        localizedMaidenName:
+          type: string
+          description: Localized version of the maidenName field
+        headline:
+          $ref: '#/components/schemas/MultiLocaleString'
+        localizedHeadline:
+          type: string
+          description: Localized version of the headline field
+          example: Software Engineer at LinkedIn
+        profilePicture:
+          $ref: '#/components/schemas/ProfilePicture'
+        positions:
+          type: object
+          description: Employment history of the member
+          additionalProperties:
+            $ref: '#/components/schemas/Position'
+        positionsOrder:
+          type: array
+          description: Positions intra-section order
+          items:
+            type: integer
+            format: int64
+
+    MultiLocaleString:
+      type: object
+      description: Localizable string object type
+      properties:
+        localized:
+          type: object
+          description: Localized values keyed by locale
+          additionalProperties:
+            type: string
+          example:
+            en_US: Example Text
+        preferredLocale:
+          $ref: '#/components/schemas/Locale'
+
+    Locale:
+      type: object
+      properties:
+        country:
+          type: string
+          example: US
+        language:
+          type: string
+          example: en
+
+    ProfilePicture:
+      type: object
+      description: Metadata about the member's picture in the profile
+      properties:
+        displayImage:
+          type: string
+          description: URN reference to the profile picture
+        displayImageReference:
+          type: object
+          description: Reference information for the display image
+
+    Position:
+      type: object
+      description: Employment position information
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the position
+          example: 47301314
+        title:
+          $ref: '#/components/schemas/MultiLocaleString'
+        localizedTitle:
+          type: string
+          description: Localized version of the title field
+          example: Software Engineer
+        company:
+          type: string
+          description: URN reference to the company organization
+          example: 'urn:li:organization:12345'
+        companyName:
+          $ref: '#/components/schemas/MultiLocaleString'
+        localizedCompanyName:
+          type: string
+          description: Localized version of the companyName field
+          example: Linkedin
+        created:
+          type: integer
+          format: int64
+          description: Timestamp when the position was created
+          example: 1551295846540
+        lastModified:
+          type: integer
+          format: int64
+          description: Timestamp when the position was last modified
+          example: 1551295846540
+
+    Paging:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of elements in the current page
+          example: 10
+        start:
+          type: integer
+          description: Starting index of the current page
+          example: 0
+        links:
+          type: array
+          description: Pagination links
+          items:
+            type: object
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code
+        message:
+          type: string
+          description: Error message
+        serviceErrorCode:
+          type: integer
+          description: LinkedIn service error code
+        code:
+          type: string
+          description: Error code identifier
+
+  examples:
+    # ============================================
+    # 200 Success Response Examples
+    # ============================================
+    
+    ProfileResponseFull:
+      summary: Full profile response
+      description: Complete profile with all available fields including positions and profile picture
+      value:
+        elements:
+          - id: "xo11w_WomY"
+            vanityName: "a-sample-vanity-name"
+            firstName:
+              localized:
+                en_US: "First"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedFirstName: "First"
+            lastName:
+              localized:
+                en_US: "Last"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedLastName: "Last"
+            headline:
+              localized:
+                en_US: "Software Engineer at LinkedIn"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedHeadline: "Software Engineer at LinkedIn"
+            profilePicture:
+              displayImage: "urn:li:digitalmediaAsset:C4D03AQGsitRwG8U8ZQ"
+            positions:
+              "47301314":
+                id: 47301314
+                title:
+                  localized:
+                    en_US: "Software Engineer"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedTitle: "Software Engineer"
+                company: "urn:li:organization:12345"
+                companyName:
+                  localized:
+                    en_US: "LinkedIn"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedCompanyName: "LinkedIn"
+                created: 1551295846540
+                lastModified: 1551295846540
+            positionsOrder:
+              - 47301314
+        paging:
+          count: 10
+          start: 0
+          links: []
+    
+    ProfileResponseMinimal:
+      summary: Minimal profile response
+      description: Profile with only basic required fields (limited by member privacy settings)
+      value:
+        elements:
+          - id: "abc123XYZ"
+            vanityName: "john-doe-minimal"
+            firstName:
+              localized:
+                en_US: "John"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedFirstName: "John"
+            lastName:
+              localized:
+                en_US: "Doe"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedLastName: "Doe"
+        paging:
+          count: 10
+          start: 0
+          links: []
+    
+    ProfileResponseMultiplePositions:
+      summary: Profile with multiple positions
+      description: Profile showing employment history with multiple positions
+      value:
+        elements:
+          - id: "def456ABC"
+            vanityName: "jane-smith-engineer"
+            firstName:
+              localized:
+                en_US: "Jane"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedFirstName: "Jane"
+            lastName:
+              localized:
+                en_US: "Smith"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedLastName: "Smith"
+            headline:
+              localized:
+                en_US: "Senior Engineering Manager at Google"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedHeadline: "Senior Engineering Manager at Google"
+            profilePicture:
+              displayImage: "urn:li:digitalmediaAsset:C4D03AQJaneSmithPhoto"
+            positions:
+              "98765432":
+                id: 98765432
+                title:
+                  localized:
+                    en_US: "Senior Engineering Manager"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedTitle: "Senior Engineering Manager"
+                company: "urn:li:organization:1441"
+                companyName:
+                  localized:
+                    en_US: "Google"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedCompanyName: "Google"
+                created: 1609459200000
+                lastModified: 1609459200000
+              "87654321":
+                id: 87654321
+                title:
+                  localized:
+                    en_US: "Software Engineer"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedTitle: "Software Engineer"
+                company: "urn:li:organization:1035"
+                companyName:
+                  localized:
+                    en_US: "Microsoft"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedCompanyName: "Microsoft"
+                created: 1483228800000
+                lastModified: 1609372800000
+              "76543210":
+                id: 76543210
+                title:
+                  localized:
+                    en_US: "Junior Developer"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedTitle: "Junior Developer"
+                company: "urn:li:organization:9999"
+                companyName:
+                  localized:
+                    en_US: "Startup Inc"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedCompanyName: "Startup Inc"
+                created: 1420070400000
+                lastModified: 1483142400000
+            positionsOrder:
+              - 98765432
+              - 87654321
+              - 76543210
+        paging:
+          count: 10
+          start: 0
+          links: []
+    
+    ProfileResponseEmpty:
+      summary: Empty response (no matching profile)
+      description: Response when vanityName does not match any profile (privacy restricted or does not exist)
+      value:
+        elements: []
+        paging:
+          count: 10
+          start: 0
+          links: []
+    
+    # ============================================
+    # 400 Bad Request Examples
+    # ============================================
+    
+    ErrorMissingQueryParam:
+      summary: Missing q parameter
+      description: The required 'q' query parameter was not provided
+      value:
+        status: 400
+        message: "Required parameter 'q' is missing"
+        serviceErrorCode: 100
+        code: "MISSING_PARAMETER"
+    
+    ErrorMissingVanityName:
+      summary: Missing vanityName parameter
+      description: The required 'vanityName' query parameter was not provided
+      value:
+        status: 400
+        message: "Required parameter 'vanityName' is missing"
+        serviceErrorCode: 100
+        code: "MISSING_PARAMETER"
+    
+    ErrorInvalidQueryType:
+      summary: Invalid query type
+      description: The 'q' parameter value is not 'vanityName'
+      value:
+        status: 400
+        message: "Invalid value for parameter 'q'. Expected 'vanityName'."
+        serviceErrorCode: 101
+        code: "INVALID_PARAMETER_VALUE"
+    
+    ErrorInvalidVanityNameFormat:
+      summary: Invalid vanityName format
+      description: The vanityName contains invalid characters or format
+      value:
+        status: 400
+        message: "Invalid vanityName format. VanityName must contain only alphanumeric characters and hyphens."
+        serviceErrorCode: 102
+        code: "INVALID_PARAMETER_FORMAT"
+    
+    # ============================================
+    # 401 Unauthorized Examples
+    # ============================================
+    
+    ErrorMissingAccessToken:
+      summary: Missing access token
+      description: No access token was provided in the Authorization header
+      value:
+        status: 401
+        message: "Empty oauth2 access token"
+        serviceErrorCode: 65600
+        code: "UNAUTHORIZED"
+    
+    ErrorInvalidAccessToken:
+      summary: Invalid access token
+      description: The provided access token is malformed or not recognized
+      value:
+        status: 401
+        message: "Invalid access token"
+        serviceErrorCode: 65601
+        code: "INVALID_ACCESS_TOKEN"
+    
+    ErrorExpiredAccessToken:
+      summary: Expired access token
+      description: The access token has expired and needs to be refreshed
+      value:
+        status: 401
+        message: "Access token has expired"
+        serviceErrorCode: 65602
+        code: "EXPIRED_ACCESS_TOKEN"
+    
+    # ============================================
+    # 403 Forbidden Examples
+    # ============================================
+    
+    ErrorInsufficientPermissions:
+      summary: Insufficient permissions
+      description: The access token does not have the required r_compliance_2l scope
+      value:
+        status: 403
+        message: "Insufficient permissions to access this resource. Required scope: r_compliance_2l"
+        serviceErrorCode: 65603
+        code: "INSUFFICIENT_SCOPE"
+    
+    ErrorApplicationNotApproved:
+      summary: Application not approved
+      description: The application has not been approved by LinkedIn for this API
+      value:
+        status: 403
+        message: "Your application is not approved to use the Find Profile by VanityName API. Please contact LinkedIn Developer Support."
+        serviceErrorCode: 65604
+        code: "APPLICATION_NOT_APPROVED"
+    
+    ErrorMemberPrivacyRestriction:
+      summary: Member privacy restriction
+      description: The member's privacy settings prevent access to their profile
+      value:
+        status: 403
+        message: "Access denied due to member's privacy settings"
+        serviceErrorCode: 65605
+        code: "PRIVACY_RESTRICTION"
+    
+    # ============================================
+    # 404 Not Found Examples
+    # ============================================
+    
+    ErrorProfileNotFound:
+      summary: Profile not found
+      description: No profile exists with the specified vanityName
+      value:
+        status: 404
+        message: "No profile found with vanityName: unknown-vanity-name"
+        serviceErrorCode: 65700
+        code: "RESOURCE_NOT_FOUND"
+    
+    ErrorPersonIdMismatch:
+      summary: PersonId application mismatch
+      description: The personId was created by a different application
+      value:
+        status: 404
+        message: "The personId is not associated with this application"
+        serviceErrorCode: 65701
+        code: "PERSON_ID_MISMATCH"
+    
+    ErrorProfileDeactivated:
+      summary: Profile deactivated
+      description: The member's profile has been deactivated or closed
+      value:
+        status: 404
+        message: "The member's profile has been deactivated"
+        serviceErrorCode: 65702
+        code: "PROFILE_DEACTIVATED"
+    
+    # ============================================
+    # 429 Too Many Requests Examples
+    # ============================================
+    
+    ErrorDailyLimitExceeded:
+      summary: Daily limit exceeded
+      description: The application has exceeded its daily limit of 500 requests
+      value:
+        status: 429
+        message: "Application daily limit of 500 requests exceeded. Limit resets at midnight UTC."
+        serviceErrorCode: 65800
+        code: "DAILY_LIMIT_EXCEEDED"
+    
+    ErrorRateLimitExceeded:
+      summary: Rate limit exceeded
+      description: Too many requests in a short period of time
+      value:
+        status: 429
+        message: "Rate limit exceeded. Please wait before making additional requests."
+        serviceErrorCode: 65801
+        code: "RATE_LIMIT_EXCEEDED"
+    
+    # ============================================
+    # 500 Internal Server Error Examples
+    # ============================================
+    
+    ErrorInternalServer:
+      summary: Internal server error
+      description: An unexpected error occurred on LinkedIn's servers
+      value:
+        status: 500
+        message: "Internal server error. Please try again later."
+        serviceErrorCode: 0
+        code: "INTERNAL_ERROR"
+    
+    # ============================================
+    # 503 Service Unavailable Examples
+    # ============================================
+    
+    ErrorServiceUnavailable:
+      summary: Service unavailable
+      description: The service is temporarily unavailable due to maintenance or high load
+      value:
+        status: 503
+        message: "Service temporarily unavailable. Please try again later."
+        serviceErrorCode: 65900
+        code: "SERVICE_UNAVAILABLE"
+
+tags:
+  - name: Profiles
+    description: Operations for looking up LinkedIn member profiles by vanity name

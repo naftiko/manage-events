@@ -1,0 +1,825 @@
+openapi: 3.1.0
+info:
+  title: LinkedIn Organization Lookup API
+  description: |
+    The Organization Lookup API searches organizations and their profiles.
+    
+    **Important Notes:**
+    - Organization lookup API is protected by 3-legged OAuth token
+    - Some API calls require that the authenticated member has the role type `ADMINISTRATOR` 
+      for the requested organization
+    - APIs without administrative access return only limited fields: id, name, localizedName, 
+      localizedWebsite, vanityName, logoV2, locations, primaryOrganizationType
+    - APIs with administrative access return all available Organization fields
+    
+    **Input Parameter Rules:**
+    - All strings are case-insensitive
+    - Multiple words should be joined with a space (URL encoded as %20)
+    - Complete string is searched when including multiple words
+    - Wildcards and boolean logic not supported (*, ?, AND, OR)
+    
+    Organization URNs are in the format `urn:li:organization:{organization id}` and 
+    represent a LinkedIn Company Page.
+    
+    **Deprecation Notice:** Marketing Version 202411 has been sunset. Migrate to the 
+    latest versioned APIs to avoid disruptions.
+  version: 1.0.0
+  contact:
+    name: LinkedIn Developer Support
+    url: https://developer.linkedin.com
+  termsOfService: https://www.linkedin.com/legal/api-terms-of-use
+
+servers:
+  - url: https://api.linkedin.com/rest
+    description: LinkedIn REST API Production Server
+
+security:
+  - OAuth2: []
+
+paths:
+  /organizations/{organizationId}:
+    get:
+      summary: Retrieve an Administered Organization
+      description: |
+        Look up organization information on behalf of authenticated members with role type 
+        `ADMINISTRATOR` for that organization. 
+        
+        API calls with insufficient permissions return 403 Forbidden.
+        
+        Returns all available Organization fields when authenticated member has admin access.
+      operationId: getOrganizationById
+      tags:
+        - Organizations
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The unique identifier for the organization
+          example: 79988552
+      responses:
+        '200':
+          description: Successful response with organization data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+              examples:
+                fullAdminAccess:
+                  $ref: '#/components/examples/OrganizationFullAdminResponse'
+                limitedNonAdminAccess:
+                  $ref: '#/components/examples/OrganizationLimitedResponse'
+                largeEnterprise:
+                  $ref: '#/components/examples/OrganizationLargeEnterpriseResponse'
+                educationalInstitution:
+                  $ref: '#/components/examples/OrganizationEducationalResponse'
+        '400':
+          description: Bad Request - Invalid organization ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidIdFormat:
+                  $ref: '#/components/examples/ErrorInvalidOrganizationIdFormat'
+                missingOrganizationId:
+                  $ref: '#/components/examples/ErrorMissingOrganizationId'
+                malformedRequest:
+                  $ref: '#/components/examples/ErrorMalformedRequest'
+        '401':
+          description: Unauthorized - Invalid or missing access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                missingToken:
+                  $ref: '#/components/examples/ErrorMissingAccessToken'
+                invalidToken:
+                  $ref: '#/components/examples/ErrorInvalidAccessToken'
+                expiredToken:
+                  $ref: '#/components/examples/ErrorExpiredAccessToken'
+        '403':
+          description: Forbidden - Insufficient permissions (requires ADMINISTRATOR role)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                notAdministrator:
+                  $ref: '#/components/examples/ErrorNotAdministrator'
+                insufficientScope:
+                  $ref: '#/components/examples/ErrorInsufficientScope'
+                organizationRestricted:
+                  $ref: '#/components/examples/ErrorOrganizationRestricted'
+        '404':
+          description: Not Found - Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                organizationNotFound:
+                  $ref: '#/components/examples/ErrorOrganizationNotFound'
+                organizationDeleted:
+                  $ref: '#/components/examples/ErrorOrganizationDeleted'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                rateLimitExceeded:
+                  $ref: '#/components/examples/ErrorRateLimitExceeded'
+                dailyLimitExceeded:
+                  $ref: '#/components/examples/ErrorDailyLimitExceeded'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                internalServerError:
+                  $ref: '#/components/examples/ErrorInternalServer'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                serviceUnavailable:
+                  $ref: '#/components/examples/ErrorServiceUnavailable'
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      description: |
+        OAuth 2.0 authentication using 3-legged Authorization Code Flow.
+        Requires one of the specified permissions based on use case.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://www.linkedin.com/oauth/v2/authorization
+          tokenUrl: https://www.linkedin.com/oauth/v2/accessToken
+          scopes:
+            rw_organization_admin: Manage organization pages and retrieve reporting data
+            r_compliance: Retrieve posts, comments, and likes on behalf of an authenticated member for compliance monitoring and archiving (private permission)
+
+  schemas:
+    Organization:
+      type: object
+      description: |
+        LinkedIn organization (Company Page) information.
+        
+        Non-admin access returns only: id, name, localizedName, localizedWebsite, 
+        vanityName, logoV2, locations, primaryOrganizationType.
+        
+        Admin access returns all fields.
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the organization
+          example: 79988552
+        $URN:
+          type: string
+          description: URN reference for the organization
+          pattern: '^urn:li:organization:\d+$'
+          example: 'urn:li:organization:79988552'
+        name:
+          $ref: '#/components/schemas/MultiLocaleString'
+        localizedName:
+          type: string
+          description: Localized version of the organization name
+          example: FirstDemoCompany
+        vanityName:
+          type: string
+          description: |
+            The vanity name of the organization used for the public profile URL: 
+            www.linkedin.com/company/{vanityName}
+          example: firstdemocompany
+        localizedWebsite:
+          type: string
+          description: Localized website URL
+          format: uri
+        logoV2:
+          $ref: '#/components/schemas/MediaAsset'
+        coverPhotoV2:
+          $ref: '#/components/schemas/CoverPhoto'
+        locations:
+          type: array
+          description: Organization locations
+          items:
+            $ref: '#/components/schemas/Location'
+        primaryOrganizationType:
+          type: string
+          description: Primary organization type classification
+          enum:
+            - NONE
+            - EDUCATIONAL
+            - GOVERNMENTAL
+            - NONPROFIT
+            - PARTNERSHIP
+            - PRIVATELY_HELD
+            - PUBLIC_COMPANY
+            - SELF_EMPLOYED
+            - SELF_OWNED
+            - SOLE_PROPRIETORSHIP
+          example: NONE
+        organizationType:
+          type: string
+          description: Organization type (admin access required)
+          enum:
+            - SELF_EMPLOYED
+            - EDUCATIONAL
+            - GOVERNMENTAL
+            - NONPROFIT
+            - PARTNERSHIP
+            - PRIVATELY_HELD
+            - PUBLIC_COMPANY
+            - SELF_OWNED
+            - SOLE_PROPRIETORSHIP
+          example: SELF_EMPLOYED
+        versionTag:
+          type: string
+          description: Version tag for the organization data (admin access required)
+          example: '111146657'
+        defaultLocale:
+          $ref: '#/components/schemas/Locale'
+        groups:
+          type: array
+          description: Groups associated with the organization (admin access required)
+          items:
+            type: string
+        alternativeNames:
+          type: array
+          description: Alternative names for the organization (admin access required)
+          items:
+            $ref: '#/components/schemas/MultiLocaleString'
+        specialties:
+          type: array
+          description: Organization specialties (admin access required)
+          items:
+            type: string
+        localizedSpecialties:
+          type: array
+          description: Localized organization specialties (admin access required)
+          items:
+            type: string
+        staffCountRange:
+          type: string
+          description: Range indicating the number of staff (admin access required)
+          enum:
+            - SIZE_1
+            - SIZE_2_10
+            - SIZE_11_50
+            - SIZE_51_200
+            - SIZE_201_500
+            - SIZE_501_1000
+            - SIZE_1001_5000
+            - SIZE_5001_10000
+            - SIZE_10001_PLUS
+          example: SIZE_1
+        industries:
+          type: array
+          description: Industry URNs associated with the organization (admin access required)
+          items:
+            type: string
+            pattern: '^urn:li:industry:\d+$'
+          example:
+            - 'urn:li:industry:4'
+
+    MultiLocaleString:
+      type: object
+      description: Localizable string object type
+      properties:
+        localized:
+          type: object
+          description: Localized values keyed by locale
+          additionalProperties:
+            type: string
+          example:
+            en_US: Example Text
+        preferredLocale:
+          $ref: '#/components/schemas/Locale'
+
+    Locale:
+      type: object
+      description: Locale information with country and language codes
+      properties:
+        country:
+          type: string
+          description: Two-letter country code (ISO 3166-1 alpha-2)
+          pattern: '^[A-Z]{2}$'
+          example: US
+        language:
+          type: string
+          description: Two-letter language code (ISO 639-1)
+          pattern: '^[a-z]{2}$'
+          example: en
+
+    MediaAsset:
+      type: object
+      description: Reference to a media asset (image, logo, etc.)
+      properties:
+        displayImage:
+          type: string
+          description: URN reference to the display image
+          pattern: '^urn:li:digitalmediaAsset:[A-Za-z0-9_-]+$'
+        displayImageReference:
+          type: object
+          description: Reference information for the display image
+
+    CoverPhoto:
+      type: object
+      description: Cover photo information with cropping details
+      properties:
+        cropped:
+          type: string
+          description: URN reference to the cropped cover photo
+          pattern: '^urn:li:digitalmediaAsset:[A-Za-z0-9_-]+$'
+          example: 'urn:li:digitalmediaAsset:C561BAQHqQYsCLYiAnA'
+        original:
+          type: string
+          description: URN reference to the original cover photo
+          pattern: '^urn:li:digitalmediaAsset:[A-Za-z0-9_-]+$'
+          example: 'urn:li:digitalmediaAsset:C561BAQHqQYsCLYiAnA'
+        cropInfo:
+          $ref: '#/components/schemas/CropInfo'
+
+    CropInfo:
+      type: object
+      description: Cropping information for images
+      properties:
+        x:
+          type: integer
+          description: X-coordinate of the crop starting point
+          example: 0
+        y:
+          type: integer
+          description: Y-coordinate of the crop starting point
+          example: 108
+        width:
+          type: integer
+          description: Width of the cropped area
+          example: 800
+        height:
+          type: integer
+          description: Height of the cropped area
+          example: 135
+
+    Location:
+      type: object
+      description: Organization location information
+      properties:
+        address:
+          type: object
+          description: Physical address details
+          properties:
+            line1:
+              type: string
+              description: Address line 1
+            line2:
+              type: string
+              description: Address line 2
+            city:
+              type: string
+              description: City name
+            state:
+              type: string
+              description: State or province
+            postalCode:
+              type: string
+              description: Postal or ZIP code
+            country:
+              type: string
+              description: Country code
+        geoLocation:
+          type: object
+          description: Geographic coordinates
+          properties:
+            latitude:
+              type: number
+              format: double
+              description: Latitude coordinate
+            longitude:
+              type: number
+              format: double
+              description: Longitude coordinate
+        description:
+          type: string
+          description: Location description
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code
+        message:
+          type: string
+          description: Error message
+        serviceErrorCode:
+          type: integer
+          description: LinkedIn service error code
+        code:
+          type: string
+          description: Error code identifier
+
+  examples:
+    # ============================================
+    # 200 Success Response Examples
+    # ============================================
+    
+    OrganizationFullAdminResponse:
+      summary: Full organization data (admin access)
+      description: Complete organization response when authenticated member has ADMINISTRATOR role
+      value:
+        id: 79988552
+        $URN: "urn:li:organization:79988552"
+        vanityName: "firstdemocompany"
+        localizedName: "FirstDemoCompany"
+        localizedWebsite: "https://www.firstdemocompany.com"
+        organizationType: "SELF_EMPLOYED"
+        primaryOrganizationType: "NONE"
+        versionTag: "111146657"
+        defaultLocale:
+          country: "US"
+          language: "en"
+        name:
+          localized:
+            en_US: "FirstDemoCompany"
+          preferredLocale:
+            country: "US"
+            language: "en"
+        logoV2:
+          displayImage: "urn:li:digitalmediaAsset:C4D0BAQHiY9YLxMZApQ"
+        coverPhotoV2:
+          cropped: "urn:li:digitalmediaAsset:C561BAQHqQYsCLYiAnA"
+          original: "urn:li:digitalmediaAsset:C561BAQHqQYsCLYiAnA"
+          cropInfo:
+            x: 0
+            y: 108
+            width: 800
+            height: 135
+        locations:
+          - address:
+              line1: "123 Main Street"
+              city: "San Francisco"
+              state: "CA"
+              postalCode: "94105"
+              country: "US"
+            geoLocation:
+              latitude: 37.7749
+              longitude: -122.4194
+            description: "Headquarters"
+        staffCountRange: "SIZE_1"
+        industries:
+          - "urn:li:industry:4"
+        specialties:
+          - "Software Development"
+          - "Cloud Computing"
+        localizedSpecialties:
+          - "Software Development"
+          - "Cloud Computing"
+        groups: []
+        alternativeNames: []
+    
+    OrganizationLimitedResponse:
+      summary: Limited organization data (non-admin access)
+      description: Limited fields returned when authenticated member does not have ADMINISTRATOR role
+      value:
+        id: 79988552
+        $URN: "urn:li:organization:79988552"
+        vanityName: "firstdemocompany"
+        localizedName: "FirstDemoCompany"
+        localizedWebsite: "https://www.firstdemocompany.com"
+        primaryOrganizationType: "NONE"
+        name:
+          localized:
+            en_US: "FirstDemoCompany"
+          preferredLocale:
+            country: "US"
+            language: "en"
+        logoV2:
+          displayImage: "urn:li:digitalmediaAsset:C4D0BAQHiY9YLxMZApQ"
+        locations: []
+    
+    OrganizationLargeEnterpriseResponse:
+      summary: Large enterprise organization
+      description: Organization response for a large publicly traded company with admin access
+      value:
+        id: 1234567890
+        $URN: "urn:li:organization:1234567890"
+        vanityName: "globaltech-corp"
+        localizedName: "GlobalTech Corporation"
+        localizedWebsite: "https://www.globaltech.com"
+        organizationType: "PUBLIC_COMPANY"
+        primaryOrganizationType: "PUBLIC_COMPANY"
+        versionTag: "987654321"
+        defaultLocale:
+          country: "US"
+          language: "en"
+        name:
+          localized:
+            en_US: "GlobalTech Corporation"
+            de_DE: "GlobalTech GmbH"
+            ja_JP: "グローバルテック株式会社"
+          preferredLocale:
+            country: "US"
+            language: "en"
+        logoV2:
+          displayImage: "urn:li:digitalmediaAsset:C5D0BAQGlobalTechLogo"
+        coverPhotoV2:
+          cropped: "urn:li:digitalmediaAsset:C561BAQGlobalTechCover"
+          original: "urn:li:digitalmediaAsset:C561BAQGlobalTechCoverOrig"
+          cropInfo:
+            x: 0
+            y: 50
+            width: 1200
+            height: 300
+        locations:
+          - address:
+              line1: "1 Technology Plaza"
+              city: "Mountain View"
+              state: "CA"
+              postalCode: "94043"
+              country: "US"
+            geoLocation:
+              latitude: 37.3861
+              longitude: -122.0839
+            description: "Global Headquarters"
+          - address:
+              line1: "100 Innovation Way"
+              city: "London"
+              postalCode: "EC2A 1NT"
+              country: "GB"
+            geoLocation:
+              latitude: 51.5074
+              longitude: -0.1278
+            description: "EMEA Headquarters"
+        staffCountRange: "SIZE_10001_PLUS"
+        industries:
+          - "urn:li:industry:4"
+          - "urn:li:industry:6"
+          - "urn:li:industry:96"
+        specialties:
+          - "Enterprise Software"
+          - "Cloud Infrastructure"
+          - "Artificial Intelligence"
+          - "Cybersecurity"
+        localizedSpecialties:
+          - "Enterprise Software"
+          - "Cloud Infrastructure"
+          - "Artificial Intelligence"
+          - "Cybersecurity"
+        groups:
+          - "urn:li:group:12345"
+          - "urn:li:group:67890"
+        alternativeNames:
+          - localized:
+              en_US: "GlobalTech"
+            preferredLocale:
+              country: "US"
+              language: "en"
+          - localized:
+              de_DE: "GT GmbH"
+            preferredLocale:
+              country: "DE"
+              language: "de"
+    
+    OrganizationEducationalResponse:
+      summary: Educational institution
+      description: Organization response for a university with admin access
+      value:
+        id: 5556667778
+        $URN: "urn:li:organization:5556667778"
+        vanityName: "tech-university"
+        localizedName: "Technology University"
+        localizedWebsite: "https://www.techuniversity.edu"
+        organizationType: "EDUCATIONAL"
+        primaryOrganizationType: "EDUCATIONAL"
+        versionTag: "445566778"
+        defaultLocale:
+          country: "US"
+          language: "en"
+        name:
+          localized:
+            en_US: "Technology University"
+          preferredLocale:
+            country: "US"
+            language: "en"
+        logoV2:
+          displayImage: "urn:li:digitalmediaAsset:C4D0BAQTechUniLogo"
+        coverPhotoV2:
+          cropped: "urn:li:digitalmediaAsset:C561BAQTechUniCampus"
+          original: "urn:li:digitalmediaAsset:C561BAQTechUniCampusOrig"
+          cropInfo:
+            x: 0
+            y: 75
+            width: 1000
+            height: 250
+        locations:
+          - address:
+              line1: "500 University Drive"
+              city: "Boston"
+              state: "MA"
+              postalCode: "02115"
+              country: "US"
+            geoLocation:
+              latitude: 42.3601
+              longitude: -71.0589
+            description: "Main Campus"
+        staffCountRange: "SIZE_1001_5000"
+        industries:
+          - "urn:li:industry:68"
+        specialties:
+          - "Computer Science"
+          - "Engineering"
+          - "Research"
+          - "Innovation"
+        localizedSpecialties:
+          - "Computer Science"
+          - "Engineering"
+          - "Research"
+          - "Innovation"
+        groups:
+          - "urn:li:group:111222"
+        alternativeNames:
+          - localized:
+              en_US: "Tech U"
+            preferredLocale:
+              country: "US"
+              language: "en"
+    
+    # ============================================
+    # 400 Bad Request Examples
+    # ============================================
+    
+    ErrorInvalidOrganizationIdFormat:
+      summary: Invalid organization ID format
+      description: The organization ID is not in the expected numeric format
+      value:
+        status: 400
+        message: "Invalid organization ID format. Expected numeric value."
+        serviceErrorCode: 100
+        code: "INVALID_PARAMETER_VALUE"
+    
+    ErrorMissingOrganizationId:
+      summary: Missing organization ID
+      description: The required organization ID path parameter was not provided
+      value:
+        status: 400
+        message: "Organization ID is required"
+        serviceErrorCode: 101
+        code: "MISSING_PARAMETER"
+    
+    ErrorMalformedRequest:
+      summary: Malformed request
+      description: The request is malformed or contains invalid syntax
+      value:
+        status: 400
+        message: "Unable to parse request. Please verify the request format."
+        serviceErrorCode: 102
+        code: "MALFORMED_REQUEST"
+    
+    # ============================================
+    # 401 Unauthorized Examples
+    # ============================================
+    
+    ErrorMissingAccessToken:
+      summary: Missing access token
+      description: No access token was provided in the Authorization header
+      value:
+        status: 401
+        message: "Empty oauth2 access token"
+        serviceErrorCode: 65600
+        code: "UNAUTHORIZED"
+    
+    ErrorInvalidAccessToken:
+      summary: Invalid access token
+      description: The provided access token is malformed or not recognized
+      value:
+        status: 401
+        message: "Invalid access token"
+        serviceErrorCode: 65601
+        code: "INVALID_ACCESS_TOKEN"
+    
+    ErrorExpiredAccessToken:
+      summary: Expired access token
+      description: The access token has expired and needs to be refreshed
+      value:
+        status: 401
+        message: "Access token has expired"
+        serviceErrorCode: 65602
+        code: "EXPIRED_ACCESS_TOKEN"
+    
+    # ============================================
+    # 403 Forbidden Examples
+    # ============================================
+    
+    ErrorNotAdministrator:
+      summary: Not an administrator
+      description: The authenticated member does not have ADMINISTRATOR role for this organization
+      value:
+        status: 403
+        message: "The authenticated member does not have administrator access to organization urn:li:organization:79988552"
+        serviceErrorCode: 65603
+        code: "ACCESS_DENIED"
+    
+    ErrorInsufficientScope:
+      summary: Insufficient OAuth scope
+      description: The access token does not have the required scope (rw_organization_admin)
+      value:
+        status: 403
+        message: "Insufficient scope. Required scope: rw_organization_admin"
+        serviceErrorCode: 65604
+        code: "INSUFFICIENT_SCOPE"
+    
+    ErrorOrganizationRestricted:
+      summary: Organization access restricted
+      description: Access to this organization has been restricted due to policy or compliance reasons
+      value:
+        status: 403
+        message: "Access to this organization is restricted"
+        serviceErrorCode: 65605
+        code: "ORGANIZATION_RESTRICTED"
+    
+    # ============================================
+    # 404 Not Found Examples
+    # ============================================
+    
+    ErrorOrganizationNotFound:
+      summary: Organization not found
+      description: No organization exists with the specified ID
+      value:
+        status: 404
+        message: "Organization with ID 99999999 not found"
+        serviceErrorCode: 65700
+        code: "RESOURCE_NOT_FOUND"
+    
+    ErrorOrganizationDeleted:
+      summary: Organization deleted
+      description: The organization existed but has been deleted
+      value:
+        status: 404
+        message: "Organization urn:li:organization:79988552 has been deleted"
+        serviceErrorCode: 65701
+        code: "RESOURCE_DELETED"
+    
+    # ============================================
+    # 429 Rate Limit Examples
+    # ============================================
+    
+    ErrorRateLimitExceeded:
+      summary: Rate limit exceeded
+      description: Too many requests in a short period of time
+      value:
+        status: 429
+        message: "Rate limit exceeded. Please retry after the specified time."
+        serviceErrorCode: 65800
+        code: "RATE_LIMIT_EXCEEDED"
+    
+    ErrorDailyLimitExceeded:
+      summary: Daily API limit exceeded
+      description: The daily API call quota has been exhausted
+      value:
+        status: 429
+        message: "Daily API call limit exceeded. Limit resets at midnight UTC."
+        serviceErrorCode: 65801
+        code: "DAILY_LIMIT_EXCEEDED"
+    
+    # ============================================
+    # 500 Internal Server Error Examples
+    # ============================================
+    
+    ErrorInternalServer:
+      summary: Internal server error
+      description: An unexpected error occurred on LinkedIn's servers
+      value:
+        status: 500
+        message: "Internal server error. Please try again later."
+        serviceErrorCode: 0
+        code: "INTERNAL_ERROR"
+    
+    # ============================================
+    # 503 Service Unavailable Examples
+    # ============================================
+    
+    ErrorServiceUnavailable:
+      summary: Service unavailable
+      description: The service is temporarily unavailable due to maintenance or high load
+      value:
+        status: 503
+        message: "Service temporarily unavailable. Please try again later."
+        serviceErrorCode: 65900
+        code: "SERVICE_UNAVAILABLE"
+
+tags:
+  - name: Organizations
+    description: Operations for looking up and retrieving organization information

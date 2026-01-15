@@ -1,0 +1,678 @@
+{
+	"info": {
+		"_postman_id": "41206fbf-ebc9-4640-bfb6-519e880a8156",
+		"name": "Cvent Sessions API",
+		"description": "Gets a paginated list of session locations.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35240",
+		"_collection_link": "https://api-evangelist.postman.co/workspace/Capabilities-Working~0e59032e-d676-4e90-be81-48adc3c04507/collection/35240-41206fbf-ebc9-4640-bfb6-519e880a8156?action=share&source=collection_link&creator=35240"
+	},
+	"item": [
+		{
+			"name": "events",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "session-locations",
+							"item": [
+								{
+									"name": "List Session Locations",
+									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "scope",
+													"value": "event/sessions:read event/sessions:write event/sessions:delete",
+													"type": "string"
+												},
+												{
+													"key": "accessTokenUrl",
+													"value": "https://api-platform.cvent.com/ea/oauth2/token",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "client_credentials",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"events",
+												":id",
+												"session-locations"
+											],
+											"query": [
+												{
+													"key": "limit",
+													"value": "100",
+													"description": "The maximum number of records to return per page."
+												},
+												{
+													"key": "token",
+													"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+													"description": "ID of an event."
+												}
+											]
+										},
+										"description": "Gets a paginated list of session locations."
+									},
+									"response": [
+										{
+											"name": "success",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"paging\": {\n    \"previousToken\": null,\n    \"nextToken\": \"2b3c4d5e6f7g8h9i10j11k12l\",\n    \"currentToken\": \"1a2b3c4d5e6f7g8h9i10j11k\",\n    \"limit\": 100,\n    \"totalCount\": 5,\n    \"_links\": {\n      \"self\": {\n        \"href\": \"?token=1a2b3c4d5e6f7g8h9i10j11k\"\n      },\n      \"next\": {\n        \"href\": \"?token=2b3c4d5e6f7g8h9i10j11k12l\"\n      }\n    }\n  },\n  \"data\": [\n    {\n      \"id\": \"38db6ae2-0dc3-487b-953e-86d6abbdf7d3\",\n      \"code\": \"ConfA\",\n      \"name\": \"Conference Room A\"\n    },\n    {\n      \"id\": \"49ec7bf3-1ed4-598c-a64f-97e7bcceg8e4\",\n      \"code\": \"ConfB\",\n      \"name\": \"Conference Room B\"\n    },\n    {\n      \"id\": \"5afd8cg4-2fe5-6a9d-b75g-a8f8cddfh9f5\",\n      \"code\": \"BallroomMain\",\n      \"name\": \"Grand Ballroom - Main Hall\"\n    },\n    {\n      \"id\": \"6bge9dh5-3gf6-7b0e-c86h-b9g9deegi0g6\",\n      \"code\": \"BallroomEast\",\n      \"name\": \"Grand Ballroom - East Wing\"\n    },\n    {\n      \"id\": \"7chf0ei6-4hg7-8c1f-d97i-c0h0effhj1h7\",\n      \"code\": \"ExhibitHall\",\n      \"name\": \"Exhibition Hall\"\n    }\n  ]\n}"
+										},
+										{
+											"name": "empty",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"paging\": {\n    \"currentToken\": \"1a2b3c4d5e6f7g8h9i10j11k\",\n    \"limit\": 100,\n    \"totalCount\": 0,\n    \"_links\": {\n      \"self\": {\n        \"href\": \"?token=1a2b3c4d5e6f7g8h9i10j11k\"\n      }\n    }\n  },\n  \"data\": []\n}"
+										},
+										{
+											"name": "singlePage",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"paging\": {\n    \"currentToken\": \"1a2b3c4d5e6f7g8h9i10j11k\",\n    \"limit\": 100,\n    \"totalCount\": 2,\n    \"_links\": {\n      \"self\": {\n        \"href\": \"?token=1a2b3c4d5e6f7g8h9i10j11k\"\n      }\n    }\n  },\n  \"data\": [\n    {\n      \"id\": \"38db6ae2-0dc3-487b-953e-86d6abbdf7d3\",\n      \"code\": \"MainStage\",\n      \"name\": \"Main Stage\"\n    },\n    {\n      \"id\": \"49ec7bf3-1ed4-598c-a64f-97e7bcceg8e4\",\n      \"code\": \"Breakout1\",\n      \"name\": \"Breakout Room 1\"\n    }\n  ]\n}"
+										},
+										{
+											"name": "badRequest",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": 400,\n  \"message\": \"Bad Request\",\n  \"details\": \"Invalid request parameter. The limit must be between 1 and 200.\"\n}"
+										},
+										{
+											"name": "invalidToken",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": 400,\n  \"message\": \"Bad Request\",\n  \"details\": \"Invalid pagination token format. Token must be a valid UUID v4.\"\n}"
+										},
+										{
+											"name": "Bad or expired token",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": 401,\n  \"message\": \"Unauthorized\",\n  \"details\": \"The access token is invalid or has expired. Please obtain a new token.\"\n}"
+										},
+										{
+											"name": "You do not have access to the resource",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": 403,\n  \"message\": \"Access Forbidden\",\n  \"details\": \"You do not have the required scope: event/sessions:read\"\n}"
+										},
+										{
+											"name": "notFound",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": 404,\n  \"message\": \"Not Found\",\n  \"details\": \"Event with ID 38db6ae2-0dc3-487b-953e-86d6abbdf7d3 was not found.\"\n}"
+										},
+										{
+											"name": "deletedEvent",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": 404,\n  \"message\": \"Not Found\",\n  \"details\": \"The requested event has been deleted and is no longer accessible.\"\n}"
+										},
+										{
+											"name": "Too many requests",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/events/:id/session-locations?limit=100&token=0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"events",
+														":id",
+														"session-locations"
+													],
+													"query": [
+														{
+															"key": "limit",
+															"value": "100",
+															"description": "The maximum number of records to return per page."
+														},
+														{
+															"key": "token",
+															"value": "0e28af57-511f-47ab-ae46-46cd1ca51a1a",
+															"description": "The continuation token returned from a previous call. This must be a valid UUID v4 if provided.\nThis will override any other pageable parameters provided.\n"
+														}
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "3db28cfc-db22-11eb-8d19-0242ac130003",
+															"description": "ID of an event."
+														}
+													]
+												}
+											},
+											"status": "Too Many Requests",
+											"code": 429,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": 429,\n  \"message\": \"Limit Exceeded\",\n  \"details\": \"You have exceeded the rate limit. Please retry after 60 seconds.\",\n  \"retryAfter\": 60\n}"
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api-platform-eur.cvent.com/ea"
+		}
+	]
+}

@@ -1,0 +1,277 @@
+
+protocolVersions:
+  - '1.0'
+name: Event Agent
+description: >-
+  An AI agent that provides comprehensive event management capabilities by
+  integrating Cvent Events API and HubSpot Marketing Emails. This agent helps
+  users create, manage, and analyze events while coordinating related marketing
+  communications. It serves as a unified interface for event lifecycle
+  management, attendee engagement, and promotional campaigns.
+version: 0.1.0
+provider:
+  organization: Naftiko
+  url: https://github.com/naftiko-capabilities/manage-events
+documentationUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/capabilities/
+iconUrl: https://example.com/icon.jpg
+supportedInterfaces:
+  - url: https://api.naftiko.io/manage-events/a2a
+    protocolBinding: JSONRPC
+  - url: https://api.naftiko.io/manage-events/a2a/rest
+    protocolBinding: HTTP+JSON
+capabilities:
+  streaming: true
+  pushNotifications: true
+  stateTransitionHistory: true
+  extensions:
+    - uri: https://naftiko.io/extensions/mcp/v1
+      description: Model Context Protocol integration for AI-native interactions
+      required: false
+    - uri: https://schema.org/Event
+      description: Schema.org Event vocabulary for semantic interoperability
+      required: false
+supportsExtendedAgentCard: true
+defaultInputModes:
+  - text/plain
+  - application/json
+defaultOutputModes:
+  - application/json
+  - text/plain
+  - text/markdown
+securitySchemes:
+  cvent_oauth2:
+    oauth2SecurityScheme:
+      description: OAuth2 authentication for Cvent Events API access
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/events:read: Read event information
+            event/events:write: Create and modify events
+            event/attendees:read: Read attendee information
+            event/attendees:write: Manage attendees
+  hubspot_oauth2:
+    oauth2SecurityScheme:
+      description: OAuth2 authentication for HubSpot Marketing API access
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+          scopes:
+            content: Access marketing content
+            marketing-email: Manage marketing emails
+            automation: Access marketing automation
+  api_key:
+    apiKeySecurityScheme:
+      description: API key for direct agent access
+      location: header
+      name: X-API-Key
+security:
+  - api_key: []
+  - cvent_oauth2:
+      - event/events:read
+  - hubspot_oauth2:
+      - content
+skills:
+  - id: manage_events
+    name: Event Management
+    description: >-
+      Create, update, and manage events using the Cvent Events API. Handles
+      event details, venues, schedules, registration settings, and event status
+      lifecycle.
+    tags:
+      - events
+      - cvent
+      - create
+      - update
+      - manage
+      - venue
+      - schedule
+      - registration
+    examples:
+      - Create a new conference event for next month
+      - Update the venue for our annual summit
+      - What events do we have scheduled for Q2?
+      - Change the registration deadline for the workshop
+      - Set up a virtual event with hybrid attendance options
+      - Clone last year's event as a template
+    inputModes:
+      - text/plain
+      - application/json
+    outputModes:
+      - application/json
+    security:
+      - cvent_oauth2:
+          - event/events:read
+          - event/events:write
+  - id: event_context_query
+    name: Event Context Intelligence
+    description: >-
+      Query and analyze event data to provide contextual insights. Uses AI to
+      understand event relationships, attendee patterns, and suggest
+      optimizations.
+    tags:
+      - ai
+      - context
+      - analysis
+      - insights
+      - intelligence
+      - patterns
+      - recommendations
+    examples:
+      - What's the context around our upcoming product launch event?
+      - Analyze attendance trends for our webinar series
+      - How does this event compare to similar ones we've run?
+      - What insights can you provide about our event portfolio?
+      - Summarize the key metrics for our Q1 events
+    inputModes:
+      - text/plain
+    outputModes:
+      - text/plain
+      - text/markdown
+      - application/json
+  - id: marketing_email_campaigns
+    name: Event Marketing Emails
+    description: >-
+      Create and manage marketing email campaigns for events using HubSpot.
+      Handles invitations, reminders, follow-ups, and promotional
+      communications.
+    tags:
+      - marketing
+      - email
+      - hubspot
+      - campaigns
+      - invitations
+      - reminders
+      - promotions
+    examples:
+      - Create an invitation email for the annual conference
+      - Set up reminder emails for registered attendees
+      - Draft a follow-up email for event attendees
+      - Show me the performance of our event email campaigns
+      - Schedule a promotional email blast for early bird registration
+    inputModes:
+      - text/plain
+      - application/json
+    outputModes:
+      - application/json
+    security:
+      - hubspot_oauth2:
+          - marketing-email
+          - content
+  - id: attendee_engagement
+    name: Attendee Engagement
+    description: >-
+      Manage attendee communications and engagement across both Cvent and
+      HubSpot. Coordinate registration confirmations, personalized outreach, and
+      engagement tracking.
+    tags:
+      - attendees
+      - engagement
+      - communications
+      - personalization
+      - outreach
+      - tracking
+    examples:
+      - Send personalized confirmation emails to new registrants
+      - What's the engagement rate for our event communications?
+      - Identify attendees who haven't opened our emails
+      - Create a re-engagement campaign for past attendees
+      - Segment attendees based on their interaction history
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+      - text/plain
+  - id: cross_platform_sync
+    name: Cross-Platform Synchronization
+    description: >-
+      Synchronize data between Cvent and HubSpot platforms. Ensures attendee
+      data, event details, and engagement metrics are consistent across systems.
+    tags:
+      - sync
+      - integration
+      - cvent
+      - hubspot
+      - data
+      - consistency
+    examples:
+      - Sync new Cvent registrations to HubSpot contacts
+      - Update HubSpot with event attendance data
+      - Ensure our contact lists are synchronized
+      - What data discrepancies exist between platforms?
+      - Reconcile attendee information across systems
+    inputModes:
+      - text/plain
+      - application/json
+    outputModes:
+      - application/json
+  - id: event_automation_workflows
+    name: Event Automation Workflows
+    description: >-
+      Create and manage automated workflows for event lifecycle processes.
+      Leverages Arazzo workflows for OAuth authorization and multi-step event
+      operations.
+    tags:
+      - automation
+      - workflows
+      - arazzo
+      - lifecycle
+      - triggers
+      - actions
+    examples:
+      - Set up an automated workflow for new registrations
+      - Create a post-event follow-up automation
+      - What automations are currently running for our events?
+      - Trigger the speaker confirmation workflow
+      - Automate the event reminder sequence
+    inputModes:
+      - text/plain
+      - application/json
+    outputModes:
+      - application/json
+  - id: event_analytics
+    name: Event Analytics & Reporting
+    description: >-
+      Generate comprehensive analytics and reports combining data from Cvent
+      events and HubSpot marketing campaigns. Provides unified insights into
+      event performance.
+    tags:
+      - analytics
+      - reporting
+      - metrics
+      - performance
+      - roi
+      - insights
+    examples:
+      - Generate a performance report for our last event
+      - What's the ROI on our event marketing campaigns?
+      - Show me registration trends over the past year
+      - Compare email open rates across different event types
+      - Create an executive summary of our event portfolio
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+      - text/markdown
+  - id: linkedin_social_integration
+    name: LinkedIn Event Promotion
+    description: >-
+      Coordinate event promotion through LinkedIn integration. Manages social
+      sharing, event posts, and professional network engagement.
+    tags:
+      - linkedin
+      - social
+      - promotion
+      - networking
+      - sharing
+    examples:
+      - Create a LinkedIn post for our upcoming conference
+      - Share event highlights on LinkedIn
+      - Who from our LinkedIn network should we invite?
+      - Schedule social promotion for the event launch
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+      - text/plain

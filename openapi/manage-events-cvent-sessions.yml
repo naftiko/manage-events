@@ -1,0 +1,408 @@
+openapi: 3.1.0
+info:
+  title: Cvent Sessions API
+  description: Gets a paginated list of session locations.
+  version: 1.0.0
+servers:
+  - url: https://api-platform-eur.cvent.com/ea
+  - url: https://api-platform.cvent.com/ea
+paths:
+  /events/{id}/session-locations:
+    get:
+      security:
+        - OAuth2.clientCredentials:
+            - event/sessions:read
+        - OAuth2.authorizationCode:
+            - event/sessions:read
+      summary: List Session Locations
+      description: Gets a paginated list of session locations.
+      operationId: getSessionLocation
+      tags:
+        - Sessions
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/token'
+      responses:
+        '200':
+          $ref: '#/components/responses/SessionLocationListSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+components:
+  examples:
+    SessionLocationListSuccessExample:
+      summary: Successful session location list response
+      description: Example response showing a paginated list of session locations for an event
+      value:
+        paging:
+          previousToken: null
+          nextToken: 2b3c4d5e6f7g8h9i10j11k12l
+          currentToken: 1a2b3c4d5e6f7g8h9i10j11k
+          limit: 100
+          totalCount: 5
+          _links:
+            self:
+              href: '?token=1a2b3c4d5e6f7g8h9i10j11k'
+            next:
+              href: '?token=2b3c4d5e6f7g8h9i10j11k12l'
+        data:
+          - id: '38db6ae2-0dc3-487b-953e-86d6abbdf7d3'
+            code: 'ConfA'
+            name: 'Conference Room A'
+          - id: '49ec7bf3-1ed4-598c-a64f-97e7bcceg8e4'
+            code: 'ConfB'
+            name: 'Conference Room B'
+          - id: '5afd8cg4-2fe5-6a9d-b75g-a8f8cddfh9f5'
+            code: 'BallroomMain'
+            name: 'Grand Ballroom - Main Hall'
+          - id: '6bge9dh5-3gf6-7b0e-c86h-b9g9deegi0g6'
+            code: 'BallroomEast'
+            name: 'Grand Ballroom - East Wing'
+          - id: '7chf0ei6-4hg7-8c1f-d97i-c0h0effhj1h7'
+            code: 'ExhibitHall'
+            name: 'Exhibition Hall'
+    SessionLocationListEmptyExample:
+      summary: Empty session location list response
+      description: Example response when the event has no session locations defined
+      value:
+        paging:
+          currentToken: 1a2b3c4d5e6f7g8h9i10j11k
+          limit: 100
+          totalCount: 0
+          _links:
+            self:
+              href: '?token=1a2b3c4d5e6f7g8h9i10j11k'
+        data: []
+    SessionLocationListSinglePageExample:
+      summary: Single page session location response
+      description: Example response when all session locations fit on a single page
+      value:
+        paging:
+          currentToken: 1a2b3c4d5e6f7g8h9i10j11k
+          limit: 100
+          totalCount: 2
+          _links:
+            self:
+              href: '?token=1a2b3c4d5e6f7g8h9i10j11k'
+        data:
+          - id: '38db6ae2-0dc3-487b-953e-86d6abbdf7d3'
+            code: 'MainStage'
+            name: 'Main Stage'
+          - id: '49ec7bf3-1ed4-598c-a64f-97e7bcceg8e4'
+            code: 'Breakout1'
+            name: 'Breakout Room 1'
+    BadRequestExample:
+      summary: Bad request error
+      description: Example response when the request is malformed or contains invalid parameters
+      value:
+        code: 400
+        message: Bad Request
+        details: 'Invalid request parameter. The limit must be between 1 and 200.'
+    BadRequestInvalidTokenExample:
+      summary: Invalid pagination token error
+      description: Example response when an invalid pagination token is provided
+      value:
+        code: 400
+        message: Bad Request
+        details: 'Invalid pagination token format. Token must be a valid UUID v4.'
+    UnauthorizedExample:
+      summary: Unauthorized error
+      description: Example response when authentication token is missing, invalid, or expired
+      value:
+        code: 401
+        message: Unauthorized
+        details: 'The access token is invalid or has expired. Please obtain a new token.'
+    ForbiddenExample:
+      summary: Forbidden error
+      description: Example response when the authenticated user lacks permission to access the resource
+      value:
+        code: 403
+        message: Access Forbidden
+        details: 'You do not have the required scope: event/sessions:read'
+    NotFoundExample:
+      summary: Event not found error
+      description: Example response when the specified event ID does not exist
+      value:
+        code: 404
+        message: Not Found
+        details: 'Event with ID 38db6ae2-0dc3-487b-953e-86d6abbdf7d3 was not found.'
+    NotFoundDeletedEventExample:
+      summary: Deleted event error
+      description: Example response when the specified event has been deleted
+      value:
+        code: 404
+        message: Not Found
+        details: 'The requested event has been deleted and is no longer accessible.'
+    TooManyRequestsExample:
+      summary: Rate limit exceeded error
+      description: Example response when the API rate limit has been exceeded
+      value:
+        code: 429
+        message: Limit Exceeded
+        details: 'You have exceeded the rate limit. Please retry after 60 seconds.'
+        retryAfter: 60
+  schemas:
+    session-locations-paginated-response:
+      title: SessionLocationPaginatedResponse
+      required:
+        - data
+        - paging
+      type: object
+      description: A paginated response of session locations.
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/session-location'
+          description: Collection of session locations.
+    paging.json:
+      title: Paging
+      required:
+        - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: >-
+            The pagination token for the previous page, if one exists. You can
+            use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: >-
+            The pagination token for the next page. If this value is present in
+            the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: >-
+            The total number of records available. This field may return blank,
+            even if there are more records. To confirm if there are more
+            records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
+    link.json:
+      title: Link
+      required:
+        - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: '?token=90c5f062-76ad-4ea4-aa53-00eb698d9262'
+    session-location:
+      title: SessionLocation
+      type: object
+      required:
+        - code
+        - name
+      description: Used to denote a sessions location.
+      properties:
+        id:
+          title: UUID Property
+          description: A string that represents a specified location.
+          type: string
+          format: uuid
+          example: 38db6ae2-0dc3-487b-953e-86d6abbdf7d3
+          readOnly: true
+        code:
+          type: string
+          description: Code / Abbreviation of the location.
+          maxLength: 30
+          example: ConfA
+        name:
+          type: string
+          description: Name of the location.
+          maxLength: 100
+          example: Conference Room A
+    error-response:
+      title: ErrorResponse
+      description: Standard error response object.
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        details:
+          type: string
+          description: Additional details about the error.
+          example: The request could not be understood by the server.
+  parameters:
+    id:
+      in: path
+      name: id
+      description: ID of an event.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 3db28cfc-db22-11eb-8d19-0242ac130003
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    token:
+      name: token
+      in: query
+      description: >
+        The continuation token returned from a previous call. This must be a
+        valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+  responses:
+    SessionLocationListSuccess:
+      description: Successfully retrieved paginated list of session locations.
+      headers: {}
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/session-locations-paginated-response'
+          examples:
+            success:
+              $ref: '#/components/examples/SessionLocationListSuccessExample'
+            empty:
+              $ref: '#/components/examples/SessionLocationListEmptyExample'
+            singlePage:
+              $ref: '#/components/examples/SessionLocationListSinglePageExample'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            badRequest:
+              $ref: '#/components/examples/BadRequestExample'
+            invalidToken:
+              $ref: '#/components/examples/BadRequestInvalidTokenExample'
+    Unauthorized:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            forbidden:
+              $ref: '#/components/examples/ForbiddenExample'
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            notFound:
+              $ref: '#/components/examples/NotFoundExample'
+            deletedEvent:
+              $ref: '#/components/examples/NotFoundDeletedEventExample'
+    TooManyRequests:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            tooManyRequests:
+              $ref: '#/components/examples/TooManyRequestsExample'
+  securitySchemes:
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/sessions:delete: Allows the deletion of a session in an event
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/sessions:read: Allows the reading of sessions
+            event/sessions:write: Allows the creation of a session in an event
+            event/sessions:delete: Allows the deletion of a session in an event
+    CallbackApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >-
+        This security scheme is used to indicate that Cvent should use API Key
+        auth when invoking your callback. This scheme is only supported for
+        callback operations, and cannot be used to make calls to Cvent
+        endpoints.
+    CallbackBasicAuth:
+      type: http
+      scheme: basic
+      description: >-
+        This security scheme is used to indicate that Cvent should use basic
+        auth when invoking your callback. This scheme is only supported for
+        callback operations, and cannot be used to make calls to Cvent
+        endpoints.

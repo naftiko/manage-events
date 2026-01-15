@@ -1,0 +1,2761 @@
+{
+	"info": {
+		"_postman_id": "8f4f2f9f-49c8-488f-a0bc-252df5f3c262",
+		"name": "HubSpot Marketing Emails API",
+		"description": "API for managing marketing emails in HubSpot. This API allows you to retrieve, \nfilter, and manage marketing email campaigns.\n\nThe Marketing Emails API is closely integrated with HubSpot's Lists and Workflows tools,\nenabling comprehensive email marketing automation.\n\n\nContact Support:\n Name: HubSpot API Support",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35240",
+		"_collection_link": "https://api-evangelist.postman.co/workspace/Capabilities-Working~0e59032e-d676-4e90-be81-48adc3c04507/collection/35240-8f4f2f9f-49c8-488f-a0bc-252df5f3c262?action=share&source=collection_link&creator=35240"
+	},
+	"item": [
+		{
+			"name": "marketing",
+			"item": [
+				{
+					"name": "v3",
+					"item": [
+						{
+							"name": "emails",
+							"item": [
+								{
+									"name": "Get all marketing emails",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=name&includedProperties=subject&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedAt&sort=updatedBy&type=MEMBERSHIP_PASSWORD_SAVED_EMAIL&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"marketing",
+												"v3",
+												"emails",
+												""
+											],
+											"query": [
+												{
+													"key": "after",
+													"value": "MjA%3D",
+													"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+												},
+												{
+													"key": "archived",
+													"value": "false",
+													"description": "Specifies whether to return archived emails. Defaults to false."
+												},
+												{
+													"key": "campaign",
+													"value": "string",
+													"description": "Filter by campaign GUID. All emails will be returned if not present."
+												},
+												{
+													"key": "createdAfter",
+													"value": "2024-01-01T00:00:00.000Z",
+													"description": "Only return emails created after the specified time."
+												},
+												{
+													"key": "createdAt",
+													"value": "1993-08-25T01:50:35.812Z",
+													"description": "Only return emails created at exactly the specified time."
+												},
+												{
+													"key": "createdBefore",
+													"value": "1993-08-25T01:50:35.812Z",
+													"description": "Only return emails created before the specified time."
+												},
+												{
+													"key": "includedProperties",
+													"value": "name",
+													"description": "Limit the response to only include this specified list of properties."
+												},
+												{
+													"key": "includedProperties",
+													"value": "subject",
+													"description": "Limit the response to only include this specified list of properties."
+												},
+												{
+													"key": "includedProperties",
+													"value": "createdAt",
+													"description": "Limit the response to only include this specified list of properties."
+												},
+												{
+													"key": "includeStats",
+													"value": "false",
+													"description": "Include statistics with emails."
+												},
+												{
+													"key": "isPublished",
+													"value": "true",
+													"description": "Filter by published/draft emails. All emails will be returned if not present."
+												},
+												{
+													"key": "limit",
+													"value": "10",
+													"description": "The maximum number of results to return. Default is 10."
+												},
+												{
+													"key": "marketingCampaignNames",
+													"value": "false",
+													"description": "Include the names for any associated marketing campaigns."
+												},
+												{
+													"key": "publishedAfter",
+													"value": "1993-08-25T01:50:35.812Z",
+													"description": "Only return emails published after the specified time."
+												},
+												{
+													"key": "publishedAt",
+													"value": "1993-08-25T01:50:35.812Z",
+													"description": "Only return emails published at exactly the specified time."
+												},
+												{
+													"key": "publishedBefore",
+													"value": "1993-08-25T01:50:35.812Z",
+													"description": "Only return emails published before the specified time."
+												},
+												{
+													"key": "sort",
+													"value": "updatedAt",
+													"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+												},
+												{
+													"key": "sort",
+													"value": "updatedBy",
+													"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+												},
+												{
+													"key": "type",
+													"value": "MEMBERSHIP_PASSWORD_SAVED_EMAIL",
+													"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+												},
+												{
+													"key": "type",
+													"value": "FOLLOWUP_EMAIL",
+													"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+												},
+												{
+													"key": "updatedAfter",
+													"value": "1993-08-25T01:50:35.812Z",
+													"description": "Only return emails last updated after the specified time."
+												},
+												{
+													"key": "updatedAt",
+													"value": "1993-08-25T01:50:35.812Z",
+													"description": "Only return emails last updated at exactly the specified time."
+												},
+												{
+													"key": "updatedBefore",
+													"value": "1993-08-25T01:50:35.812Z",
+													"description": "Only return emails last updated before the specified time."
+												},
+												{
+													"key": "workflowNames",
+													"value": "false",
+													"description": "Include the names of any workflows associated with the returned emails."
+												}
+											]
+										},
+										"description": "Retrieve a collection of marketing emails with optional filtering and pagination.\nThe results can be filtered by various criteria including publication status,\ncampaign, creation/update times, and email type.\n"
+									},
+									"response": [
+										{
+											"name": "simpleEmailList",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"results\": [\n    {\n      \"id\": \"4613448134\",\n      \"name\": \"Welcome Email\",\n      \"subject\": \"Welcome to Our Service!\",\n      \"type\": \"BATCH_EMAIL\",\n      \"subcategory\": \"batch\",\n      \"state\": \"PUBLISHED\",\n      \"isPublished\": true,\n      \"isTransactional\": false,\n      \"archived\": false,\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"createdById\": 2983922,\n      \"updatedAt\": \"2024-01-15T14:22:00.000Z\",\n      \"updatedById\": 2983922,\n      \"from\": {\n        \"fromName\": \"Marketing Team\",\n        \"replyTo\": \"marketing@example.com\"\n      }\n    }\n  ],\n  \"total\": 1\n}"
+										},
+										{
+											"name": "emailListWithStats",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"results\": [\n    {\n      \"id\": \"4613448134\",\n      \"name\": \"January Newsletter\",\n      \"subject\": \"Your January Update\",\n      \"type\": \"BATCH_EMAIL\",\n      \"subcategory\": \"batch\",\n      \"state\": \"PUBLISHED\",\n      \"isPublished\": true,\n      \"isTransactional\": false,\n      \"archived\": false,\n      \"sendOnPublish\": true,\n      \"createdAt\": \"2024-01-10T09:00:00.000Z\",\n      \"createdById\": 2983922,\n      \"updatedAt\": \"2024-01-10T12:30:00.000Z\",\n      \"updatedById\": 2983922,\n      \"from\": {\n        \"fromName\": \"Newsletter Team\",\n        \"replyTo\": \"newsletter@example.com\"\n      },\n      \"to\": {\n        \"contactIds\": {\n          \"include\": [\n            51,\n            52,\n            53\n          ]\n        },\n        \"suppressGraymail\": true\n      },\n      \"stats\": {\n        \"counters\": {\n          \"sent\": 1500,\n          \"delivered\": 1485,\n          \"bounce\": 15,\n          \"open\": 750,\n          \"click\": 225,\n          \"unsubscribed\": 3,\n          \"spamreport\": 1\n        },\n        \"ratios\": {\n          \"deliveredratio\": 99,\n          \"bounceratio\": 1,\n          \"openratio\": 50.5,\n          \"clickratio\": 15,\n          \"clickthroughratio\": 30,\n          \"unsubscribedratio\": 0.2,\n          \"spamreportratio\": 0.07\n        },\n        \"deviceBreakdown\": {\n          \"open_device_type\": {\n            \"computer\": 450,\n            \"mobile\": 280,\n            \"unknown\": 20\n          },\n          \"click_device_type\": {\n            \"computer\": 150,\n            \"mobile\": 70,\n            \"unknown\": 5\n          }\n        }\n      },\n      \"subscriptionDetails\": {\n        \"officeLocationId\": \"4701002382\",\n        \"subscriptionId\": 1264909\n      }\n    }\n  ],\n  \"total\": 1\n}"
+										},
+										{
+											"name": "emptyEmailList",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"results\": [],\n  \"total\": 0\n}"
+										},
+										{
+											"name": "paginatedEmailList",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"results\": [\n    {\n      \"id\": \"4613448134\",\n      \"name\": \"Email Campaign 1\",\n      \"subject\": \"Subject Line 1\",\n      \"type\": \"BATCH_EMAIL\",\n      \"state\": \"PUBLISHED\",\n      \"isPublished\": true,\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"updatedAt\": \"2024-01-15T14:22:00.000Z\"\n    },\n    {\n      \"id\": \"4613448135\",\n      \"name\": \"Email Campaign 2\",\n      \"subject\": \"Subject Line 2\",\n      \"type\": \"AUTOMATED_EMAIL\",\n      \"state\": \"PUBLISHED\",\n      \"isPublished\": true,\n      \"createdAt\": \"2024-01-14T09:15:00.000Z\",\n      \"updatedAt\": \"2024-01-14T11:45:00.000Z\"\n    },\n    {\n      \"id\": \"4613448136\",\n      \"name\": \"Email Campaign 3\",\n      \"subject\": \"Subject Line 3\",\n      \"type\": \"BATCH_EMAIL\",\n      \"state\": \"DRAFT\",\n      \"isPublished\": false,\n      \"createdAt\": \"2024-01-13T16:00:00.000Z\",\n      \"updatedAt\": \"2024-01-13T16:30:00.000Z\"\n    }\n  ],\n  \"total\": 47,\n  \"paging\": {\n    \"next\": {\n      \"after\": \"MjA%3D\",\n      \"link\": \"https://api.hubapi.com/marketing/v3/emails/?after=MjA%3D&limit=10\"\n    },\n    \"prev\": {\n      \"after\": \"MTA%3D\",\n      \"link\": \"https://api.hubapi.com/marketing/v3/emails/?after=MTA%3D&limit=10\"\n    }\n  }\n}"
+										},
+										{
+											"name": "invalidDateFormat",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid date format for parameter 'createdAfter'. Expected ISO 8601 format (e.g., 2024-01-01T00:00:00.000Z)\",\n  \"correlationId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"category\": \"VALIDATION_ERROR\",\n  \"subCategory\": \"INVALID_DATE_FORMAT\",\n  \"context\": {\n    \"invalidValue\": [\n      \"2024-13-45\"\n    ],\n    \"parameterName\": [\n      \"createdAfter\"\n    ]\n  }\n}"
+										},
+										{
+											"name": "invalidEmailType",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid value for parameter 'type'. Must be one of: AB_EMAIL, AUTOMATED_EMAIL, BATCH_EMAIL, ...\",\n  \"correlationId\": \"b2c3d4e5-f6a7-8901-bcde-f23456789012\",\n  \"category\": \"VALIDATION_ERROR\",\n  \"subCategory\": \"INVALID_ENUM_VALUE\",\n  \"context\": {\n    \"invalidValue\": [\n      \"INVALID_TYPE\"\n    ],\n    \"parameterName\": [\n      \"type\"\n    ],\n    \"allowedValues\": [\n      \"AB_EMAIL\",\n      \"AUTOMATED_EMAIL\",\n      \"BATCH_EMAIL\",\n      \"BLOG_EMAIL\"\n    ]\n  }\n}"
+										},
+										{
+											"name": "invalidSortField",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid sort field 'invalidField'. Valid fields are: name, createdAt, updatedAt, createdBy, updatedBy\",\n  \"correlationId\": \"c3d4e5f6-a7b8-9012-cdef-345678901234\",\n  \"category\": \"VALIDATION_ERROR\",\n  \"subCategory\": \"INVALID_SORT_FIELD\",\n  \"context\": {\n    \"invalidValue\": [\n      \"invalidField\"\n    ],\n    \"parameterName\": [\n      \"sort\"\n    ]\n  }\n}"
+										},
+										{
+											"name": "invalidLimit",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"Parameter 'limit' must be between 1 and 100. Received: 500\",\n  \"correlationId\": \"d4e5f6a7-b8c9-0123-def0-456789012345\",\n  \"category\": \"VALIDATION_ERROR\",\n  \"subCategory\": \"INVALID_PARAMETER_VALUE\",\n  \"context\": {\n    \"invalidValue\": [\n      \"500\"\n    ],\n    \"parameterName\": [\n      \"limit\"\n    ],\n    \"minValue\": [\n      \"1\"\n    ],\n    \"maxValue\": [\n      \"100\"\n    ]\n  }\n}"
+										},
+										{
+											"name": "missingToken",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"Authentication credentials were not provided. Please include a valid Bearer token or API key.\",\n  \"correlationId\": \"e5f6a7b8-c9d0-1234-ef01-567890123456\",\n  \"category\": \"UNAUTHORIZED\",\n  \"subCategory\": \"MISSING_CREDENTIALS\"\n}"
+										},
+										{
+											"name": "invalidToken",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"The provided authentication token is invalid or malformed.\",\n  \"correlationId\": \"f6a7b8c9-d0e1-2345-f012-678901234567\",\n  \"category\": \"UNAUTHORIZED\",\n  \"subCategory\": \"INVALID_TOKEN\"\n}"
+										},
+										{
+											"name": "expiredToken",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"The access token has expired. Please refresh your token and retry the request.\",\n  \"correlationId\": \"a7b8c9d0-e1f2-3456-0123-789012345678\",\n  \"category\": \"UNAUTHORIZED\",\n  \"subCategory\": \"EXPIRED_TOKEN\"\n}"
+										},
+										{
+											"name": "insufficientScope",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"The access token does not have the required 'content' scope to access marketing emails.\",\n  \"correlationId\": \"b8c9d0e1-f2a3-4567-1234-890123456789\",\n  \"category\": \"FORBIDDEN\",\n  \"subCategory\": \"INSUFFICIENT_SCOPE\",\n  \"context\": {\n    \"requiredScopes\": [\n      \"content\"\n    ],\n    \"providedScopes\": [\n      \"crm.objects.contacts.read\"\n    ]\n  }\n}"
+										},
+										{
+											"name": "accountAccessDenied",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have permission to access marketing emails in this HubSpot account. Please contact your account administrator.\",\n  \"correlationId\": \"c9d0e1f2-a3b4-5678-2345-901234567890\",\n  \"category\": \"FORBIDDEN\",\n  \"subCategory\": \"ACCESS_DENIED\"\n}"
+										},
+										{
+											"name": "rateLimitExceeded",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Too Many Requests",
+											"code": 429,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"You have exceeded the rate limit. Please wait before making additional requests.\",\n  \"correlationId\": \"d0e1f2a3-b4c5-6789-3456-012345678901\",\n  \"category\": \"RATE_LIMIT\",\n  \"subCategory\": \"RATE_LIMIT_EXCEEDED\",\n  \"context\": {\n    \"retryAfter\": [\n      \"10\"\n    ],\n    \"limit\": [\n      \"100\"\n    ],\n    \"remaining\": [\n      \"0\"\n    ],\n    \"resetAt\": [\n      \"2024-01-15T10:31:00.000Z\"\n    ]\n  }\n}"
+										},
+										{
+											"name": "dailyLimitExceeded",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Too Many Requests",
+											"code": 429,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"You have exceeded your daily API call limit. Your limit will reset at midnight UTC.\",\n  \"correlationId\": \"e1f2a3b4-c5d6-7890-4567-123456789012\",\n  \"category\": \"RATE_LIMIT\",\n  \"subCategory\": \"DAILY_LIMIT_EXCEEDED\",\n  \"context\": {\n    \"dailyLimit\": [\n      \"250000\"\n    ],\n    \"dailyUsage\": [\n      \"250000\"\n    ],\n    \"resetAt\": [\n      \"2024-01-16T00:00:00.000Z\"\n    ]\n  }\n}"
+										},
+										{
+											"name": "Internal server error",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Internal Server Error",
+											"code": 500,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"An internal server error occurred. Please try again later. If the problem persists, contact HubSpot support with the correlation ID.\",\n  \"correlationId\": \"f2a3b4c5-d6e7-8901-5678-234567890123\",\n  \"category\": \"INTERNAL_ERROR\"\n}"
+										},
+										{
+											"name": "Service unavailable",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"status": "Service Unavailable",
+											"code": 503,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"The marketing emails service is temporarily unavailable. Please try again in a few minutes.\",\n  \"correlationId\": \"a3b4c5d6-e7f8-9012-6789-345678901234\",\n  \"category\": \"SERVICE_UNAVAILABLE\",\n  \"context\": {\n    \"retryAfter\": [\n      \"60\"\n    ]\n  }\n}"
+										},
+										{
+											"name": "Unexpected error",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/marketing/v3/emails/?after=MjA%3D&archived=false&campaign=string&createdAfter=2024-01-01T00:00:00.000Z&createdAt=1993-08-25T01:50:35.812Z&createdBefore=1993-08-25T01:50:35.812Z&includedProperties=createdAt&includeStats=false&isPublished=true&limit=10&marketingCampaignNames=false&publishedAfter=1993-08-25T01:50:35.812Z&publishedAt=1993-08-25T01:50:35.812Z&publishedBefore=1993-08-25T01:50:35.812Z&sort=updatedBy&type=FOLLOWUP_EMAIL&updatedAfter=1993-08-25T01:50:35.812Z&updatedAt=1993-08-25T01:50:35.812Z&updatedBefore=1993-08-25T01:50:35.812Z&workflowNames=false",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"marketing",
+														"v3",
+														"emails",
+														""
+													],
+													"query": [
+														{
+															"key": "after",
+															"value": "MjA%3D",
+															"description": "The cursor token value to get the next set of results. You can get this \nfrom the paging.next.after JSON property of a paged response containing more results.\n"
+														},
+														{
+															"key": "archived",
+															"value": "false",
+															"description": "Specifies whether to return archived emails. Defaults to false."
+														},
+														{
+															"key": "campaign",
+															"value": "string",
+															"description": "Filter by campaign GUID. All emails will be returned if not present."
+														},
+														{
+															"key": "createdAfter",
+															"value": "2024-01-01T00:00:00.000Z",
+															"description": "Only return emails created after the specified time."
+														},
+														{
+															"key": "createdAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created at exactly the specified time."
+														},
+														{
+															"key": "createdBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails created before the specified time."
+														},
+														{
+															"key": "includedProperties",
+															"value": "createdAt",
+															"description": "Limit the response to only include this specified list of properties."
+														},
+														{
+															"key": "includeStats",
+															"value": "false",
+															"description": "Include statistics with emails."
+														},
+														{
+															"key": "isPublished",
+															"value": "true",
+															"description": "Filter by published/draft emails. All emails will be returned if not present."
+														},
+														{
+															"key": "limit",
+															"value": "10",
+															"description": "The maximum number of results to return. Default is 10."
+														},
+														{
+															"key": "marketingCampaignNames",
+															"value": "false",
+															"description": "Include the names for any associated marketing campaigns."
+														},
+														{
+															"key": "publishedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published after the specified time."
+														},
+														{
+															"key": "publishedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published at exactly the specified time."
+														},
+														{
+															"key": "publishedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails published before the specified time."
+														},
+														{
+															"key": "sort",
+															"value": "updatedBy",
+															"description": "Specifies which fields to use for sorting results. Valid fields are \nname, createdAt, updatedAt, createdBy, updatedBy. createdAt will be used by default.\n"
+														},
+														{
+															"key": "type",
+															"value": "FOLLOWUP_EMAIL",
+															"description": "Email types to be filtered by. Multiple types can be included. \nAll emails will be returned if not present.\n"
+														},
+														{
+															"key": "updatedAfter",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated after the specified time."
+														},
+														{
+															"key": "updatedAt",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated at exactly the specified time."
+														},
+														{
+															"key": "updatedBefore",
+															"value": "1993-08-25T01:50:35.812Z",
+															"description": "Only return emails last updated before the specified time."
+														},
+														{
+															"key": "workflowNames",
+															"value": "false",
+															"description": "Include the names of any workflows associated with the returned emails."
+														}
+													]
+												}
+											},
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"status\": \"error\",\n  \"message\": \"An unexpected error occurred while processing your request.\",\n  \"correlationId\": \"b4c5d6e7-f8a9-0123-7890-456789012345\",\n  \"category\": \"UNEXPECTED_ERROR\"\n}"
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "scope",
+				"value": "content",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://api.hubapi.com/oauth/v1/token",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://app.hubspot.com/oauth/authorize",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.hubapi.com"
+		}
+	]
+}

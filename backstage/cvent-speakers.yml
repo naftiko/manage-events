@@ -1,0 +1,560 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: Cvent Attendees API
+  description: Needs a more full description created.
+  tags:
+    - Attendees
+  links:
+    - title: Link
+      icon: code
+      url: https://example.com
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: team-c
+  definition: |
+
+    openapi: 3.0.0
+    info:
+      title: Cvent Speakers API
+      description: Get a paginated list of speakers and categories assigned to the provided session ID.
+      version: 1.0.0
+    servers:
+      - url: https://api-platform-eur.cvent.com/ea
+      - url: https://api-platform.cvent.com/ea
+    paths:
+      /sessions/{id}/speakers:
+        get:
+          security:
+            - OAuth2.clientCredentials:
+                - event/speakers:read
+            - OAuth2.authorizationCode:
+                - event/speakers:read
+          summary: List Session's Speakers
+          description: >-
+            Get a paginated list of speakers and categories assigned to the provided
+            session ID.
+          operationId: listSessionSpeakers
+          parameters:
+            - name: id
+              in: path
+              required: true
+              description: The unique identifier of the session.
+              schema:
+                type: string
+                format: uuid
+                example: 7f8e9d0c-1a2b-3c4d-5e6f-7a8b9c0d1e2f
+            - $ref: '#/components/parameters/limit'
+            - $ref: '#/components/parameters/token'
+          tags:
+            - Sessions
+          responses:
+            '200':
+              description: >-
+                Successfully retrieved a paginated list of speakers assigned to the
+                session.
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/session-speaker-paginated-response'
+                  examples:
+                    multipleSpeakers:
+                      $ref: '#/components/examples/MultipleSpeakersResponse'
+                    singleSpeaker:
+                      $ref: '#/components/examples/SingleSpeakerResponse'
+                    emptyList:
+                      $ref: '#/components/examples/EmptySpeakersResponse'
+            '400':
+              $ref: '#/components/responses/BadRequest'
+            '401':
+              $ref: '#/components/responses/Unauthorized'
+            '403':
+              $ref: '#/components/responses/Forbidden'
+            '404':
+              $ref: '#/components/responses/NotFound'
+            '429':
+              $ref: '#/components/responses/TooManyRequests'
+          deprecated: false
+          externalDocs:
+            description: More about OAuth2 authorization code support for administrators
+            url: '#oauth2-auth-code-planner-admin'
+
+    components:
+      schemas:
+        session-speaker-paginated-response:
+          title: SessionSpeakerPaginatedResponse
+          description: >-
+            The response from a request to get the list of session speakers. This
+            includes the paging object as well as the collection of session
+            speakers.
+          required:
+            - paging
+            - data
+          type: object
+          properties:
+            paging:
+              $ref: '#/components/schemas/paging'
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/session-speaker'
+              description: Collection of a session's speakers.
+
+        paging:
+          title: Paging
+          required:
+            - _links
+          type: object
+          description: Represents pagination information for a collection of resources.
+          properties:
+            previousToken:
+              type: string
+              description: >-
+                The pagination token for the previous page, if one exists. You can
+                use this token to navigate to the previous page of data.
+              example: 1a2b3c4d5e6f7g8h9i10j11k
+            nextToken:
+              type: string
+              description: >-
+                The pagination token for the next page. If this value is present in
+                the response, there is another page of data you can fetch.
+              example: 1a2b3c4d5e6f7g8h9i10j11k
+            currentToken:
+              type: string
+              description: The pagination token for the current page.
+              example: 1a2b3c4d5e6f7g8h9i10j11k
+            limit:
+              type: integer
+              description: The number of records to return on the page. Not to exceed 200.
+              example: 100
+            totalCount:
+              type: integer
+              description: >-
+                The total number of records available. This field may return blank,
+                even if there are more records. To confirm if there are more
+                records, check the `nextToken` field.
+              example: 2
+            _links:
+              $ref: '#/components/schemas/pagination-links'
+
+        pagination-links:
+          title: PaginationLinks
+          type: object
+          description: Represents pagination links for navigating between pages of data.
+          properties:
+            next:
+              $ref: '#/components/schemas/link'
+            self:
+              $ref: '#/components/schemas/link'
+            prev:
+              $ref: '#/components/schemas/link'
+
+        link:
+          title: Link
+          required:
+            - href
+          type: object
+          description: Represents a link to a related resource.
+          properties:
+            href:
+              type: string
+              description: A URL provided that can be followed for linking.
+              example: '?token=90c5f062-76ad-4ea4-aa53-00eb698d9262'
+
+        session-speaker:
+          title: SessionSpeaker
+          description: A session speaker.
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+            session:
+              $ref: '#/components/schemas/session-lite'
+            category:
+              $ref: '#/components/schemas/category-id-name'
+            order:
+              type: integer
+              description: The order of the speaker in a session.
+              example: 1
+
+        uuid-property:
+          title: UUID Property
+          description: A string that has to be a format matching the industry standard UUID.
+          type: string
+          format: uuid
+          example: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+
+        session-id:
+          title: Session ID
+          description: The unique identifier of a session.
+          type: string
+          format: uuid
+          example: 7f8e9d0c-1a2b-3c4d-5e6f-7a8b9c0d1e2f
+
+        session-lite:
+          title: SessionLite
+          description: The unique identifier of a session.
+          required:
+            - id
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/session-id'
+
+        category-id-name:
+          title: SpeakerCategory
+          description: A defined speaker category.
+          type: object
+          required:
+            - id
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid-property'
+            name:
+              type: string
+              description: The name of the speaker category.
+              maxLength: 50
+              example: Presenters
+
+        error-response:
+          title: ErrorResponse
+          description: Standard error response object.
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: integer
+              description: The HTTP status code.
+              example: 400
+            message:
+              type: string
+              description: A human-readable error message.
+              example: Bad Request
+            details:
+              type: array
+              description: Additional details about the error.
+              items:
+                $ref: '#/components/schemas/error-detail'
+
+        error-detail:
+          title: ErrorDetail
+          description: Detailed information about a specific error.
+          type: object
+          properties:
+            field:
+              type: string
+              description: The field that caused the error.
+              example: limit
+            reason:
+              type: string
+              description: The reason for the error.
+              example: Value must be between 1 and 200
+
+      parameters:
+        limit:
+          name: limit
+          in: query
+          description: The maximum number of records to return per page.
+          style: form
+          explode: true
+          schema:
+            maximum: 200
+            minimum: 1
+            type: integer
+            default: 100
+            example: 100
+
+        token:
+          name: token
+          in: query
+          description: >
+            The continuation token returned from a previous request. This must be a
+            valid UUID v4 if provided. This will override any other pageable
+            parameters provided.
+          style: form
+          explode: true
+          schema:
+            type: string
+            format: uuid
+            example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+
+      examples:
+        # Success Response Examples
+        MultipleSpeakersResponse:
+          summary: Multiple speakers with pagination
+          description: A successful response containing multiple speakers with next page available.
+          value:
+            paging:
+              currentToken: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+              nextToken: b2c3d4e5-f6a7-8901-bcde-f12345678901
+              limit: 100
+              totalCount: 150
+              _links:
+                self:
+                  href: '?token=a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+                next:
+                  href: '?token=b2c3d4e5-f6a7-8901-bcde-f12345678901'
+            data:
+              - id: 04ca6ae2-0dc3-487b-953e-86d6abbdf7d3
+                session:
+                  id: 7f8e9d0c-1a2b-3c4d-5e6f-7a8b9c0d1e2f
+                category:
+                  id: 11111111-2222-3333-4444-555555555555
+                  name: Keynote Speaker
+                order: 1
+              - id: 15db7bf3-1ed4-598c-a64f-97e7bccg8e4d
+                session:
+                  id: 7f8e9d0c-1a2b-3c4d-5e6f-7a8b9c0d1e2f
+                category:
+                  id: 22222222-3333-4444-5555-666666666666
+                  name: Panelist
+                order: 2
+              - id: 26ec8cg4-2fe5-6a9d-b75g-a8f8cddhf5e5
+                session:
+                  id: 7f8e9d0c-1a2b-3c4d-5e6f-7a8b9c0d1e2f
+                category:
+                  id: 11111111-2222-3333-4444-555555555555
+                  name: Keynote Speaker
+                order: 3
+
+        SingleSpeakerResponse:
+          summary: Single speaker result
+          description: A successful response containing a single speaker with no additional pages.
+          value:
+            paging:
+              currentToken: c3d4e5f6-a7b8-9012-cdef-123456789012
+              limit: 100
+              totalCount: 1
+              _links:
+                self:
+                  href: '?token=c3d4e5f6-a7b8-9012-cdef-123456789012'
+            data:
+              - id: 37fd9dh5-3gf6-7b0e-c86h-b9g9deei6f6f
+                session:
+                  id: 8g9f0e1d-2b3c-4d5e-6f7g-8a9b0c1d2e3f
+                category:
+                  id: 33333333-4444-5555-6666-777777777777
+                  name: Presenter
+                order: 1
+
+        EmptySpeakersResponse:
+          summary: No speakers assigned
+          description: A successful response when no speakers are assigned to the session.
+          value:
+            paging:
+              currentToken: d4e5f6a7-b8c9-0123-def0-234567890123
+              limit: 100
+              totalCount: 0
+              _links:
+                self:
+                  href: '?token=d4e5f6a7-b8c9-0123-def0-234567890123'
+            data: []
+
+        # Error Response Examples
+        BadRequestInvalidLimit:
+          summary: Invalid limit parameter
+          description: Error when the limit parameter is outside the valid range (1-200).
+          value:
+            code: 400
+            message: Bad Request
+            details:
+              - field: limit
+                reason: Value must be between 1 and 200
+
+        BadRequestInvalidToken:
+          summary: Invalid pagination token
+          description: Error when the pagination token is not a valid UUID v4.
+          value:
+            code: 400
+            message: Bad Request
+            details:
+              - field: token
+                reason: Must be a valid UUID v4 format
+
+        BadRequestInvalidSessionId:
+          summary: Invalid session ID format
+          description: Error when the session ID path parameter is not a valid UUID.
+          value:
+            code: 400
+            message: Bad Request
+            details:
+              - field: id
+                reason: Session ID must be a valid UUID format
+
+        UnauthorizedExpiredToken:
+          summary: Expired access token
+          description: Error when the OAuth2 access token has expired.
+          value:
+            code: 401
+            message: Unauthorized
+            details:
+              - field: Authorization
+                reason: Access token has expired
+
+        UnauthorizedMissingToken:
+          summary: Missing access token
+          description: Error when no OAuth2 access token is provided.
+          value:
+            code: 401
+            message: Unauthorized
+            details:
+              - field: Authorization
+                reason: Access token is required
+
+        UnauthorizedInvalidToken:
+          summary: Invalid access token
+          description: Error when the OAuth2 access token is malformed or invalid.
+          value:
+            code: 401
+            message: Unauthorized
+            details:
+              - field: Authorization
+                reason: Access token is invalid
+
+        ForbiddenInsufficientScope:
+          summary: Insufficient OAuth2 scope
+          description: Error when the access token lacks the required event/speakers:read scope.
+          value:
+            code: 403
+            message: Access Forbidden
+            details:
+              - field: scope
+                reason: "Required scope 'event/speakers:read' not granted"
+
+        ForbiddenNoEventAccess:
+          summary: No access to event
+          description: Error when the user does not have permission to access the event containing the session.
+          value:
+            code: 403
+            message: Access Forbidden
+            details:
+              - field: event
+                reason: You do not have access to the event containing this session
+
+        NotFoundSession:
+          summary: Session not found
+          description: Error when the specified session ID does not exist.
+          value:
+            code: 404
+            message: Not Found
+            details:
+              - field: id
+                reason: Session with the specified ID does not exist
+
+        NotFoundEvent:
+          summary: Event not found
+          description: Error when the event containing the session has been deleted.
+          value:
+            code: 404
+            message: Not Found
+            details:
+              - field: event
+                reason: The event containing this session no longer exists
+
+        TooManyRequestsRateLimit:
+          summary: Rate limit exceeded
+          description: Error when the API rate limit has been exceeded.
+          value:
+            code: 429
+            message: Limit Exceeded
+            details:
+              - field: rate_limit
+                reason: API rate limit exceeded. Please retry after 60 seconds
+
+        TooManyRequestsConcurrent:
+          summary: Too many concurrent requests
+          description: Error when too many concurrent requests are being processed.
+          value:
+            code: 429
+            message: Limit Exceeded
+            details:
+              - field: concurrent_requests
+                reason: Too many concurrent requests. Please reduce request frequency
+
+      responses:
+        BadRequest:
+          description: Bad request - The request was malformed or contained invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+              examples:
+                invalidLimit:
+                  $ref: '#/components/examples/BadRequestInvalidLimit'
+                invalidToken:
+                  $ref: '#/components/examples/BadRequestInvalidToken'
+                invalidSessionId:
+                  $ref: '#/components/examples/BadRequestInvalidSessionId'
+
+        Unauthorized:
+          description: Unauthorized - Authentication failed or access token is missing/invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+              examples:
+                expiredToken:
+                  $ref: '#/components/examples/UnauthorizedExpiredToken'
+                missingToken:
+                  $ref: '#/components/examples/UnauthorizedMissingToken'
+                invalidToken:
+                  $ref: '#/components/examples/UnauthorizedInvalidToken'
+
+        Forbidden:
+          description: Forbidden - You do not have permission to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+              examples:
+                insufficientScope:
+                  $ref: '#/components/examples/ForbiddenInsufficientScope'
+                noEventAccess:
+                  $ref: '#/components/examples/ForbiddenNoEventAccess'
+
+        NotFound:
+          description: Not Found - The requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+              examples:
+                sessionNotFound:
+                  $ref: '#/components/examples/NotFoundSession'
+                eventNotFound:
+                  $ref: '#/components/examples/NotFoundEvent'
+
+        TooManyRequests:
+          description: Too Many Requests - Rate limit has been exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+              examples:
+                rateLimit:
+                  $ref: '#/components/examples/TooManyRequestsRateLimit'
+                concurrentRequests:
+                  $ref: '#/components/examples/TooManyRequestsConcurrent'
+
+      securitySchemes:
+        OAuth2.authorizationCode:
+          type: oauth2
+          description: OAuth2 Authorization Code Flow
+          flows:
+            authorizationCode:
+              authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+              tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+              scopes:
+                event/speakers:read: Allows the reading of speakers
+
+        OAuth2.clientCredentials:
+          type: oauth2
+          description: OAuth2 Client Credentials Flow
+          flows:
+            clientCredentials:
+              tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+              scopes:
+                event/speakers:read: Allows the reading of speakers

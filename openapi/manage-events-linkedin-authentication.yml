@@ -1,0 +1,935 @@
+openapi: 3.1.0
+info:
+  title: LinkedIn OAuth 2.0 API
+  description: |
+    LinkedIn's Authorization Code Flow (3-legged OAuth) API for requesting permission from LinkedIn members to access their account data.
+    
+    This API allows applications to:
+    - Request authorization from LinkedIn members
+    - Exchange authorization codes for access tokens
+    - Make authenticated API calls on behalf of members
+    - Refresh access tokens
+    
+    The level of access is explicitly requested using the scope parameter during the authorization process.
+  version: 1.0.0
+  contact:
+    name: LinkedIn Developer Support
+    url: https://www.linkedin.com/help/linkedin
+  termsOfService: https://www.linkedin.com/legal/api-terms-of-use
+
+servers:
+  - url: https://www.linkedin.com
+    description: LinkedIn OAuth Server
+  - url: https://api.linkedin.com
+    description: LinkedIn API Server
+
+paths:
+  /oauth/v2/authorization:
+    get:
+      summary: Request Authorization Code
+      description: |
+        Direct the member's browser to LinkedIn's OAuth 2.0 authorization page where the member either accepts or denies your application's permission request.
+        
+        The member may first be asked to log in to LinkedIn. Once authenticated, they will see a consent screen identifying your application and the permissions being requested.
+        
+        **Important:** Social login (Google/Apple) and passkey login are currently supported on desktop and Android web browsers only. To enable these on other platforms, include the query parameter `enable_extended_login=true`.
+      operationId: requestAuthorizationCode
+      tags:
+        - OAuth Authorization
+      parameters:
+        - name: response_type
+          in: query
+          required: true
+          description: The value of this field should always be `code`
+          schema:
+            type: string
+            enum:
+              - code
+          example: code
+        - name: client_id
+          in: query
+          required: true
+          description: The API Key value generated when you registered your application
+          schema:
+            type: string
+          example: 86your_client_id
+        - name: redirect_uri
+          in: query
+          required: true
+          description: |
+            The URI your users are sent back to after authorization. This value must match one of the Redirect URLs defined in your application configuration.
+            
+            Requirements:
+            - Must be absolute URLs (e.g., `https://dev.example.com/auth/linkedin/callback`)
+            - Must use HTTPS (except localhost for testing)
+            - Parameters are ignored
+            - Cannot include a # fragment
+          schema:
+            type: string
+            format: uri
+          example: https://dev.example.com/auth/linkedin/callback
+        - name: state
+          in: query
+          required: false
+          description: A unique string value of your choice that is hard to guess. Used to prevent CSRF attacks.
+          schema:
+            type: string
+          example: DCEeFWf45A53sdfKef424
+        - name: scope
+          in: query
+          required: true
+          description: |
+            URL-encoded, space-delimited list of member permissions your application is requesting on behalf of the user.
+            
+            Available scopes depend on which Products or Partner Programs your app has access to. Check the Auth tab in the LinkedIn Developer Portal for current scopes.
+          schema:
+            type: string
+          example: r_liteprofile%20r_emailaddress%20w_member_social
+        - name: enable_extended_login
+          in: query
+          required: false
+          description: Set to `true` to enable social login (Google/Apple) and passkey login on platforms beyond desktop and Android web browsers
+          schema:
+            type: boolean
+          example: true
+      responses:
+        '302':
+          description: |
+            Redirect to the specified redirect_uri with authorization code or error.
+            
+            **Success:** Redirects with `code` and `state` parameters
+            **Failure:** Redirects with `error`, `error_description`, and `state` parameters
+          headers:
+            Location:
+              description: Redirect URL with query parameters
+              schema:
+                type: string
+              examples:
+                success:
+                  $ref: '#/components/examples/AuthorizationRedirectSuccess'
+                loginCancelled:
+                  $ref: '#/components/examples/AuthorizationRedirectLoginCancelled'
+                authorizeCancelled:
+                  $ref: '#/components/examples/AuthorizationRedirectAuthorizeCancelled'
+        '400':
+          description: Bad Request - Missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingResponseType:
+                  $ref: '#/components/examples/AuthorizationErrorMissingResponseType'
+                missingClientId:
+                  $ref: '#/components/examples/AuthorizationErrorMissingClientId'
+                missingRedirectUri:
+                  $ref: '#/components/examples/AuthorizationErrorMissingRedirectUri'
+                missingScope:
+                  $ref: '#/components/examples/AuthorizationErrorMissingScope'
+        '401':
+          description: Unauthorized - Invalid credentials or configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidRedirectUri:
+                  $ref: '#/components/examples/AuthorizationErrorInvalidRedirectUri'
+                invalidClientId:
+                  $ref: '#/components/examples/AuthorizationErrorInvalidClientId'
+                invalidScope:
+                  $ref: '#/components/examples/AuthorizationErrorInvalidScope'
+
+  /oauth/v2/accessToken:
+    post:
+      summary: Exchange Authorization Code for Access Token
+      description: |
+        Exchange the authorization code received from the authorization endpoint for an access token.
+        
+        The authorization code has a 30-minute lifespan and must be used immediately. Access tokens are issued with a 60-day lifespan.
+      operationId: exchangeAuthorizationCode
+      tags:
+        - OAuth Token
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - grant_type
+                - code
+                - client_id
+                - client_secret
+                - redirect_uri
+              properties:
+                grant_type:
+                  type: string
+                  description: The value of this field should always be `authorization_code`
+                  enum:
+                    - authorization_code
+                  example: authorization_code
+                code:
+                  type: string
+                  description: The authorization code received from the authorization endpoint
+                  example: AQTQmah11lalyH65DAIivsjsAQV5P
+                client_id:
+                  type: string
+                  description: The Client ID value generated in your application settings
+                  example: 86your_client_id
+                client_secret:
+                  type: string
+                  description: The Secret Key value generated in your application settings. Keep this value secure!
+                  example: your_client_secret
+                  format: password
+                redirect_uri:
+                  type: string
+                  description: The same redirect_uri value that you passed in the authorization request
+                  format: uri
+                  example: https://dev.example.com/auth/linkedin/callback
+            examples:
+              standardTokenRequest:
+                $ref: '#/components/examples/TokenRequestStandard'
+      responses:
+        '200':
+          description: Successful token exchange
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenResponse'
+              examples:
+                standardToken:
+                  $ref: '#/components/examples/TokenResponseStandard'
+                tokenWithRefresh:
+                  $ref: '#/components/examples/TokenResponseWithRefresh'
+                limitedScope:
+                  $ref: '#/components/examples/TokenResponseLimitedScope'
+        '400':
+          description: Bad Request - Missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingRedirectUri:
+                  $ref: '#/components/examples/TokenErrorMissingRedirectUri'
+                missingCode:
+                  $ref: '#/components/examples/TokenErrorMissingCode'
+                missingGrantType:
+                  $ref: '#/components/examples/TokenErrorMissingGrantType'
+                missingClientId:
+                  $ref: '#/components/examples/TokenErrorMissingClientId'
+                missingClientSecret:
+                  $ref: '#/components/examples/TokenErrorMissingClientSecret'
+                invalidRedirectUri:
+                  $ref: '#/components/examples/TokenErrorInvalidRedirectUri'
+                expiredCode:
+                  $ref: '#/components/examples/TokenErrorExpiredCode'
+                unsupportedGrantType:
+                  $ref: '#/components/examples/TokenErrorUnsupportedGrantType'
+        '401':
+          description: Unauthorized - Invalid authorization code or client credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidCode:
+                  $ref: '#/components/examples/TokenErrorInvalidCode'
+                invalidClientCredentials:
+                  $ref: '#/components/examples/TokenErrorInvalidClientCredentials'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                rateLimitExceeded:
+                  $ref: '#/components/examples/TokenErrorRateLimitExceeded'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internalError:
+                  $ref: '#/components/examples/ErrorInternalServer'
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                serviceUnavailable:
+                  $ref: '#/components/examples/ErrorServiceUnavailable'
+
+  /v2/me:
+    get:
+      summary: Get Current Member Profile
+      description: |
+        Retrieve the authenticated member's profile information.
+        
+        This is an example of making an authenticated API request using the access token obtained from the OAuth flow.
+      operationId: getCurrentMember
+      tags:
+        - Profile API
+      security:
+        - oauth2:
+            - r_liteprofile
+      responses:
+        '200':
+          description: Successful response with member profile data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberProfile'
+              examples:
+                fullProfile:
+                  $ref: '#/components/examples/ProfileResponseFull'
+                minimalProfile:
+                  $ref: '#/components/examples/ProfileResponseMinimal'
+        '400':
+          description: Bad Request - Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidRequest:
+                  $ref: '#/components/examples/ProfileErrorInvalidRequest'
+        '401':
+          description: Unauthorized - Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingToken:
+                  $ref: '#/components/examples/ProfileErrorMissingToken'
+                invalidToken:
+                  $ref: '#/components/examples/ProfileErrorInvalidToken'
+                expiredToken:
+                  $ref: '#/components/examples/ProfileErrorExpiredToken'
+        '403':
+          description: Forbidden - Insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                insufficientScope:
+                  $ref: '#/components/examples/ProfileErrorInsufficientScope'
+                memberRestricted:
+                  $ref: '#/components/examples/ProfileErrorMemberRestricted'
+        '404':
+          description: Not Found - Member profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                profileNotFound:
+                  $ref: '#/components/examples/ProfileErrorNotFound'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                rateLimitExceeded:
+                  $ref: '#/components/examples/ProfileErrorRateLimitExceeded'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internalError:
+                  $ref: '#/components/examples/ErrorInternalServer'
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                serviceUnavailable:
+                  $ref: '#/components/examples/ErrorServiceUnavailable'
+
+components:
+  schemas:
+    AccessTokenResponse:
+      type: object
+      description: Response containing the access token and related information
+      required:
+        - access_token
+        - expires_in
+      properties:
+        access_token:
+          type: string
+          description: |
+            The access token for the application. This value must be kept secure.
+            
+            Token length is approximately 500 characters, but applications should handle tokens up to 1000 characters.
+          example: AQUvlL_DYEzvT2wz1QJiEPeLioeA
+        expires_in:
+          type: integer
+          description: The number of seconds remaining until the token expires. Currently, all access tokens are issued with a 60-day lifespan.
+          example: 5184000
+        refresh_token:
+          type: string
+          description: Your refresh token for the application. This token must be kept secure. Available for select partners only.
+          example: AQVaBCdEfGhIjKlMnOpQrStUvWxYz
+        refresh_token_expires_in:
+          type: integer
+          description: The number of seconds remaining until the refresh token expires. Refresh tokens usually have a longer lifespan than access tokens.
+          example: 31536000
+        scope:
+          type: string
+          description: Space-delimited list of member permissions granted to your application
+          example: r_liteprofile r_emailaddress
+
+    MemberProfile:
+      type: object
+      description: LinkedIn member profile information
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the member
+          example: "urn:li:person:abc123XYZ"
+        firstName:
+          type: object
+          description: Member's first name with localization
+          properties:
+            localized:
+              type: object
+              additionalProperties:
+                type: string
+              example:
+                en_US: "John"
+            preferredLocale:
+              type: object
+              properties:
+                country:
+                  type: string
+                  example: "US"
+                language:
+                  type: string
+                  example: "en"
+        lastName:
+          type: object
+          description: Member's last name with localization
+          properties:
+            localized:
+              type: object
+              additionalProperties:
+                type: string
+              example:
+                en_US: "Doe"
+            preferredLocale:
+              type: object
+              properties:
+                country:
+                  type: string
+                  example: "US"
+                language:
+                  type: string
+                  example: "en"
+        profilePicture:
+          type: object
+          description: Member's profile picture information
+          properties:
+            displayImage:
+              type: string
+              description: URN reference to the profile image
+              example: "urn:li:digitalmediaAsset:C4D03AQGsitRwG8U8ZQ"
+        headline:
+          type: object
+          description: Member's professional headline
+          properties:
+            localized:
+              type: object
+              additionalProperties:
+                type: string
+              example:
+                en_US: "Software Engineer at Tech Company"
+            preferredLocale:
+              type: object
+              properties:
+                country:
+                  type: string
+                language:
+                  type: string
+
+    ErrorResponse:
+      type: object
+      description: Error response structure
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error code indicating the type of error
+          example: "invalid_request"
+        error_description:
+          type: string
+          description: Human-readable description of the error
+          example: "A required parameter is missing"
+        status:
+          type: integer
+          description: HTTP status code
+          example: 401
+        message:
+          type: string
+          description: Additional error message
+          example: "Unauthorized"
+        serviceErrorCode:
+          type: integer
+          description: LinkedIn-specific service error code
+          example: 65600
+
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: |
+        LinkedIn OAuth 2.0 Authorization Code Flow (3-legged OAuth)
+        
+        To use this authentication:
+        1. Register your application in the LinkedIn Developer Portal
+        2. Configure redirect URIs
+        3. Request authorization from users
+        4. Exchange authorization code for access token
+        5. Use access token in API requests
+      flows:
+        authorizationCode:
+          authorizationUrl: https://www.linkedin.com/oauth/v2/authorization
+          tokenUrl: https://www.linkedin.com/oauth/v2/accessToken
+          refreshUrl: https://www.linkedin.com/oauth/v2/authorization
+          scopes:
+            r_liteprofile: Read access to lite profile (name, photo, headline)
+            r_emailaddress: Read access to primary email address
+            r_basicprofile: Read access to basic profile information
+            w_member_social: Write access to share content on member's behalf
+            r_organization_social: Read access to organization's posts and metrics
+            w_organization_social: Write access to post on organization's behalf
+            rw_organization_admin: Admin access to manage organization
+            r_ads: Read access to advertising accounts
+            r_ads_reporting: Read access to advertising reports
+            rw_ads: Write access to advertising accounts
+            r_1st_connections_size: Read total count of 1st degree connections
+
+  examples:
+    # ============================================
+    # Authorization Endpoint - 302 Redirect Examples
+    # ============================================
+    
+    AuthorizationRedirectSuccess:
+      summary: Successful authorization
+      description: Member approved the authorization request and is redirected with an authorization code
+      value: "https://dev.example.com/auth/linkedin/callback?code=AQTQmah11lalyH65DAIivsjsAQV5P&state=DCEeFWf45A53sdfKef424"
+    
+    AuthorizationRedirectLoginCancelled:
+      summary: Member cancelled login
+      description: Member declined to log in to LinkedIn
+      value: "https://dev.example.com/auth/linkedin/callback?error=user_cancelled_login&error_description=The+member+declined+to+log+in&state=DCEeFWf45A53sdfKef424"
+    
+    AuthorizationRedirectAuthorizeCancelled:
+      summary: Member refused authorization
+      description: Member logged in but refused to authorize the application
+      value: "https://dev.example.com/auth/linkedin/callback?error=user_cancelled_authorize&error_description=The+member+refused+to+authorize&state=DCEeFWf45A53sdfKef424"
+    
+    # ============================================
+    # Authorization Endpoint - 400 Bad Request Examples
+    # ============================================
+    
+    AuthorizationErrorMissingResponseType:
+      summary: Missing response_type parameter
+      description: The required response_type parameter was not provided
+      value:
+        error: "invalid_request"
+        error_description: "A required parameter \"response_type\" is missing"
+    
+    AuthorizationErrorMissingClientId:
+      summary: Missing client_id parameter
+      description: The required client_id parameter was not provided
+      value:
+        error: "invalid_request"
+        error_description: "A required parameter \"client_id\" is missing"
+    
+    AuthorizationErrorMissingRedirectUri:
+      summary: Missing redirect_uri parameter
+      description: The required redirect_uri parameter was not provided
+      value:
+        error: "invalid_request"
+        error_description: "A required parameter \"redirect_uri\" is missing"
+    
+    AuthorizationErrorMissingScope:
+      summary: Missing scope parameter
+      description: The required scope parameter was not provided
+      value:
+        error: "invalid_request"
+        error_description: "A required parameter \"scope\" is missing"
+    
+    # ============================================
+    # Authorization Endpoint - 401 Unauthorized Examples
+    # ============================================
+    
+    AuthorizationErrorInvalidRedirectUri:
+      summary: Invalid redirect URI
+      description: The redirect_uri does not match any URI registered for the application
+      value:
+        error: "redirect_uri_mismatch"
+        error_description: "Redirect URI passed in the request does not match the redirect URI added to the developer application"
+    
+    AuthorizationErrorInvalidClientId:
+      summary: Invalid client ID
+      description: The client_id does not match any registered application
+      value:
+        error: "invalid_client"
+        error_description: "Client ID passed in the request does not match the client ID of the developer application"
+    
+    AuthorizationErrorInvalidScope:
+      summary: Invalid scope requested
+      description: One or more requested scopes are invalid or not authorized for this application
+      value:
+        error: "invalid_scope"
+        error_description: "Permissions passed in the request is invalid"
+    
+    # ============================================
+    # Token Endpoint - Request Examples
+    # ============================================
+    
+    TokenRequestStandard:
+      summary: Standard token exchange request
+      description: Request body for exchanging an authorization code for tokens
+      value:
+        grant_type: "authorization_code"
+        code: "AQTQmah11lalyH65DAIivsjsAQV5P"
+        client_id: "86your_client_id"
+        client_secret: "your_client_secret"
+        redirect_uri: "https://dev.example.com/auth/linkedin/callback"
+    
+    # ============================================
+    # Token Endpoint - 200 Success Examples
+    # ============================================
+    
+    TokenResponseStandard:
+      summary: Standard token response
+      description: Successful token exchange without refresh token
+      value:
+        access_token: "AQUvlL_DYEzvT2wz1QJiEPeLioeA"
+        expires_in: 5184000
+        scope: "r_liteprofile r_emailaddress"
+    
+    TokenResponseWithRefresh:
+      summary: Token response with refresh token
+      description: Successful token exchange including refresh token (for select partners)
+      value:
+        access_token: "AQUvlL_DYEzvT2wz1QJiEPeLioeA"
+        expires_in: 5184000
+        refresh_token: "AQVaBCdEfGhIjKlMnOpQrStUvWxYz"
+        refresh_token_expires_in: 31536000
+        scope: "r_liteprofile r_emailaddress w_member_social"
+    
+    TokenResponseLimitedScope:
+      summary: Token response with limited scope
+      description: Token granted with fewer scopes than requested (user declined some permissions)
+      value:
+        access_token: "AQUvlL_DYEzvT2wz1QJiEPeLioeA"
+        expires_in: 5184000
+        scope: "r_liteprofile"
+    
+    # ============================================
+    # Token Endpoint - 400 Bad Request Examples
+    # ============================================
+    
+    TokenErrorMissingRedirectUri:
+      summary: Missing redirect_uri parameter
+      description: The required redirect_uri parameter was not provided
+      value:
+        error: "invalid_request"
+        error_description: "A required parameter \"redirect_uri\" is missing"
+    
+    TokenErrorMissingCode:
+      summary: Missing code parameter
+      description: The required authorization code parameter was not provided
+      value:
+        error: "invalid_request"
+        error_description: "A required parameter \"code\" is missing"
+    
+    TokenErrorMissingGrantType:
+      summary: Missing grant_type parameter
+      description: The required grant_type parameter was not provided
+      value:
+        error: "invalid_request"
+        error_description: "A required parameter \"grant_type\" is missing"
+    
+    TokenErrorMissingClientId:
+      summary: Missing client_id parameter
+      description: The required client_id parameter was not provided
+      value:
+        error: "invalid_request"
+        error_description: "A required parameter \"client_id\" is missing"
+    
+    TokenErrorMissingClientSecret:
+      summary: Missing client_secret parameter
+      description: The required client_secret parameter was not provided
+      value:
+        error: "invalid_request"
+        error_description: "A required parameter \"client_secret\" is missing"
+    
+    TokenErrorInvalidRedirectUri:
+      summary: Redirect URI mismatch
+      description: The redirect_uri does not match the one used during authorization
+      value:
+        error: "invalid_redirect_uri"
+        error_description: "Unable to retrieve access token: appid/redirect uri/code verifier does not match authorization code. Or authorization code expired. Or external member binding exists"
+    
+    TokenErrorExpiredCode:
+      summary: Expired authorization code
+      description: The authorization code has expired (codes are valid for 30 minutes)
+      value:
+        error: "invalid_grant"
+        error_description: "The authorization code has expired"
+    
+    TokenErrorUnsupportedGrantType:
+      summary: Unsupported grant type
+      description: The grant_type value is not supported
+      value:
+        error: "unsupported_grant_type"
+        error_description: "Grant type \"client_credentials\" is not supported"
+    
+    # ============================================
+    # Token Endpoint - 401 Unauthorized Examples
+    # ============================================
+    
+    TokenErrorInvalidCode:
+      summary: Invalid authorization code
+      description: The authorization code is invalid or has already been used
+      value:
+        error: "invalid_grant"
+        error_description: "Unable to retrieve access token: authorization code not found"
+    
+    TokenErrorInvalidClientCredentials:
+      summary: Invalid client credentials
+      description: The client_id or client_secret is incorrect
+      value:
+        error: "invalid_client"
+        error_description: "Client authentication failed"
+    
+    # ============================================
+    # Token Endpoint - 429 Rate Limit Examples
+    # ============================================
+    
+    TokenErrorRateLimitExceeded:
+      summary: Rate limit exceeded
+      description: Too many token requests in a short period
+      value:
+        error: "rate_limit_exceeded"
+        error_description: "Rate limit for token requests exceeded. Please wait before retrying."
+        status: 429
+        serviceErrorCode: 65604
+    
+    # ============================================
+    # Profile API - 200 Success Examples
+    # ============================================
+    
+    ProfileResponseFull:
+      summary: Full profile response
+      description: Complete member profile with all available fields
+      value:
+        id: "urn:li:person:abc123XYZ"
+        firstName:
+          localized:
+            en_US: "John"
+          preferredLocale:
+            country: "US"
+            language: "en"
+        lastName:
+          localized:
+            en_US: "Doe"
+          preferredLocale:
+            country: "US"
+            language: "en"
+        profilePicture:
+          displayImage: "urn:li:digitalmediaAsset:C4D03AQGsitRwG8U8ZQ"
+        headline:
+          localized:
+            en_US: "Senior Software Engineer at Tech Company"
+          preferredLocale:
+            country: "US"
+            language: "en"
+    
+    ProfileResponseMinimal:
+      summary: Minimal profile response
+      description: Profile with only required fields (limited scope)
+      value:
+        id: "urn:li:person:abc123XYZ"
+        firstName:
+          localized:
+            en_US: "John"
+          preferredLocale:
+            country: "US"
+            language: "en"
+        lastName:
+          localized:
+            en_US: "Doe"
+          preferredLocale:
+            country: "US"
+            language: "en"
+    
+    # ============================================
+    # Profile API - 400 Bad Request Examples
+    # ============================================
+    
+    ProfileErrorInvalidRequest:
+      summary: Invalid request
+      description: The request is malformed or contains invalid parameters
+      value:
+        error: "invalid_request"
+        error_description: "Invalid request format"
+        status: 400
+        serviceErrorCode: 65601
+    
+    # ============================================
+    # Profile API - 401 Unauthorized Examples
+    # ============================================
+    
+    ProfileErrorMissingToken:
+      summary: Missing access token
+      description: No access token was provided in the Authorization header
+      value:
+        error: "unauthorized"
+        error_description: "Empty oauth2 access token"
+        status: 401
+        serviceErrorCode: 65600
+    
+    ProfileErrorInvalidToken:
+      summary: Invalid access token
+      description: The provided access token is malformed or invalid
+      value:
+        error: "invalid_token"
+        error_description: "The access token is invalid"
+        status: 401
+        serviceErrorCode: 65600
+    
+    ProfileErrorExpiredToken:
+      summary: Expired access token
+      description: The access token has expired and needs to be refreshed
+      value:
+        error: "expired_token"
+        error_description: "Access token has expired"
+        status: 401
+        serviceErrorCode: 65600
+    
+    # ============================================
+    # Profile API - 403 Forbidden Examples
+    # ============================================
+    
+    ProfileErrorInsufficientScope:
+      summary: Insufficient scope
+      description: The access token does not have the required r_liteprofile scope
+      value:
+        error: "insufficient_scope"
+        error_description: "The access token does not have the required scope to access this resource. Required scope: r_liteprofile"
+        status: 403
+        serviceErrorCode: 65602
+    
+    ProfileErrorMemberRestricted:
+      summary: Member restricted access
+      description: The member has restricted access to their profile data
+      value:
+        error: "access_denied"
+        error_description: "The member has restricted access to their profile information"
+        status: 403
+        serviceErrorCode: 65603
+    
+    # ============================================
+    # Profile API - 404 Not Found Examples
+    # ============================================
+    
+    ProfileErrorNotFound:
+      summary: Profile not found
+      description: The requested member profile does not exist
+      value:
+        error: "not_found"
+        error_description: "The requested resource was not found"
+        status: 404
+        serviceErrorCode: 65605
+    
+    # ============================================
+    # Profile API - 429 Rate Limit Examples
+    # ============================================
+    
+    ProfileErrorRateLimitExceeded:
+      summary: Rate limit exceeded
+      description: Too many API requests in a short period
+      value:
+        error: "rate_limit_exceeded"
+        error_description: "API rate limit exceeded. Please wait before making additional requests."
+        status: 429
+        serviceErrorCode: 65604
+    
+    # ============================================
+    # Shared Error Examples
+    # ============================================
+    
+    ErrorInternalServer:
+      summary: Internal server error
+      description: An unexpected error occurred on LinkedIn's servers
+      value:
+        error: "server_error"
+        error_description: "An internal server error occurred. Please try again later."
+        status: 500
+        serviceErrorCode: 65500
+    
+    ErrorServiceUnavailable:
+      summary: Service unavailable
+      description: LinkedIn services are temporarily unavailable
+      value:
+        error: "service_unavailable"
+        error_description: "LinkedIn services are temporarily unavailable. Please try again later."
+        status: 503
+        serviceErrorCode: 65503
+
+security:
+  - oauth2: []
+
+tags:
+  - name: OAuth Authorization
+    description: Endpoints for OAuth 2.0 authorization flow
+  - name: OAuth Token
+    description: Endpoints for token management
+  - name: Profile API
+    description: Example authenticated API endpoints
+
+externalDocs:
+  description: LinkedIn OAuth 2.0 Documentation
+  url: https://docs.microsoft.com/en-us/linkedin/shared/authentication/authentication
+
+x-linkedin-docs:
+  best-practices:
+    - Request the least number of scope permissions needed
+    - Keep client_secret secure and never share it
+    - Validate state parameter to prevent CSRF attacks
+    - Refresh access tokens before they expire
+    - Handle token length up to 1000 characters
+    - Use HTTPS for all redirect URIs (except localhost for testing)
+  
+  token-generator:
+    description: The LinkedIn Developer Portal has a token generator for manually creating tokens
+    url: https://www.linkedin.com/developers/tools/oauth/token-generator
+  
+  authorization-code-lifetime: 30 minutes
+  access-token-lifetime: 60 days
+  
+  notes:
+    - If scope permissions change in your app, users must re-authenticate
+    - Multiple valid access tokens can be held simultaneously if the same scope is requested
+    - If a different scope is requested, all previous access tokens are invalidated
+    - Social login and passkey login require enable_extended_login=true on non-desktop/Android platforms

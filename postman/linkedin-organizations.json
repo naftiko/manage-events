@@ -1,0 +1,940 @@
+{
+	"info": {
+		"_postman_id": "997c6770-c15e-4f87-a89e-87df3229a840",
+		"name": "LinkedIn Organization Lookup API",
+		"description": "The Organization Lookup API searches organizations and their profiles.\n\n**Important Notes:**\n- Organization lookup API is protected by 3-legged OAuth token\n- Some API calls require that the authenticated member has the role type `ADMINISTRATOR` \n  for the requested organization\n- APIs without administrative access return only limited fields: id, name, localizedName, \n  localizedWebsite, vanityName, logoV2, locations, primaryOrganizationType\n- APIs with administrative access return all available Organization fields\n\n**Input Parameter Rules:**\n- All strings are case-insensitive\n- Multiple words should be joined with a space (URL encoded as %20)\n- Complete string is searched when including multiple words\n- Wildcards and boolean logic not supported (*, ?, AND, OR)\n\nOrganization URNs are in the format `urn:li:organization:{organization id}` and \nrepresent a LinkedIn Company Page.\n\n**Deprecation Notice:** Marketing Version 202411 has been sunset. Migrate to the \nlatest versioned APIs to avoid disruptions.\n\n\nContact Support:\n Name: LinkedIn Developer Support",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35240",
+		"_collection_link": "https://api-evangelist.postman.co/workspace/Capabilities-Working~0e59032e-d676-4e90-be81-48adc3c04507/collection/35240-997c6770-c15e-4f87-a89e-87df3229a840?action=share&source=collection_link&creator=35240"
+	},
+	"item": [
+		{
+			"name": "organizations",
+			"item": [
+				{
+					"name": "{organizationId}",
+					"item": [
+						{
+							"name": "Retrieve an Administered Organization",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/organizations/:organizationId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organizations",
+										":organizationId"
+									],
+									"variable": [
+										{
+											"key": "organizationId",
+											"value": "79988552",
+											"description": "The unique identifier for the organization"
+										}
+									]
+								},
+								"description": "Look up organization information on behalf of authenticated members with role type \n`ADMINISTRATOR` for that organization. \n\nAPI calls with insufficient permissions return 403 Forbidden.\n\nReturns all available Organization fields when authenticated member has admin access.\n"
+							},
+							"response": [
+								{
+									"name": "fullAdminAccess",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": 79988552,\n  \"$URN\": \"urn:li:organization:79988552\",\n  \"vanityName\": \"firstdemocompany\",\n  \"localizedName\": \"FirstDemoCompany\",\n  \"localizedWebsite\": \"https://www.firstdemocompany.com\",\n  \"organizationType\": \"SELF_EMPLOYED\",\n  \"primaryOrganizationType\": \"NONE\",\n  \"versionTag\": \"111146657\",\n  \"defaultLocale\": {\n    \"country\": \"US\",\n    \"language\": \"en\"\n  },\n  \"name\": {\n    \"localized\": {\n      \"en_US\": \"FirstDemoCompany\"\n    },\n    \"preferredLocale\": {\n      \"country\": \"US\",\n      \"language\": \"en\"\n    }\n  },\n  \"logoV2\": {\n    \"displayImage\": \"urn:li:digitalmediaAsset:C4D0BAQHiY9YLxMZApQ\"\n  },\n  \"coverPhotoV2\": {\n    \"cropped\": \"urn:li:digitalmediaAsset:C561BAQHqQYsCLYiAnA\",\n    \"original\": \"urn:li:digitalmediaAsset:C561BAQHqQYsCLYiAnA\",\n    \"cropInfo\": {\n      \"x\": 0,\n      \"y\": 108,\n      \"width\": 800,\n      \"height\": 135\n    }\n  },\n  \"locations\": [\n    {\n      \"address\": {\n        \"line1\": \"123 Main Street\",\n        \"city\": \"San Francisco\",\n        \"state\": \"CA\",\n        \"postalCode\": \"94105\",\n        \"country\": \"US\"\n      },\n      \"geoLocation\": {\n        \"latitude\": 37.7749,\n        \"longitude\": -122.4194\n      },\n      \"description\": \"Headquarters\"\n    }\n  ],\n  \"staffCountRange\": \"SIZE_1\",\n  \"industries\": [\n    \"urn:li:industry:4\"\n  ],\n  \"specialties\": [\n    \"Software Development\",\n    \"Cloud Computing\"\n  ],\n  \"localizedSpecialties\": [\n    \"Software Development\",\n    \"Cloud Computing\"\n  ],\n  \"groups\": [],\n  \"alternativeNames\": []\n}"
+								},
+								{
+									"name": "limitedNonAdminAccess",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": 79988552,\n  \"$URN\": \"urn:li:organization:79988552\",\n  \"vanityName\": \"firstdemocompany\",\n  \"localizedName\": \"FirstDemoCompany\",\n  \"localizedWebsite\": \"https://www.firstdemocompany.com\",\n  \"primaryOrganizationType\": \"NONE\",\n  \"name\": {\n    \"localized\": {\n      \"en_US\": \"FirstDemoCompany\"\n    },\n    \"preferredLocale\": {\n      \"country\": \"US\",\n      \"language\": \"en\"\n    }\n  },\n  \"logoV2\": {\n    \"displayImage\": \"urn:li:digitalmediaAsset:C4D0BAQHiY9YLxMZApQ\"\n  },\n  \"locations\": []\n}"
+								},
+								{
+									"name": "largeEnterprise",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": 1234567890,\n  \"$URN\": \"urn:li:organization:1234567890\",\n  \"vanityName\": \"globaltech-corp\",\n  \"localizedName\": \"GlobalTech Corporation\",\n  \"localizedWebsite\": \"https://www.globaltech.com\",\n  \"organizationType\": \"PUBLIC_COMPANY\",\n  \"primaryOrganizationType\": \"PUBLIC_COMPANY\",\n  \"versionTag\": \"987654321\",\n  \"defaultLocale\": {\n    \"country\": \"US\",\n    \"language\": \"en\"\n  },\n  \"name\": {\n    \"localized\": {\n      \"en_US\": \"GlobalTech Corporation\",\n      \"de_DE\": \"GlobalTech GmbH\",\n      \"ja_JP\": \"グローバルテック株式会社\"\n    },\n    \"preferredLocale\": {\n      \"country\": \"US\",\n      \"language\": \"en\"\n    }\n  },\n  \"logoV2\": {\n    \"displayImage\": \"urn:li:digitalmediaAsset:C5D0BAQGlobalTechLogo\"\n  },\n  \"coverPhotoV2\": {\n    \"cropped\": \"urn:li:digitalmediaAsset:C561BAQGlobalTechCover\",\n    \"original\": \"urn:li:digitalmediaAsset:C561BAQGlobalTechCoverOrig\",\n    \"cropInfo\": {\n      \"x\": 0,\n      \"y\": 50,\n      \"width\": 1200,\n      \"height\": 300\n    }\n  },\n  \"locations\": [\n    {\n      \"address\": {\n        \"line1\": \"1 Technology Plaza\",\n        \"city\": \"Mountain View\",\n        \"state\": \"CA\",\n        \"postalCode\": \"94043\",\n        \"country\": \"US\"\n      },\n      \"geoLocation\": {\n        \"latitude\": 37.3861,\n        \"longitude\": -122.0839\n      },\n      \"description\": \"Global Headquarters\"\n    },\n    {\n      \"address\": {\n        \"line1\": \"100 Innovation Way\",\n        \"city\": \"London\",\n        \"postalCode\": \"EC2A 1NT\",\n        \"country\": \"GB\"\n      },\n      \"geoLocation\": {\n        \"latitude\": 51.5074,\n        \"longitude\": -0.1278\n      },\n      \"description\": \"EMEA Headquarters\"\n    }\n  ],\n  \"staffCountRange\": \"SIZE_10001_PLUS\",\n  \"industries\": [\n    \"urn:li:industry:4\",\n    \"urn:li:industry:6\",\n    \"urn:li:industry:96\"\n  ],\n  \"specialties\": [\n    \"Enterprise Software\",\n    \"Cloud Infrastructure\",\n    \"Artificial Intelligence\",\n    \"Cybersecurity\"\n  ],\n  \"localizedSpecialties\": [\n    \"Enterprise Software\",\n    \"Cloud Infrastructure\",\n    \"Artificial Intelligence\",\n    \"Cybersecurity\"\n  ],\n  \"groups\": [\n    \"urn:li:group:12345\",\n    \"urn:li:group:67890\"\n  ],\n  \"alternativeNames\": [\n    {\n      \"localized\": {\n        \"en_US\": \"GlobalTech\"\n      },\n      \"preferredLocale\": {\n        \"country\": \"US\",\n        \"language\": \"en\"\n      }\n    },\n    {\n      \"localized\": {\n        \"de_DE\": \"GT GmbH\"\n      },\n      \"preferredLocale\": {\n        \"country\": \"DE\",\n        \"language\": \"de\"\n      }\n    }\n  ]\n}"
+								},
+								{
+									"name": "educationalInstitution",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": 5556667778,\n  \"$URN\": \"urn:li:organization:5556667778\",\n  \"vanityName\": \"tech-university\",\n  \"localizedName\": \"Technology University\",\n  \"localizedWebsite\": \"https://www.techuniversity.edu\",\n  \"organizationType\": \"EDUCATIONAL\",\n  \"primaryOrganizationType\": \"EDUCATIONAL\",\n  \"versionTag\": \"445566778\",\n  \"defaultLocale\": {\n    \"country\": \"US\",\n    \"language\": \"en\"\n  },\n  \"name\": {\n    \"localized\": {\n      \"en_US\": \"Technology University\"\n    },\n    \"preferredLocale\": {\n      \"country\": \"US\",\n      \"language\": \"en\"\n    }\n  },\n  \"logoV2\": {\n    \"displayImage\": \"urn:li:digitalmediaAsset:C4D0BAQTechUniLogo\"\n  },\n  \"coverPhotoV2\": {\n    \"cropped\": \"urn:li:digitalmediaAsset:C561BAQTechUniCampus\",\n    \"original\": \"urn:li:digitalmediaAsset:C561BAQTechUniCampusOrig\",\n    \"cropInfo\": {\n      \"x\": 0,\n      \"y\": 75,\n      \"width\": 1000,\n      \"height\": 250\n    }\n  },\n  \"locations\": [\n    {\n      \"address\": {\n        \"line1\": \"500 University Drive\",\n        \"city\": \"Boston\",\n        \"state\": \"MA\",\n        \"postalCode\": \"02115\",\n        \"country\": \"US\"\n      },\n      \"geoLocation\": {\n        \"latitude\": 42.3601,\n        \"longitude\": -71.0589\n      },\n      \"description\": \"Main Campus\"\n    }\n  ],\n  \"staffCountRange\": \"SIZE_1001_5000\",\n  \"industries\": [\n    \"urn:li:industry:68\"\n  ],\n  \"specialties\": [\n    \"Computer Science\",\n    \"Engineering\",\n    \"Research\",\n    \"Innovation\"\n  ],\n  \"localizedSpecialties\": [\n    \"Computer Science\",\n    \"Engineering\",\n    \"Research\",\n    \"Innovation\"\n  ],\n  \"groups\": [\n    \"urn:li:group:111222\"\n  ],\n  \"alternativeNames\": [\n    {\n      \"localized\": {\n        \"en_US\": \"Tech U\"\n      },\n      \"preferredLocale\": {\n        \"country\": \"US\",\n        \"language\": \"en\"\n      }\n    }\n  ]\n}"
+								},
+								{
+									"name": "invalidIdFormat",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 400,\n  \"message\": \"Invalid organization ID format. Expected numeric value.\",\n  \"serviceErrorCode\": 100,\n  \"code\": \"INVALID_PARAMETER_VALUE\"\n}"
+								},
+								{
+									"name": "missingOrganizationId",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 400,\n  \"message\": \"Organization ID is required\",\n  \"serviceErrorCode\": 101,\n  \"code\": \"MISSING_PARAMETER\"\n}"
+								},
+								{
+									"name": "malformedRequest",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 400,\n  \"message\": \"Unable to parse request. Please verify the request format.\",\n  \"serviceErrorCode\": 102,\n  \"code\": \"MALFORMED_REQUEST\"\n}"
+								},
+								{
+									"name": "missingToken",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 401,\n  \"message\": \"Empty oauth2 access token\",\n  \"serviceErrorCode\": 65600,\n  \"code\": \"UNAUTHORIZED\"\n}"
+								},
+								{
+									"name": "invalidToken",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 401,\n  \"message\": \"Invalid access token\",\n  \"serviceErrorCode\": 65601,\n  \"code\": \"INVALID_ACCESS_TOKEN\"\n}"
+								},
+								{
+									"name": "expiredToken",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 401,\n  \"message\": \"Access token has expired\",\n  \"serviceErrorCode\": 65602,\n  \"code\": \"EXPIRED_ACCESS_TOKEN\"\n}"
+								},
+								{
+									"name": "notAdministrator",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 403,\n  \"message\": \"The authenticated member does not have administrator access to organization urn:li:organization:79988552\",\n  \"serviceErrorCode\": 65603,\n  \"code\": \"ACCESS_DENIED\"\n}"
+								},
+								{
+									"name": "insufficientScope",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 403,\n  \"message\": \"Insufficient scope. Required scope: rw_organization_admin\",\n  \"serviceErrorCode\": 65604,\n  \"code\": \"INSUFFICIENT_SCOPE\"\n}"
+								},
+								{
+									"name": "organizationRestricted",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 403,\n  \"message\": \"Access to this organization is restricted\",\n  \"serviceErrorCode\": 65605,\n  \"code\": \"ORGANIZATION_RESTRICTED\"\n}"
+								},
+								{
+									"name": "organizationNotFound",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 404,\n  \"message\": \"Organization with ID 99999999 not found\",\n  \"serviceErrorCode\": 65700,\n  \"code\": \"RESOURCE_NOT_FOUND\"\n}"
+								},
+								{
+									"name": "organizationDeleted",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 404,\n  \"message\": \"Organization urn:li:organization:79988552 has been deleted\",\n  \"serviceErrorCode\": 65701,\n  \"code\": \"RESOURCE_DELETED\"\n}"
+								},
+								{
+									"name": "rateLimitExceeded",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Too Many Requests",
+									"code": 429,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 429,\n  \"message\": \"Rate limit exceeded. Please retry after the specified time.\",\n  \"serviceErrorCode\": 65800,\n  \"code\": \"RATE_LIMIT_EXCEEDED\"\n}"
+								},
+								{
+									"name": "dailyLimitExceeded",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Too Many Requests",
+									"code": 429,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 429,\n  \"message\": \"Daily API call limit exceeded. Limit resets at midnight UTC.\",\n  \"serviceErrorCode\": 65801,\n  \"code\": \"DAILY_LIMIT_EXCEEDED\"\n}"
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 500,\n  \"message\": \"Internal server error. Please try again later.\",\n  \"serviceErrorCode\": 0,\n  \"code\": \"INTERNAL_ERROR\"\n}"
+								},
+								{
+									"name": "Service Unavailable",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/organizations/:organizationId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"organizations",
+												":organizationId"
+											],
+											"variable": [
+												{
+													"key": "organizationId",
+													"value": "79988552",
+													"description": "The unique identifier for the organization"
+												}
+											]
+										}
+									},
+									"status": "Service Unavailable",
+									"code": 503,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"status\": 503,\n  \"message\": \"Service temporarily unavailable. Please try again later.\",\n  \"serviceErrorCode\": 65900,\n  \"code\": \"SERVICE_UNAVAILABLE\"\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "scope",
+				"value": "rw_organization_admin r_compliance",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://www.linkedin.com/oauth/v2/accessToken",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://www.linkedin.com/oauth/v2/authorization",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.linkedin.com/rest"
+		}
+	]
+}

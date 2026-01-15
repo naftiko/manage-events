@@ -1,0 +1,704 @@
+openapi: 3.1.0
+info:
+  title: Cvent Exhibitors API
+  description: Retrieves a paginated list of exhibitors associated with a single event.
+  version: 1.0.0
+servers:
+  - url: https://api-platform-eur.cvent.com/ea
+  - url: https://api-platform.cvent.com/ea
+paths:
+  /events/{id}/exhibitors:
+    get:
+      summary: List Exhibitors
+      description: Retrieves a paginated list of exhibitors associated with a single event.
+      operationId: getExhibitors
+      tags:
+        - Exhibitor
+      security:
+        - OAuth2.clientCredentials:
+            - exhibitor/exhibitors:read
+        - OAuth2.authorizationCode:
+            - exhibitor/exhibitors:read
+      parameters:
+        - $ref: '#/components/parameters/id6'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+        - name: filter
+          in: query
+          required: false
+          description: >
+            A filter query string narrows search results and supports the
+            combination of logical and comparison operators.
+
+            The filter adheres to the pattern filter='field' comparisonType
+            'value'.
+
+
+            These are the comparison types that can be used in filter
+            expressions:
+
+            * equal: eq
+
+            * includes value(s): in
+
+
+            The following fields are filterable:
+
+            * hidden (eq)
+
+            * deleted (eq)
+
+            * id (in)
+          schema:
+            type: string
+            example: >-
+              id in ('{UUID}', '{UUID}') AND deleted eq 'true' AND hidden eq
+              'true'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExhibitorListSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      externalDocs:
+        description: More about OAuth2 authorization code support for administrators
+        url: '#oauth2-auth-code-planner-admin'
+components:
+  examples:
+    ExhibitorListSuccessExample:
+      summary: Successful exhibitor list response
+      description: Example response showing a paginated list of exhibitors for an event
+      value:
+        paging:
+          previousToken: null
+          nextToken: 2b3c4d5e6f7g8h9i10j11k12l
+          currentToken: 1a2b3c4d5e6f7g8h9i10j11k
+          limit: 100
+          totalCount: 2
+          _links:
+            self:
+              href: '?token=1a2b3c4d5e6f7g8h9i10j11k'
+            next:
+              href: '?token=2b3c4d5e6f7g8h9i10j11k12l'
+        data:
+          - id: '4888db54-db22-11eb-8d19-0242ac130003'
+            name: 'Acme Technology Solutions'
+            description: 'Leading provider of innovative technology solutions for enterprise businesses.'
+            website: 'https://www.acmetech.example.com'
+            email: 'contact@acmetech.example.com'
+            phone: '555-123-4567'
+            hidden: false
+            deleted: false
+            sponsorshipLevel:
+              id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+              name: 'Platinum Sponsor'
+            categories:
+              - id: 'c1d2e3f4-a5b6-7890-cdef-123456789012'
+                name: 'Technology'
+              - id: 'd2e3f4a5-b6c7-8901-def0-234567890123'
+                name: 'Software'
+            booths:
+              - id: 'b1c2d3e4-f5a6-7890-bcde-f12345678901'
+                name: 'Booth A101'
+                location: 'Hall A, Row 1'
+            profileLogoId: '31bd3ae1-0dc3-487b-953e-41d6bbade7d2'
+            profileLogoUrl: 'https://images.cvent.com/pt/fileLocation/acme_logo.png'
+            bannerId: '12ca3ae2-0dc3-487b-953e-86d6acadf7d5'
+            bannerUrl: 'https://images.cvent.com/pt/fileLocation/acme_banner.png'
+            address:
+              address1: '123 Tech Boulevard'
+              address2: 'Suite 500'
+              city: 'San Francisco'
+              regionCode: 'CA'
+              postalCode: '94105'
+              countryCode: 'US'
+            socialMedia:
+              twitter: 'https://twitter.com/acmetech'
+              linkedin: 'https://linkedin.com/company/acmetech'
+              facebook: 'https://facebook.com/acmetech'
+            created: '2024-01-15T10:00:00Z'
+            createdBy: 'jsmith'
+            lastModified: '2024-02-20T14:30:00Z'
+            lastModifiedBy: 'jsmith'
+          - id: '5999ec65-ec33-22fc-9e2a-1353bd241114'
+            name: 'Global Events Corp'
+            description: 'Full-service event management and production company.'
+            website: 'https://www.globalevents.example.com'
+            email: 'info@globalevents.example.com'
+            phone: '555-987-6543'
+            hidden: false
+            deleted: false
+            sponsorshipLevel:
+              id: 'b2c3d4e5-f6a7-8901-bcde-f23456789012'
+              name: 'Gold Sponsor'
+            categories:
+              - id: 'e3f4a5b6-c7d8-9012-ef01-345678901234'
+                name: 'Event Services'
+            booths:
+              - id: 'c2d3e4f5-a6b7-8901-cdef-234567890123'
+                name: 'Booth B205'
+                location: 'Hall B, Row 2'
+            profileLogoId: '42ce4bf2-1ed4-598c-b64f-52e7ccbdf8e3'
+            profileLogoUrl: 'https://images.cvent.com/pt/fileLocation/global_logo.png'
+            address:
+              address1: '456 Event Plaza'
+              city: 'Chicago'
+              regionCode: 'IL'
+              postalCode: '60601'
+              countryCode: 'US'
+            created: '2024-01-20T09:00:00Z'
+            createdBy: 'mwilson'
+            lastModified: '2024-02-18T11:15:00Z'
+            lastModifiedBy: 'mwilson'
+    ExhibitorListEmptyExample:
+      summary: Empty exhibitor list response
+      description: Example response when no exhibitors match the filter criteria or the event has no exhibitors
+      value:
+        paging:
+          currentToken: 1a2b3c4d5e6f7g8h9i10j11k
+          limit: 100
+          totalCount: 0
+          _links:
+            self:
+              href: '?token=1a2b3c4d5e6f7g8h9i10j11k'
+        data: []
+    BadRequestExample:
+      summary: Bad request error
+      description: Example response when the request is malformed or contains invalid parameters
+      value:
+        code: 400
+        message: Bad Request
+        details: 'Invalid filter syntax. The filter must adhere to the pattern: field comparisonType value'
+    BadRequestInvalidFilterExample:
+      summary: Invalid filter field error
+      description: Example response when an invalid filter field is specified
+      value:
+        code: 400
+        message: Bad Request
+        details: 'Unknown filter field: invalidField. Valid filter fields are: hidden, deleted, id'
+    UnauthorizedExample:
+      summary: Unauthorized error
+      description: Example response when authentication token is missing, invalid, or expired
+      value:
+        code: 401
+        message: Unauthorized
+        details: 'The access token is invalid or has expired. Please obtain a new token.'
+    ForbiddenExample:
+      summary: Forbidden error
+      description: Example response when the authenticated user lacks permission to access the resource
+      value:
+        code: 403
+        message: Access Forbidden
+        details: 'You do not have the required scope: exhibitor/exhibitors:read'
+    NotFoundExample:
+      summary: Event not found error
+      description: Example response when the specified event ID does not exist
+      value:
+        code: 404
+        message: Not Found
+        details: 'Event with ID 3db28cfc-db22-11eb-8d19-0242ac130003 was not found.'
+    NotFoundDeletedEventExample:
+      summary: Deleted event error
+      description: Example response when the specified event has been deleted
+      value:
+        code: 404
+        message: Not Found
+        details: 'The requested event has been deleted and is no longer accessible.'
+    TooManyRequestsExample:
+      summary: Rate limit exceeded error
+      description: Example response when the API rate limit has been exceeded
+      value:
+        code: 429
+        message: Limit Exceeded
+        details: 'You have exceeded the rate limit. Please retry after 60 seconds.'
+        retryAfter: 60
+  schemas:
+    exhibitors-paginated-response:
+      title: ExhibitorsPaginatedResponse
+      type: object
+      description: A paginated response containing a list of exhibitors for an event.
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging.json'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/exhibitor.json'
+          description: Paginated list of exhibitors for an event.
+    paging.json:
+      title: Paging
+      required:
+        - _links
+      type: object
+      description: Represents pagination information for a collection of resources.
+      properties:
+        previousToken:
+          type: string
+          description: >-
+            The pagination token for the previous page, if one exists. You can
+            use this token to navigate to the previous page of data.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        nextToken:
+          type: string
+          description: >-
+            The pagination token for the next page. If this value is present in
+            the response, there is another page of data you can fetch.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        currentToken:
+          type: string
+          description: The pagination token for the current page.
+          example: 1a2b3c4d5e6f7g8h9i10j11k
+        limit:
+          type: integer
+          description: The number of records to return on the page. Not to exceed 200.
+          example: 100
+        totalCount:
+          type: integer
+          description: >-
+            The total number of records available. This field may return blank,
+            even if there are more records. To confirm if there are more
+            records, check the `nextToken` field.
+          example: 2
+        _links:
+          $ref: '#/components/schemas/pagination-links.json'
+    pagination-links.json:
+      title: PaginationLinks
+      type: object
+      description: Represents pagination links for navigating between pages of data.
+      properties:
+        next:
+          $ref: '#/components/schemas/link.json'
+        self:
+          $ref: '#/components/schemas/link.json'
+        prev:
+          $ref: '#/components/schemas/link.json'
+    link.json:
+      title: Link
+      required:
+        - href
+      type: object
+      description: Represents a link to a related resource.
+      properties:
+        href:
+          type: string
+          description: A url provided that can be followed for linking
+          example: '?token=90c5f062-76ad-4ea4-aa53-00eb698d9262'
+    exhibitor.json:
+      title: Exhibitor
+      description: Represents an exhibitor at an event.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the exhibitor.
+          example: 4888db54-db22-11eb-8d19-0242ac130003
+          readOnly: true
+        name:
+          type: string
+          description: The name of the exhibitor/company.
+          maxLength: 200
+          example: Acme Technology Solutions
+        description:
+          type: string
+          description: A description of the exhibitor and their products/services.
+          maxLength: 5000
+          example: Leading provider of innovative technology solutions.
+        website:
+          type: string
+          format: uri
+          description: The exhibitor's website URL.
+          example: https://www.acmetech.example.com
+        email:
+          type: string
+          format: email
+          description: The primary contact email for the exhibitor.
+          example: contact@acmetech.example.com
+        phone:
+          type: string
+          description: The primary contact phone number for the exhibitor.
+          maxLength: 30
+          example: 555-123-4567
+        hidden:
+          type: boolean
+          description: True indicates the exhibitor is hidden from public view.
+          example: false
+        deleted:
+          type: boolean
+          description: True indicates the exhibitor has been deleted.
+          example: false
+          readOnly: true
+        sponsorshipLevel:
+          $ref: '#/components/schemas/sponsorship-level.json'
+        categories:
+          type: array
+          description: List of categories associated with the exhibitor.
+          items:
+            $ref: '#/components/schemas/exhibitor-category.json'
+        booths:
+          type: array
+          description: List of booths assigned to the exhibitor.
+          items:
+            $ref: '#/components/schemas/exhibitor-booth.json'
+        profileLogoId:
+          type: string
+          format: uuid
+          description: File ID for exhibitor profile logo.
+          example: 31bd3ae1-0dc3-487b-953e-41d6bbade7d2
+          readOnly: true
+        profileLogoUrl:
+          type: string
+          format: uri
+          description: URL for exhibitor profile logo.
+          example: https://images.cvent.com/pt/fileLocation/url_123
+          readOnly: true
+        bannerId:
+          type: string
+          format: uuid
+          description: File ID for exhibitor banner.
+          example: 12ca3ae2-0dc3-487b-953e-86d6acadf7d5
+          readOnly: true
+        bannerUrl:
+          type: string
+          format: uri
+          description: URL for exhibitor banner.
+          example: https://images.cvent.com/pt/fileLocation/url_456
+          readOnly: true
+        address:
+          $ref: '#/components/schemas/address.json'
+        socialMedia:
+          $ref: '#/components/schemas/social-media.json'
+        created:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was created.
+          readOnly: true
+          example: '2024-01-15T10:00:00Z'
+        createdBy:
+          type: string
+          description: The identifier of the user that created this record.
+          readOnly: true
+          example: jsmith
+        lastModified:
+          type: string
+          format: date-time
+          description: The ISO 8601 zoned date time when this record was last updated.
+          readOnly: true
+          example: '2024-02-20T14:30:00Z'
+        lastModifiedBy:
+          type: string
+          description: The identifier of the user that last updated this record.
+          readOnly: true
+          example: jsmith
+    sponsorship-level.json:
+      title: SponsorshipLevel
+      description: Represents a sponsorship level for an exhibitor.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the sponsorship level.
+          example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        name:
+          type: string
+          description: The name of the sponsorship level.
+          example: Platinum Sponsor
+    exhibitor-category.json:
+      title: ExhibitorCategory
+      description: Represents a category for classifying exhibitors.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the category.
+          example: c1d2e3f4-a5b6-7890-cdef-123456789012
+        name:
+          type: string
+          description: The name of the category.
+          example: Technology
+    exhibitor-booth.json:
+      title: ExhibitorBooth
+      description: Represents a booth assigned to an exhibitor.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the booth.
+          example: b1c2d3e4-f5a6-7890-bcde-f12345678901
+        name:
+          type: string
+          description: The name or number of the booth.
+          example: Booth A101
+        location:
+          type: string
+          description: The location description of the booth.
+          example: Hall A, Row 1
+    address.json:
+      title: Address
+      description: Address details for an exhibitor.
+      type: object
+      properties:
+        address1:
+          type: string
+          maxLength: 40
+          description: The first line of an address.
+          example: 123 Tech Boulevard
+        address2:
+          type: string
+          maxLength: 40
+          description: The second line of an address.
+          example: Suite 500
+        address3:
+          type: string
+          maxLength: 40
+          description: The third line of an address.
+          example: Building A
+        city:
+          type: string
+          maxLength: 40
+          description: The name of the city.
+          example: San Francisco
+        region:
+          type: string
+          description: The name of the state/province/region of the address.
+          readOnly: true
+          example: California
+        regionCode:
+          type: string
+          description: The abbreviation of the state/province/region of the address.
+          minLength: 2
+          maxLength: 10
+          example: CA
+        postalCode:
+          type: string
+          maxLength: 25
+          description: Postal code (also known as zipcode) of the address.
+          example: '94105'
+        country:
+          type: string
+          description: Name of the country of the address.
+          readOnly: true
+          example: United States of America
+        countryCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+          description: ISO 3166 two-letter (alpha-2) country code.
+          example: US
+    social-media.json:
+      title: SocialMedia
+      description: Social media links for an exhibitor.
+      type: object
+      properties:
+        twitter:
+          type: string
+          format: uri
+          description: Twitter profile URL.
+          example: https://twitter.com/acmetech
+        linkedin:
+          type: string
+          format: uri
+          description: LinkedIn profile URL.
+          example: https://linkedin.com/company/acmetech
+        facebook:
+          type: string
+          format: uri
+          description: Facebook profile URL.
+          example: https://facebook.com/acmetech
+        instagram:
+          type: string
+          format: uri
+          description: Instagram profile URL.
+          example: https://instagram.com/acmetech
+        youtube:
+          type: string
+          format: uri
+          description: YouTube channel URL.
+          example: https://youtube.com/acmetech
+    error-response:
+      title: ErrorResponse
+      description: Standard error response object.
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: A brief description of the error.
+          example: Bad Request
+        details:
+          type: string
+          description: Additional details about the error.
+          example: The request could not be understood by the server.
+  parameters:
+    id6:
+      in: path
+      name: id
+      description: ID of an event.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 3db28cfc-db22-11eb-8d19-0242ac130003
+    limit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page.
+      style: form
+      explode: true
+      schema:
+        maximum: 200
+        minimum: 1
+        type: integer
+        default: 100
+        example: 100
+    token:
+      name: token
+      in: query
+      description: >
+        The continuation token returned from a previous class. This must be a
+        valid UUID v4 if provided.
+
+        This will override any other pageable parameters provided.
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+    before:
+      name: before
+      required: false
+      in: query
+      description: >-
+        Used to query records that have been added or updated before this time
+        point.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+    after:
+      name: after
+      required: false
+      description: >-
+        Used to query records that have been added or updated after this time
+        point. Default to the beginning of time of the data store.
+      in: query
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+  responses:
+    ExhibitorListSuccess:
+      description: Successfully retrieved exhibitors.
+      headers: {}
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/exhibitors-paginated-response'
+          examples:
+            success:
+              $ref: '#/components/examples/ExhibitorListSuccessExample'
+            empty:
+              $ref: '#/components/examples/ExhibitorListEmptyExample'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            badRequest:
+              $ref: '#/components/examples/BadRequestExample'
+            invalidFilter:
+              $ref: '#/components/examples/BadRequestInvalidFilterExample'
+    Unauthorized:
+      description: Bad or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: You do not have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            forbidden:
+              $ref: '#/components/examples/ForbiddenExample'
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            notFound:
+              $ref: '#/components/examples/NotFoundExample'
+            deletedEvent:
+              $ref: '#/components/examples/NotFoundDeletedEventExample'
+    TooManyRequests:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          examples:
+            tooManyRequests:
+              $ref: '#/components/examples/TooManyRequestsExample'
+  securitySchemes:
+    OAuth2.authorizationCode:
+      type: oauth2
+      description: OAuth2 Authorization Code Flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+    OAuth2.clientCredentials:
+      type: oauth2
+      description: OAuth2 Client Credentials Flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            exhibitor/exhibitors:read: Allows reading exhibitors
+            exhibitor/exhibitors:write: Allows creating/updating exhibitors
+            exhibitor/exhibitors:delete: Allows deleting exhibitors
+    CallbackApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >-
+        This security scheme is used to indicate that Cvent should use API Key
+        auth when invoking your callback. This scheme is only supported for
+        callback operations, and cannot be used to make calls to Cvent
+        endpoints.
+    CallbackBasicAuth:
+      type: http
+      scheme: basic
+      description: >-
+        This security scheme is used to indicate that Cvent should use basic
+        auth when invoking your callback. This scheme is only supported for
+        callback operations, and cannot be used to make calls to Cvent
+        endpoints.

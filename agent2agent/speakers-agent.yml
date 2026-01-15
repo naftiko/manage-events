@@ -1,0 +1,182 @@
+protocolVersions:
+  - '1.0'
+name: Speakers Agent
+description: >-
+  An AI agent that helps users query speakers assigned to event sessions through
+  the Cvent API. It retrieves speaker information including their categories
+  (e.g., Keynote Speaker, Panelist, Presenter), session assignments, and
+  presentation order.
+version: 1.0.0
+provider:
+  organization: Cvent
+  url: https://www.cvent.com
+documentationUrl: https://developer.cvent.com/documentation
+iconUrl: https://www.cvent.com/favicon.ico
+supportedInterfaces:
+  - url: https://api-platform.cvent.com/ea
+    protocolBinding: HTTP+JSON
+  - url: https://api-platform-eur.cvent.com/ea
+    protocolBinding: HTTP+JSON
+capabilities:
+  streaming: false
+  pushNotifications: false
+  stateTransitionHistory: false
+  extensions: []
+supportsExtendedAgentCard: false
+defaultInputModes:
+  - text/plain
+  - application/json
+defaultOutputModes:
+  - application/json
+  - text/plain
+securitySchemes:
+  oauth2_client_credentials:
+    oauth2SecurityScheme:
+      description: OAuth2 Client Credentials Flow for server-to-server authentication
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/speakers:read: Allows reading of speakers
+  oauth2_authorization_code:
+    oauth2SecurityScheme:
+      description: OAuth2 Authorization Code Flow for user-delegated authentication
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/speakers:read: Allows reading of speakers
+security:
+  - oauth2_client_credentials:
+      - event/speakers:read
+  - oauth2_authorization_code:
+      - event/speakers:read
+skills:
+  - id: list_session_speakers
+    name: List Session Speakers
+    description: >-
+      Retrieves a paginated list of speakers assigned to a specific session.
+      Returns speaker IDs, their categories (e.g., Keynote Speaker, Panelist,
+      Presenter), and their presentation order within the session.
+    tags:
+      - speakers
+      - sessions
+      - presenters
+      - panelists
+      - keynote
+      - events
+      - cvent
+    examples:
+      - Who are the speakers for session ID abc-123?
+      - List all presenters for this session
+      - Show me the speakers assigned to the keynote session
+      - What speakers are presenting at this workshop?
+    inputModes:
+      - text/plain
+      - application/json
+    outputModes:
+      - application/json
+  - id: get_speaker_categories
+    name: Get Speaker Categories
+    description: >-
+      Retrieves the categories assigned to speakers for a session. Categories
+      define the speaker's role such as Keynote Speaker, Panelist, Presenter,
+      Moderator, etc.
+    tags:
+      - speakers
+      - categories
+      - roles
+      - keynote
+      - panelist
+      - presenter
+      - moderator
+    examples:
+      - What categories of speakers are in this session?
+      - Who is the keynote speaker?
+      - List all panelists for this session
+      - What role does each speaker have?
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: get_speaker_order
+    name: Get Speaker Presentation Order
+    description: >-
+      Retrieves the presentation order of speakers within a session. Shows the
+      sequence in which speakers are scheduled to present.
+    tags:
+      - speakers
+      - order
+      - sequence
+      - schedule
+      - lineup
+    examples:
+      - What order do the speakers present in?
+      - Who speaks first in this session?
+      - Show me the speaker lineup
+      - What is the presentation sequence?
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: find_keynote_speakers
+    name: Find Keynote Speakers
+    description: >-
+      Identifies keynote speakers assigned to sessions. Filters speakers by the
+      Keynote Speaker category.
+    tags:
+      - speakers
+      - keynote
+      - featured
+      - main-stage
+    examples:
+      - Who are the keynote speakers?
+      - Find all keynote presentations
+      - List featured speakers for the event
+      - Who is giving the opening keynote?
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: find_panelists
+    name: Find Panel Discussion Speakers
+    description: >-
+      Identifies panelists assigned to panel discussion sessions. Filters
+      speakers by the Panelist category.
+    tags:
+      - speakers
+      - panelists
+      - panel
+      - discussion
+      - debate
+    examples:
+      - Who are the panelists for this discussion?
+      - List all panel participants
+      - Show me the panel lineup
+      - Who is on the expert panel?
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+  - id: check_session_has_speakers
+    name: Check Session Has Speakers
+    description: >-
+      Verifies whether a session has speakers assigned. Useful for identifying
+      sessions that still need speaker assignments.
+    tags:
+      - speakers
+      - sessions
+      - validation
+      - check
+      - assigned
+    examples:
+      - Does this session have speakers assigned?
+      - Are there any speakers for this workshop?
+      - Check if the session has a presenter
+      - Is anyone scheduled to speak?
+    inputModes:
+      - text/plain
+    outputModes:
+      - application/json
+      - text/plain
