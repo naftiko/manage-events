@@ -78,6 +78,7 @@ This capability will eventually run using the Naftiko engine, but also simulatne
 I am rapidly iterating upon this set of capabilities as part of ongoing Cvent conversations, helping evolve and strengthen our AI Context use case. To help capture the changes I will try to do bulk updates via commits and PRs, but will wrap with an issue for logging purposes.
 
 - [AI Context Change Log #1](https://github.com/naftiko-capabilities/manage-events/issues/1)
+- [Capability Updates #5](https://github.com/naftiko/manage-events/issues/5)
 
 ## Contributions
 I need your feedback. Please leave via [issues](https://github.com/naftiko-capabilities/manage-events/issues) or in [Slack](https://naftiko.slack.com/archives/C09LLFZDLL9), but also don't hesitate submitting pull requests to fix any problems encountered and leave feedback to help contribute to this work as it happening.
