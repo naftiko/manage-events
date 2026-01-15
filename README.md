@@ -39,6 +39,30 @@ All of the JSON Schema are stored centrally via the [schema repository](https://
 ## Rules
 All of the Spectral and Vacuum are stored centrally via the [rules repository](https://github.com/naftiko/rules) to ensure their reuse across each of the capabilities and use cases being developed as part of this work.
 
+## Services
+These are the different types of services in use across these capabilities, providing the different layers of integration needed to deliver this capbility.
+
+- **Fleet** - The different services produced from this capability.
+    - **Manage Events (HTTP)** - The aggregate HTTP JSON API produced.
+    - **Manage Events (MCP)** - The aggregate HTTP MCP produced.
+    - **Manage Events (A2A)** - The aggregate A2A produced.        
+- **Rigging** - The different services needed to deliver business value.
+    - **CVent Attendees (HTTP)** - The CVent Attendees API.
+    - **CVent Authentication (HTTP)** - The CVent Authentication API.
+    - **CVent Events (HTTP)** - The CVent Events API.
+    - **CVent Exhibitors (HTTP)** - The CVent Exhibitors API.
+    - **CVent Sessions (HTTP)** - The CVent Sessions API.
+    - **CVent Speakers (HTTP)** - The CVent Speakers API.
+    - **HubSpot Authentication (HTTP)** - The HubSpot Authentication API.
+    - **HubSpot Marketing (HTTP)** - The HubSpot Marketing Emails API.
+    - **LinkedIn Authentication (HTTP)** - The LinkedIn Authentication API.
+    - **LinkedIn Organizations (HTTP)** - The LinkedIn Organizations API.
+    - **LinkedIn People (HTTP)** - The LinkedIn People API.
+- **Hull** - The different services needed to deliver operational value.
+    - **New Relic Logs (HTTP)** - Logging of capbility activity via New Relic.
+    - **New Relic Tracing (HTTP)** - Tracing of capbility activity via New Relic.
+    - **Hashicorp Vault (HTTP)** - Management of secrets and keys.
+
 ## Tools
 This capability possesses the common artifacts that other open-source tooling already speak, and can power the following tools:
 
@@ -47,6 +71,8 @@ This capability possesses the common artifacts that other open-source tooling al
 - [**Backstage**](https://naftiko.github.io/technology/docs/tooling/backstage/) - Distribute capabilities and APIs used as part of the capabilities to any Backstage instance.
 
 This capability will eventually run using the Naftiko engine, but also simulatneoulsy work across these open-source tools.
+
+![Artifact and Tooling Workflow](diagrams/capability-artifact-tooling-flow.png "Artifact and Tooling Workflow")
 
 ## Changes
 I am rapidly iterating upon this set of capabilities as part of ongoing Cvent conversations, helping evolve and strengthen our AI Context use case. To help capture the changes I will try to do bulk updates via commits and PRs, but will wrap with an issue for logging purposes.

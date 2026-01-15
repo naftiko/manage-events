@@ -1,0 +1,2746 @@
+openapi: 3.1.0
+info:
+  title: Mange Events API
+  description: |
+    A unified API combining Cvent event management, HubSpot marketing, and LinkedIn organization capabilities.
+  version: 0.1.0
+  contact:
+    name: API Support
+
+servers:
+  - url: https://api-platform.cvent.com/ea
+    description: Cvent US Production
+  - url: https://api-platform-eur.cvent.com/ea
+    description: Cvent EU Production
+  - url: https://api.hubapi.com
+    description: HubSpot API Server
+  - url: https://api.linkedin.com/rest
+    description: LinkedIn REST API Server
+  - url: https://api.linkedin.com/v2
+    description: LinkedIn v2 API Server
+  - url: http://localhost:8080/rest/mange-events
+    description: Sandbox API  
+
+tags:
+  - name: Events
+    description: Event management operations.
+  - name: Attendees
+    description: Event attendee operations.
+  - name: Exhibitors
+    description: Event exhibitor operations.
+  - name: Sessions
+    description: Session location operations.
+  - name: Speakers
+    description: Session speaker operations.
+  - name: Marketing Emails
+    description: Marketing email operations.
+  - name: Organizations
+    description: Organization lookup operations.
+  - name: Profiles
+    description:  Member profile lookup operations.
+
+paths:
+  # ============================================================================
+  # CVENT - EVENTS
+  # ============================================================================
+  /events:
+    get:
+      tags:
+        - Events
+      summary: List Events
+      description: Gets a paginated list of events.
+      operationId: listEvents
+      security:
+        - CventOAuth2ClientCredentials:
+            - event/events:read
+        - CventOAuth2AuthorizationCode:
+            - event/events:read
+      parameters:
+        - $ref: '#/components/parameters/CventAfter'
+        - $ref: '#/components/parameters/CventBefore'
+        - $ref: '#/components/parameters/CventLimit'
+        - $ref: '#/components/parameters/CventToken'
+        - $ref: '#/components/parameters/EventSort'
+        - name: filter
+          in: query
+          required: false
+          description: |
+            A filter query string to narrow search results using logical and comparison operators.
+            
+            **Comparison Types:**
+            - `eq` (equal), `ne` (not equal)
+            - `gt` (greater than), `ge` (greater or equal)
+            - `lt` (less than), `le` (less than or equal)
+            - `contains` (contains a value)
+
+            **Filterable Fields:**
+            - `id`, `title`, `code`, `description`, `note` (eq|ne|contains for title)
+            - `start`, `end`, `launchAfter`, `closeAfter`, `archiveAfter` (eq|ne|lt|le|gt|ge)
+            - `created`, `lastModified` (eq|ne|lt|le|gt|ge)
+            - `status`, `eventStatus`, `format`, `virtual` (eq|ne)
+            - `capacity` (eq|ne|lt|le|gt|ge)
+            - `planner.firstName`, `planner.lastName`, `planner.email` (eq|ne)
+            - `stakeholder.*` fields (eq|ne)
+            - `venue.address.*` fields (eq|ne)
+            - `customField.{uuid}` (eq|ne|lt|le|gt|ge|sw|contains)
+          schema:
+            type: string
+            example: "status eq 'Active' and format eq 'Virtual'"
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/CventBadRequest'
+        '401':
+          $ref: '#/components/responses/CventUnauthorized'
+        '403':
+          $ref: '#/components/responses/CventForbidden'
+        '429':
+          $ref: '#/components/responses/CventTooManyRequests'
+
+  # ============================================================================
+  # CVENT - ATTENDEES
+  # ============================================================================
+  /attendees:
+    get:
+      tags:
+        - Attendees
+      summary: List Attendees
+      description: Gets a paginated list of attendees in your account.
+      operationId: listAttendees
+      security:
+        - CventOAuth2ClientCredentials:
+            - event/attendees:read
+        - CventOAuth2AuthorizationCode:
+            - event/attendees:read
+      parameters:
+        - $ref: '#/components/parameters/CventAfter'
+        - $ref: '#/components/parameters/CventBefore'
+        - $ref: '#/components/parameters/CventLimit'
+        - $ref: '#/components/parameters/CventToken'
+        - $ref: '#/components/parameters/AttendeeExpand'
+        - $ref: '#/components/parameters/AttendeeSort'
+        - $ref: '#/components/parameters/IncludeDeletedGuests'
+        - name: filter
+          in: query
+          required: false
+          description: |
+            A filter query string to narrow search results.
+            
+            **Filterable Fields:**
+            - `event.id`, `id`, `confirmationNumber`, `referenceId`, `note` (eq|ne)
+            - `checkedIn`, `guest`, `unsubscribed`, `group.leader` (eq|ne)
+            - Date fields: `checkIn`, `checkOut`, `registeredAt`, `lastModified`, `created` (eq|ne|lt|le|gt|ge)
+            - `status`, `invitedBy`, `responseMethod`, `visibility` (eq|ne)
+            - `contact.*` fields (eq|ne|sw)
+          schema:
+            type: string
+            example: "event.id eq 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' and checkedIn eq 'true'"
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of attendees.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendeePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/CventBadRequest'
+        '401':
+          $ref: '#/components/responses/CventUnauthorized'
+        '403':
+          $ref: '#/components/responses/CventForbidden'
+        '429':
+          $ref: '#/components/responses/CventTooManyRequests'
+
+  # ============================================================================
+  # CVENT - EXHIBITORS
+  # ============================================================================
+  /events/{eventId}/exhibitors:
+    get:
+      tags:
+        - Exhibitors
+      summary: List Exhibitors
+      description: Retrieves a paginated list of exhibitors associated with a single event.
+      operationId: listEventExhibitors
+      security:
+        - CventOAuth2ClientCredentials:
+            - exhibitor/exhibitors:read
+        - CventOAuth2AuthorizationCode:
+            - exhibitor/exhibitors:read
+      parameters:
+        - $ref: '#/components/parameters/EventId'
+        - $ref: '#/components/parameters/CventAfter'
+        - $ref: '#/components/parameters/CventBefore'
+        - $ref: '#/components/parameters/CventLimit'
+        - $ref: '#/components/parameters/CventToken'
+        - name: filter
+          in: query
+          required: false
+          description: |
+            Filter by `hidden` (eq), `deleted` (eq), or `id` (in).
+          schema:
+            type: string
+            example: "deleted eq 'false' AND hidden eq 'false'"
+      responses:
+        '200':
+          description: Successfully retrieved exhibitors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExhibitorPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/CventBadRequest'
+        '401':
+          $ref: '#/components/responses/CventUnauthorized'
+        '403':
+          $ref: '#/components/responses/CventForbidden'
+        '404':
+          $ref: '#/components/responses/CventNotFound'
+        '429':
+          $ref: '#/components/responses/CventTooManyRequests'
+
+  # ============================================================================
+  # CVENT - SESSION LOCATIONS
+  # ============================================================================
+  /events/{eventId}/session-locations:
+    get:
+      tags:
+        - Sessions
+      summary: List Session Locations
+      description: Gets a paginated list of session locations for an event.
+      operationId: listEventSessionLocations
+      security:
+        - CventOAuth2ClientCredentials:
+            - event/sessions:read
+        - CventOAuth2AuthorizationCode:
+            - event/sessions:read
+      parameters:
+        - $ref: '#/components/parameters/EventId'
+        - $ref: '#/components/parameters/CventLimit'
+        - $ref: '#/components/parameters/CventToken'
+      responses:
+        '200':
+          description: Successfully retrieved paginated list of session locations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionLocationPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/CventBadRequest'
+        '401':
+          $ref: '#/components/responses/CventUnauthorized'
+        '403':
+          $ref: '#/components/responses/CventForbidden'
+        '404':
+          $ref: '#/components/responses/CventNotFound'
+        '429':
+          $ref: '#/components/responses/CventTooManyRequests'
+
+  # ============================================================================
+  # CVENT - SESSION SPEAKERS
+  # ============================================================================
+  /sessions/{sessionId}/speakers:
+    get:
+      tags:
+        - Speakers
+      summary: List Session Speakers
+      description: Gets a paginated list of speakers assigned to a session.
+      operationId: listSessionSpeakers
+      security:
+        - CventOAuth2ClientCredentials:
+            - event/speakers:read
+        - CventOAuth2AuthorizationCode:
+            - event/speakers:read
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/CventLimit'
+        - $ref: '#/components/parameters/CventToken'
+      responses:
+        '200':
+          description: Successfully retrieved a paginated list of speakers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionSpeakerPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/CventBadRequest'
+        '401':
+          $ref: '#/components/responses/CventUnauthorized'
+        '403':
+          $ref: '#/components/responses/CventForbidden'
+        '404':
+          $ref: '#/components/responses/CventNotFound'
+        '429':
+          $ref: '#/components/responses/CventTooManyRequests'
+
+  # ============================================================================
+  # HUBSPOT - MARKETING EMAILS
+  # ============================================================================
+  /marketing/emails:
+    get:
+      tags:
+        - Marketing Emails
+      summary: List Marketing Emails
+      description: |
+        Retrieve a collection of marketing emails with optional filtering and pagination.
+        Results can be filtered by publication status, campaign, creation/update times, and email type.
+      operationId: listMarketingEmails
+      security:
+        - HubSpotOAuth2: [content]
+        - HubSpotBearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/HubSpotAfter'
+        - $ref: '#/components/parameters/HubSpotLimit'
+        - $ref: '#/components/parameters/HubSpotArchived'
+        - $ref: '#/components/parameters/HubSpotCampaign'
+        - $ref: '#/components/parameters/HubSpotCreatedAfter'
+        - $ref: '#/components/parameters/HubSpotCreatedAt'
+        - $ref: '#/components/parameters/HubSpotCreatedBefore'
+        - $ref: '#/components/parameters/HubSpotIncludedProperties'
+        - $ref: '#/components/parameters/HubSpotIncludeStats'
+        - $ref: '#/components/parameters/HubSpotIsPublished'
+        - $ref: '#/components/parameters/HubSpotMarketingCampaignNames'
+        - $ref: '#/components/parameters/HubSpotPublishedAfter'
+        - $ref: '#/components/parameters/HubSpotPublishedAt'
+        - $ref: '#/components/parameters/HubSpotPublishedBefore'
+        - $ref: '#/components/parameters/HubSpotSort'
+        - $ref: '#/components/parameters/HubSpotEmailType'
+        - $ref: '#/components/parameters/HubSpotUpdatedAfter'
+        - $ref: '#/components/parameters/HubSpotUpdatedAt'
+        - $ref: '#/components/parameters/HubSpotUpdatedBefore'
+        - $ref: '#/components/parameters/HubSpotWorkflowNames'
+      responses:
+        '200':
+          description: Successfully retrieved marketing emails.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketingEmailCollectionResponse'
+        '400':
+          $ref: '#/components/responses/HubSpotBadRequest'
+        '401':
+          $ref: '#/components/responses/HubSpotUnauthorized'
+        '403':
+          $ref: '#/components/responses/HubSpotForbidden'
+        '429':
+          $ref: '#/components/responses/HubSpotTooManyRequests'
+        '500':
+          $ref: '#/components/responses/HubSpotInternalError'
+        '503':
+          $ref: '#/components/responses/HubSpotServiceUnavailable'
+
+  # ============================================================================
+  # LINKEDIN - ORGANIZATIONS (REST API)
+  # ============================================================================
+  /organizations/{organizationId}:
+    get:
+      tags:
+        - Organizations
+      summary: Get Organization
+      description: |
+        Look up organization information on behalf of authenticated members.
+        
+        **Server:** Uses LinkedIn REST API (`https://api.linkedin.com/rest`)
+        
+        **Admin Access:** Returns all Organization fields when the authenticated member 
+        has ADMINISTRATOR role for the organization.
+        
+        **Non-Admin Access:** Returns limited fields: id, name, localizedName, 
+        localizedWebsite, vanityName, logoV2, locations, primaryOrganizationType.
+        
+        API calls with insufficient permissions return 403 Forbidden.
+      operationId: getOrganization
+      security:
+        - LinkedInOAuth2:
+            - rw_organization_admin
+      parameters:
+        - $ref: '#/components/parameters/LinkedInOrganizationId'
+      responses:
+        '200':
+          description: Successfully retrieved organization data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedInOrganization'
+        '400':
+          $ref: '#/components/responses/LinkedInBadRequest'
+        '401':
+          $ref: '#/components/responses/LinkedInUnauthorized'
+        '403':
+          $ref: '#/components/responses/LinkedInForbidden'
+        '404':
+          $ref: '#/components/responses/LinkedInNotFound'
+        '429':
+          $ref: '#/components/responses/LinkedInTooManyRequests'
+        '500':
+          $ref: '#/components/responses/LinkedInInternalError'
+        '503':
+          $ref: '#/components/responses/LinkedInServiceUnavailable'
+
+  # ============================================================================
+  # LINKEDIN - PROFILES (v2 API)
+  # ============================================================================
+  /people:
+    get:
+      tags:
+        - Profiles
+      summary: Find Profile by VanityName
+      description: |
+        Returns basic profile fields for the LinkedIn member that matches the vanityName.
+        Requires an access token for application authenticated call.
+        
+        **Server:** Uses LinkedIn v2 API (`https://api.linkedin.com/v2`)
+        
+        **Note:** The use of this API is restricted to developers approved by LinkedIn 
+        and subject to applicable data restrictions in their agreements.
+        
+        The vanityName is used to represent the public profile URL in the format: 
+        `www.linkedin.com/in/{vanityName}`. Each LinkedIn profile has a unique vanityName.
+        
+        **Usage Restrictions:**
+        - You cannot "browse members" by VanityNames
+        - Should only be used to identify profiles from known vanityNames for approved use cases
+        - Access to profile data is subject to the relevant members' privacy settings
+        - Application limit of 500 requests per day
+      operationId: getProfileByVanityName
+      security:
+        - LinkedInOAuth2:
+            - r_compliance_2l
+      parameters:
+        - $ref: '#/components/parameters/LinkedInQueryType'
+        - $ref: '#/components/parameters/LinkedInVanityName'
+      responses:
+        '200':
+          description: Successful response with profile data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedInProfileResponse'
+              examples:
+                fullProfile:
+                  $ref: '#/components/examples/LinkedInProfileResponseFull'
+                minimalProfile:
+                  $ref: '#/components/examples/LinkedInProfileResponseMinimal'
+                profileWithMultiplePositions:
+                  $ref: '#/components/examples/LinkedInProfileResponseMultiplePositions'
+                profileNotFound:
+                  $ref: '#/components/examples/LinkedInProfileResponseEmpty'
+        '400':
+          $ref: '#/components/responses/LinkedInBadRequest'
+        '401':
+          $ref: '#/components/responses/LinkedInUnauthorized'
+        '403':
+          $ref: '#/components/responses/LinkedInForbidden'
+        '404':
+          $ref: '#/components/responses/LinkedInNotFound'
+        '429':
+          $ref: '#/components/responses/LinkedInTooManyRequests'
+        '500':
+          $ref: '#/components/responses/LinkedInInternalError'
+        '503':
+          $ref: '#/components/responses/LinkedInServiceUnavailable'
+
+components:
+  # ============================================================================
+  # PARAMETERS - CVENT
+  # ============================================================================
+  parameters:
+    EventId:
+      name: eventId
+      in: path
+      description: The unique identifier of the event.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 3db28cfc-db22-11eb-8d19-0242ac130003
+
+    SessionId:
+      name: sessionId
+      in: path
+      description: The unique identifier of the session.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 7f8e9d0c-1a2b-3c4d-5e6f-7a8b9c0d1e2f
+
+    CventAfter:
+      name: after
+      in: query
+      required: false
+      description: Query records added or updated after this ISO 8601 datetime.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+
+    CventBefore:
+      name: before
+      in: query
+      required: false
+      description: Query records added or updated before this ISO 8601 datetime.
+      schema:
+        type: string
+        format: date-time
+        example: '2017-01-02T02:00:00Z'
+
+    CventLimit:
+      name: limit
+      in: query
+      description: The maximum number of records to return per page (1-200).
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 100
+        example: 100
+
+    CventToken:
+      name: token
+      in: query
+      description: Continuation token from a previous request (UUID v4).
+      schema:
+        type: string
+        format: uuid
+        example: 0e28af57-511f-47ab-ae46-46cd1ca51a1a
+
+    EventSort:
+      name: sort
+      in: query
+      required: false
+      description: 'Sort order. Format: `field:ORDER`. Sortable: `start`.'
+      schema:
+        type: string
+        example: start:DESC
+
+    AttendeeSort:
+      name: sort
+      in: query
+      required: false
+      description: 'Sort order. Sortable: `contact.firstName`, `contact.lastName`, `contact.title`, `contact.company`, `registeredAt`, `checkIn`.'
+      schema:
+        type: string
+        example: contact.company:DESC,contact.title:ASC
+
+    AttendeeExpand:
+      name: expand
+      in: query
+      required: false
+      description: 'Expandable fields: `answers.question`, `registrationType`.'
+      schema:
+        type: array
+        items:
+          type: string
+          enum: [answers.question, registrationType]
+
+    IncludeDeletedGuests:
+      name: includeDeletedGuests
+      in: query
+      required: false
+      description: Include deleted guests in the response.
+      schema:
+        type: boolean
+        default: false
+
+    # ============================================================================
+    # PARAMETERS - HUBSPOT
+    # ============================================================================
+    HubSpotAfter:
+      name: after
+      in: query
+      description: Cursor token to get the next set of results.
+      required: false
+      schema:
+        type: string
+      example: "MjA%3D"
+
+    HubSpotLimit:
+      name: limit
+      in: query
+      description: Maximum results to return (1-100). Default 10.
+      required: false
+      schema:
+        type: integer
+        default: 10
+        minimum: 1
+        maximum: 100
+
+    HubSpotArchived:
+      name: archived
+      in: query
+      description: Return archived emails. Default false.
+      required: false
+      schema:
+        type: boolean
+        default: false
+
+    HubSpotCampaign:
+      name: campaign
+      in: query
+      description: Filter by campaign GUID.
+      required: false
+      schema:
+        type: string
+
+    HubSpotCreatedAfter:
+      name: createdAfter
+      in: query
+      description: Only emails created after this time.
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    HubSpotCreatedAt:
+      name: createdAt
+      in: query
+      description: Only emails created at exactly this time.
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    HubSpotCreatedBefore:
+      name: createdBefore
+      in: query
+      description: Only emails created before this time.
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    HubSpotIncludedProperties:
+      name: includedProperties
+      in: query
+      description: Limit response to specified properties.
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: true
+
+    HubSpotIncludeStats:
+      name: includeStats
+      in: query
+      description: Include email performance statistics.
+      required: false
+      schema:
+        type: boolean
+        default: false
+
+    HubSpotIsPublished:
+      name: isPublished
+      in: query
+      description: Filter by published/draft status.
+      required: false
+      schema:
+        type: boolean
+
+    HubSpotMarketingCampaignNames:
+      name: marketingCampaignNames
+      in: query
+      description: Include associated marketing campaign names.
+      required: false
+      schema:
+        type: boolean
+        default: false
+
+    HubSpotPublishedAfter:
+      name: publishedAfter
+      in: query
+      description: Only emails published after this time.
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    HubSpotPublishedAt:
+      name: publishedAt
+      in: query
+      description: Only emails published at exactly this time.
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    HubSpotPublishedBefore:
+      name: publishedBefore
+      in: query
+      description: Only emails published before this time.
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    HubSpotSort:
+      name: sort
+      in: query
+      description: 'Sort fields: name, createdAt, updatedAt, createdBy, updatedBy. Prefix `-` for descending.'
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum: [name, createdAt, updatedAt, createdBy, updatedBy, -name, -createdAt, -updatedAt, -createdBy, -updatedBy]
+      style: form
+      explode: true
+
+    HubSpotEmailType:
+      name: type
+      in: query
+      description: Filter by email type(s).
+      required: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/MarketingEmailType'
+      style: form
+      explode: true
+
+    HubSpotUpdatedAfter:
+      name: updatedAfter
+      in: query
+      description: Only emails updated after this time.
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    HubSpotUpdatedAt:
+      name: updatedAt
+      in: query
+      description: Only emails updated at exactly this time.
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    HubSpotUpdatedBefore:
+      name: updatedBefore
+      in: query
+      description: Only emails updated before this time.
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    HubSpotWorkflowNames:
+      name: workflowNames
+      in: query
+      description: Include names of associated workflows.
+      required: false
+      schema:
+        type: boolean
+        default: false
+
+    # ============================================================================
+    # PARAMETERS - LINKEDIN
+    # ============================================================================
+    LinkedInOrganizationId:
+      name: organizationId
+      in: path
+      required: true
+      description: The unique identifier for the organization.
+      schema:
+        type: integer
+        format: int64
+      example: 79988552
+
+    LinkedInQueryType:
+      name: q
+      in: query
+      required: true
+      description: Query type parameter, must be set to "vanityName"
+      schema:
+        type: string
+        enum: [vanityName]
+
+    LinkedInVanityName:
+      name: vanityName
+      in: query
+      required: true
+      description: The vanity name of the LinkedIn member to retrieve
+      schema:
+        type: string
+        example: a-sample-vanity-name
+
+  # ============================================================================
+  # RESPONSES - CVENT
+  # ============================================================================
+  responses:
+    CventBadRequest:
+      description: Bad request - invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CventErrorResponse'
+          example:
+            code: 400
+            message: Bad Request
+            details: 'Invalid filter syntax'
+
+    CventUnauthorized:
+      description: Unauthorized - invalid or expired token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CventErrorResponse'
+          example:
+            code: 401
+            message: Unauthorized
+            details: 'The access token is invalid or has expired'
+
+    CventForbidden:
+      description: Forbidden - insufficient permissions.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CventErrorResponse'
+          example:
+            code: 403
+            message: Access Forbidden
+            details: 'You do not have the required scope'
+
+    CventNotFound:
+      description: Not Found - resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CventErrorResponse'
+          example:
+            code: 404
+            message: Not Found
+            details: 'The requested resource was not found'
+
+    CventTooManyRequests:
+      description: Too Many Requests - rate limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CventErrorResponse'
+          example:
+            code: 429
+            message: Limit Exceeded
+            details: 'Rate limit exceeded'
+            retryAfter: 60
+
+    # ============================================================================
+    # RESPONSES - HUBSPOT
+    # ============================================================================
+    HubSpotBadRequest:
+      description: Bad request - invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HubSpotErrorResponse'
+          example:
+            status: "error"
+            message: "Invalid date format"
+            correlationId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+            category: "VALIDATION_ERROR"
+
+    HubSpotUnauthorized:
+      description: Unauthorized - invalid or missing token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HubSpotErrorResponse'
+          example:
+            status: "error"
+            message: "Authentication credentials were not provided"
+            correlationId: "b2c3d4e5-f6a7-8901-bcde-f23456789012"
+            category: "UNAUTHORIZED"
+
+    HubSpotForbidden:
+      description: Forbidden - insufficient permissions.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HubSpotErrorResponse'
+          example:
+            status: "error"
+            message: "The access token does not have the required scope"
+            correlationId: "c3d4e5f6-a7b8-9012-cdef-345678901234"
+            category: "FORBIDDEN"
+
+    HubSpotTooManyRequests:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HubSpotErrorResponse'
+          example:
+            status: "error"
+            message: "Rate limit exceeded"
+            correlationId: "d4e5f6a7-b8c9-0123-def0-456789012345"
+            category: "RATE_LIMIT"
+
+    HubSpotInternalError:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HubSpotErrorResponse'
+          example:
+            status: "error"
+            message: "Internal server error"
+            correlationId: "e5f6a7b8-c9d0-1234-ef01-567890123456"
+            category: "INTERNAL_ERROR"
+
+    HubSpotServiceUnavailable:
+      description: Service unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HubSpotErrorResponse'
+          example:
+            status: "error"
+            message: "Service temporarily unavailable"
+            correlationId: "f6a7b8c9-d0e1-2345-f012-678901234567"
+            category: "SERVICE_UNAVAILABLE"
+
+    # ============================================================================
+    # RESPONSES - LINKEDIN
+    # ============================================================================
+    LinkedInBadRequest:
+      description: Bad request - invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LinkedInErrorResponse'
+          examples:
+            missingQueryParam:
+              summary: Missing q parameter
+              value:
+                status: 400
+                message: "Required parameter 'q' is missing"
+                serviceErrorCode: 100
+                code: "MISSING_PARAMETER"
+            invalidQueryType:
+              summary: Invalid query type
+              value:
+                status: 400
+                message: "Invalid value for parameter 'q'. Expected 'vanityName'."
+                serviceErrorCode: 101
+                code: "INVALID_PARAMETER_VALUE"
+            invalidOrganizationId:
+              summary: Invalid organization ID format
+              value:
+                status: 400
+                message: "Invalid organization ID format. Expected numeric value."
+                serviceErrorCode: 100
+                code: "INVALID_PARAMETER_VALUE"
+
+    LinkedInUnauthorized:
+      description: Unauthorized - invalid or missing access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LinkedInErrorResponse'
+          examples:
+            missingAccessToken:
+              summary: Missing access token
+              value:
+                status: 401
+                message: "Empty oauth2 access token"
+                serviceErrorCode: 65600
+                code: "UNAUTHORIZED"
+            invalidAccessToken:
+              summary: Invalid access token
+              value:
+                status: 401
+                message: "Invalid access token"
+                serviceErrorCode: 65601
+                code: "INVALID_ACCESS_TOKEN"
+            expiredAccessToken:
+              summary: Expired access token
+              value:
+                status: 401
+                message: "Access token has expired"
+                serviceErrorCode: 65602
+                code: "EXPIRED_ACCESS_TOKEN"
+
+    LinkedInForbidden:
+      description: Forbidden - insufficient permissions.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LinkedInErrorResponse'
+          examples:
+            insufficientPermissions:
+              summary: Insufficient permissions
+              value:
+                status: 403
+                message: "Insufficient permissions to access this resource"
+                serviceErrorCode: 65603
+                code: "INSUFFICIENT_SCOPE"
+            applicationNotApproved:
+              summary: Application not approved
+              value:
+                status: 403
+                message: "Your application is not approved to use this API"
+                serviceErrorCode: 65604
+                code: "APPLICATION_NOT_APPROVED"
+            memberPrivacyRestriction:
+              summary: Member privacy restriction
+              value:
+                status: 403
+                message: "Access denied due to member's privacy settings"
+                serviceErrorCode: 65605
+                code: "PRIVACY_RESTRICTION"
+            adminAccessRequired:
+              summary: Admin access required
+              value:
+                status: 403
+                message: "The authenticated member does not have administrator access"
+                serviceErrorCode: 65603
+                code: "ACCESS_DENIED"
+
+    LinkedInNotFound:
+      description: Not Found - resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LinkedInErrorResponse'
+          examples:
+            organizationNotFound:
+              summary: Organization not found
+              value:
+                status: 404
+                message: "Organization not found"
+                serviceErrorCode: 65700
+                code: "RESOURCE_NOT_FOUND"
+            profileNotFound:
+              summary: Profile not found
+              value:
+                status: 404
+                message: "No profile found with vanityName: unknown-vanity-name"
+                serviceErrorCode: 65700
+                code: "RESOURCE_NOT_FOUND"
+            profileDeactivated:
+              summary: Profile deactivated
+              value:
+                status: 404
+                message: "The member's profile has been deactivated"
+                serviceErrorCode: 65702
+                code: "PROFILE_DEACTIVATED"
+
+    LinkedInTooManyRequests:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LinkedInErrorResponse'
+          examples:
+            rateLimitExceeded:
+              summary: Rate limit exceeded
+              value:
+                status: 429
+                message: "Rate limit exceeded"
+                serviceErrorCode: 65800
+                code: "RATE_LIMIT_EXCEEDED"
+            dailyLimitExceeded:
+              summary: Daily limit exceeded (Profiles API)
+              value:
+                status: 429
+                message: "Application daily limit of 500 requests exceeded. Limit resets at midnight UTC."
+                serviceErrorCode: 65800
+                code: "DAILY_LIMIT_EXCEEDED"
+
+    LinkedInInternalError:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LinkedInErrorResponse'
+          example:
+            status: 500
+            message: "Internal server error"
+            serviceErrorCode: 0
+            code: "INTERNAL_ERROR"
+
+    LinkedInServiceUnavailable:
+      description: Service unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LinkedInErrorResponse'
+          example:
+            status: 503
+            message: "Service temporarily unavailable"
+            serviceErrorCode: 65900
+            code: "SERVICE_UNAVAILABLE"
+
+  # ============================================================================
+  # SCHEMAS
+  # ============================================================================
+  schemas:
+    # --------------------------------------------------------------------------
+    # ERROR RESPONSES
+    # --------------------------------------------------------------------------
+    CventErrorResponse:
+      title: CventErrorResponse
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Bad Request
+        details:
+          type: string
+        retryAfter:
+          type: integer
+
+    HubSpotErrorResponse:
+      title: HubSpotErrorResponse
+      type: object
+      required:
+        - message
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+        correlationId:
+          type: string
+        category:
+          type: string
+        subCategory:
+          type: string
+        context:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+    LinkedInErrorResponse:
+      title: LinkedInErrorResponse
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        message:
+          type: string
+        serviceErrorCode:
+          type: integer
+        code:
+          type: string
+
+    # --------------------------------------------------------------------------
+    # CVENT COMMON
+    # --------------------------------------------------------------------------
+    CventPaging:
+      title: CventPaging
+      type: object
+      required:
+        - _links
+      properties:
+        previousToken:
+          type: string
+        nextToken:
+          type: string
+        currentToken:
+          type: string
+        limit:
+          type: integer
+          example: 100
+        totalCount:
+          type: integer
+        _links:
+          $ref: '#/components/schemas/CventPaginationLinks'
+
+    CventPaginationLinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/CventLink'
+        next:
+          $ref: '#/components/schemas/CventLink'
+        prev:
+          $ref: '#/components/schemas/CventLink'
+
+    CventLink:
+      type: object
+      required:
+        - href
+      properties:
+        href:
+          type: string
+          example: '?token=90c5f062-76ad-4ea4-aa53-00eb698d9262'
+
+    Lookup:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+          maxLength: 30
+
+    IdName:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    Address:
+      type: object
+      properties:
+        address1:
+          type: string
+          maxLength: 100
+        address2:
+          type: string
+          maxLength: 100
+        address3:
+          type: string
+          maxLength: 100
+        city:
+          type: string
+          maxLength: 50
+        region:
+          type: string
+          readOnly: true
+        regionCode:
+          type: string
+          maxLength: 10
+        postalCode:
+          type: string
+          maxLength: 25
+        country:
+          type: string
+          readOnly: true
+        countryCode:
+          type: string
+          maxLength: 3
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+
+    CustomField:
+      type: object
+      required:
+        - id
+        - value
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          readOnly: true
+        type:
+          type: string
+          enum: [AutoIncrement, ConsentQuestion, Currency, Decimal, Date, DateTime, Email, FileUpload, FreeText, General, MultiChoice, MultiSelect, Number, OpenEndedDateTime, OpenEndedText, SingleChoice, SingleSelect, USPhoneNumber, Unknown]
+          readOnly: true
+        value:
+          type: array
+          items:
+            type: string
+        order:
+          type: integer
+          readOnly: true
+
+    Audit:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        createdBy:
+          type: string
+          readOnly: true
+        lastModified:
+          type: string
+          format: date-time
+          readOnly: true
+        lastModifiedBy:
+          type: string
+          readOnly: true
+
+    # --------------------------------------------------------------------------
+    # CVENT EVENTS
+    # --------------------------------------------------------------------------
+    EventPaginatedResponse:
+      type: object
+      required:
+        - paging
+        - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/CventPaging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+
+    Event:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 300
+        code:
+          type: string
+          maxLength: 18
+          readOnly: true
+        format:
+          type: string
+          enum: [In-person, Virtual, Hybrid]
+        description:
+          type: string
+          maxLength: 20000
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        closeAfter:
+          type: string
+          format: date-time
+          readOnly: true
+        archiveAfter:
+          type: string
+          format: date-time
+          readOnly: true
+        launchAfter:
+          type: string
+          format: date-time
+          readOnly: true
+        timezone:
+          type: string
+          maxLength: 29
+        venues:
+          type: array
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/Venue'
+        phone:
+          type: string
+          maxLength: 13
+          readOnly: true
+        note:
+          type: string
+          maxLength: 300
+        defaultLocale:
+          type: string
+          maxLength: 35
+          readOnly: true
+        languages:
+          type: array
+          items:
+            type: string
+        currency:
+          type: string
+          maxLength: 3
+          readOnly: true
+        registrationSecurityLevel:
+          type: string
+          enum: [Private, Public, Public and Private]
+          readOnly: true
+        status:
+          type: string
+          enum: [Active, Cancelled, Closed, Completed, Deleted, NoRegistrationRequired, Pending, Processing]
+          readOnly: true
+        eventStatus:
+          type: string
+          enum: [Upcoming, Ongoing, Completed, Cancelled, Deleted, Processing, Archived]
+          readOnly: true
+        planningStatus:
+          type: string
+          maxLength: 50
+          readOnly: true
+        testMode:
+          type: boolean
+          readOnly: true
+        capacity:
+          type: integer
+          readOnly: true
+        planners:
+          type: array
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/Planner'
+        stakeholders:
+          type: array
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/Stakeholder'
+          readOnly: true
+        customFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomField'
+          readOnly: true
+        type:
+          type: string
+          enum: [Celebration, Conference, CventEssentials, CventWebinar, Dinner, Forum, FundraiserBenefit, Holiday, IncentiveTrip, Meeting, OtherGeneral, PoliticalEvent, Reunion, SaveTheDate, Seminar, SimpleEvent, SportsEvent, TradeShow, TrainingSession, Webinar]
+        _links:
+          type: object
+          readOnly: true
+          properties:
+            invitation:
+              $ref: '#/components/schemas/CventLink'
+            agenda:
+              $ref: '#/components/schemas/CventLink'
+            summary:
+              $ref: '#/components/schemas/CventLink'
+            registration:
+              $ref: '#/components/schemas/CventLink'
+
+    Venue:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 300
+        address:
+          $ref: '#/components/schemas/Address'
+
+    Planner:
+      type: object
+      properties:
+        prefix:
+          type: string
+          maxLength: 30
+        firstName:
+          type: string
+          maxLength: 50
+        lastName:
+          type: string
+          maxLength: 50
+        company:
+          type: string
+          maxLength: 100
+        title:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          maxLength: 80
+
+    Stakeholder:
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 50
+        lastName:
+          type: string
+          maxLength: 50
+        company:
+          type: string
+          maxLength: 100
+        title:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          maxLength: 80
+        workPhone:
+          type: string
+          maxLength: 30
+        homePhone:
+          type: string
+          maxLength: 30
+        mobilePhone:
+          type: string
+          maxLength: 30
+
+    # --------------------------------------------------------------------------
+    # CVENT ATTENDEES
+    # --------------------------------------------------------------------------
+    AttendeePaginatedResponse:
+      type: object
+      required:
+        - paging
+        - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/CventPaging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attendee'
+
+    Attendee:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          type: string
+          format: uuid
+        event:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+        confirmationNumber:
+          type: string
+          maxLength: 18
+        contact:
+          $ref: '#/components/schemas/AttendeeContact'
+        checkedIn:
+          type: boolean
+        checkIn:
+          type: string
+          format: date-time
+        checkOut:
+          type: string
+          format: date-time
+        duration:
+          type: integer
+        registrationPath:
+          $ref: '#/components/schemas/Lookup'
+        invitationList:
+          $ref: '#/components/schemas/IdName'
+        webLinks:
+          type: object
+          properties:
+            acceptRegistration:
+              type: string
+              format: uri
+            declineRegistration:
+              type: string
+              format: uri
+        registrationType:
+          $ref: '#/components/schemas/Lookup'
+        referenceId:
+          type: string
+          maxLength: 100
+        externalReferences:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [Salesforce, Marketo, Eloqua, HubSpot, Custom]
+              id:
+                type: string
+              referenceId:
+                type: string
+        note:
+          type: string
+          maxLength: 300
+        guest:
+          type: boolean
+        deletedGuest:
+          type: boolean
+          readOnly: true
+        primaryId:
+          type: string
+          format: uuid
+        group:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+            member:
+              type: boolean
+            leader:
+              type: boolean
+        unsubscribed:
+          type: boolean
+        status:
+          type: string
+          enum: [No Response, Accepted, Declined, Visited, Waitlisted, Cancelled, Pending Approval, Denied Approval]
+        registeredAt:
+          type: string
+          format: date-time
+        registrationLastModified:
+          type: string
+          format: date-time
+        registrationCancelledAt:
+          type: string
+          format: date-time
+        invitedBy:
+          type: string
+          enum: [Planner-Invited, No Invitation, Guest-Invited, Alternate Campaign, Weblink, Import, Historical Import, API Invited]
+        responseMethod:
+          type: string
+        answers:
+          type: array
+          items:
+            type: object
+            properties:
+              question:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+              value:
+                type: array
+                items:
+                  type: string
+          readOnly: true
+        admissionItem:
+          $ref: '#/components/schemas/Lookup'
+        visibility:
+          type: string
+          enum: [Private, Public]
+        bio:
+          type: string
+          maxLength: 2500
+        websiteUrl:
+          type: string
+          format: uri
+          readOnly: true
+        allowPushNotifications:
+          type: boolean
+          readOnly: true
+        allowAppointmentPushNotifications:
+          type: boolean
+          readOnly: true
+        testRecord:
+          type: boolean
+          readOnly: true
+        attendeeLastModified:
+          type: string
+          format: date-time
+        credit:
+          type: number
+
+    AttendeeContact:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+          maxLength: 30
+        lastName:
+          type: string
+          maxLength: 50
+        middleName:
+          type: string
+          maxLength: 30
+        nickname:
+          type: string
+          maxLength: 30
+        email:
+          type: string
+          format: email
+          maxLength: 80
+        ccEmail:
+          type: string
+          format: email
+          maxLength: 80
+        gender:
+          type: string
+          enum: [Male, Female, Unknown]
+        company:
+          type: string
+        designation:
+          type: string
+          maxLength: 30
+        title:
+          type: string
+          maxLength: 100
+        prefix:
+          type: string
+          maxLength: 30
+        homeAddress:
+          $ref: '#/components/schemas/Address'
+        homePhone:
+          type: string
+          maxLength: 30
+        homeFax:
+          type: string
+          maxLength: 30
+        workAddress:
+          $ref: '#/components/schemas/Address'
+        workPhone:
+          type: string
+          maxLength: 30
+        workFax:
+          type: string
+          maxLength: 30
+        mobilePhone:
+          type: string
+          maxLength: 30
+        pager:
+          type: string
+          maxLength: 30
+        sourceId:
+          type: string
+          maxLength: 50
+        deleted:
+          type: boolean
+          readOnly: true
+        headline:
+          type: string
+          readOnly: true
+        personalWebsite:
+          type: string
+          format: uri
+          readOnly: true
+        biography:
+          type: string
+          readOnly: true
+        pronouns:
+          type: string
+          readOnly: true
+        customFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomField'
+          readOnly: true
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/CventLink'
+
+    # --------------------------------------------------------------------------
+    # CVENT EXHIBITORS
+    # --------------------------------------------------------------------------
+    ExhibitorPaginatedResponse:
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/CventPaging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Exhibitor'
+
+    Exhibitor:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Audit'
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        website:
+          type: string
+          format: uri
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          maxLength: 30
+        hidden:
+          type: boolean
+        deleted:
+          type: boolean
+          readOnly: true
+        sponsorshipLevel:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+        booths:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+              location:
+                type: string
+        profileLogoId:
+          type: string
+          format: uuid
+          readOnly: true
+        profileLogoUrl:
+          type: string
+          format: uri
+          readOnly: true
+        bannerId:
+          type: string
+          format: uuid
+          readOnly: true
+        bannerUrl:
+          type: string
+          format: uri
+          readOnly: true
+        address:
+          $ref: '#/components/schemas/Address'
+        socialMedia:
+          type: object
+          properties:
+            twitter:
+              type: string
+              format: uri
+            linkedin:
+              type: string
+              format: uri
+            facebook:
+              type: string
+              format: uri
+            instagram:
+              type: string
+              format: uri
+            youtube:
+              type: string
+              format: uri
+
+    # --------------------------------------------------------------------------
+    # CVENT SESSIONS
+    # --------------------------------------------------------------------------
+    SessionLocationPaginatedResponse:
+      type: object
+      required:
+        - paging
+        - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/CventPaging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionLocation'
+
+    SessionLocation:
+      type: object
+      required:
+        - code
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+          maxLength: 100
+
+    # --------------------------------------------------------------------------
+    # CVENT SPEAKERS
+    # --------------------------------------------------------------------------
+    SessionSpeakerPaginatedResponse:
+      type: object
+      required:
+        - paging
+        - data
+      properties:
+        paging:
+          $ref: '#/components/schemas/CventPaging'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionSpeaker'
+
+    SessionSpeaker:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        session:
+          type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              format: uuid
+        category:
+          type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+              maxLength: 50
+        order:
+          type: integer
+
+    # --------------------------------------------------------------------------
+    # HUBSPOT MARKETING EMAILS
+    # --------------------------------------------------------------------------
+    MarketingEmailCollectionResponse:
+      type: object
+      required:
+        - results
+        - total
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketingEmail'
+        total:
+          type: integer
+        paging:
+          $ref: '#/components/schemas/HubSpotPaging'
+
+    MarketingEmail:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        type:
+          $ref: '#/components/schemas/MarketingEmailType'
+        subcategory:
+          type: string
+        state:
+          type: string
+          enum: [DRAFT, PUBLISHED, ARCHIVED]
+        isPublished:
+          type: boolean
+        isTransactional:
+          type: boolean
+        archived:
+          type: boolean
+        sendOnPublish:
+          type: boolean
+        activeDomain:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdById:
+          type: integer
+        updatedAt:
+          type: string
+          format: date-time
+        updatedById:
+          type: integer
+        from:
+          type: object
+          properties:
+            fromName:
+              type: string
+            replyTo:
+              type: string
+              format: email
+        to:
+          type: object
+          properties:
+            contactIds:
+              type: object
+              properties:
+                include:
+                  type: array
+                  items:
+                    type: integer
+            contactIlsLists:
+              type: object
+            suppressGraymail:
+              type: boolean
+        content:
+          type: object
+          properties:
+            templatePath:
+              type: string
+            widgets:
+              type: object
+              additionalProperties:
+                type: object
+        stats:
+          $ref: '#/components/schemas/MarketingEmailStats'
+        subscriptionDetails:
+          type: object
+          properties:
+            officeLocationId:
+              type: string
+            subscriptionId:
+              type: integer
+
+    MarketingEmailType:
+      type: string
+      enum:
+        - AB_EMAIL
+        - AUTOMATED_AB_EMAIL
+        - AUTOMATED_EMAIL
+        - BATCH_EMAIL
+        - BLOG_EMAIL
+        - BLOG_EMAIL_CHILD
+        - FEEDBACK_CES_EMAIL
+        - FEEDBACK_CUSTOM_EMAIL
+        - FEEDBACK_CUSTOM_SURVEY_EMAIL
+        - FEEDBACK_NPS_EMAIL
+        - FOLLOWUP_EMAIL
+        - LEADFLOW_EMAIL
+        - LOCALTIME_EMAIL
+        - MARKETING_SINGLE_SEND_API
+        - MEMBERSHIP_EMAIL_VERIFICATION_EMAIL
+        - MEMBERSHIP_FOLLOW_UP_EMAIL
+        - MEMBERSHIP_OTP_LOGIN_EMAIL
+        - MEMBERSHIP_PASSWORD_RESET_EMAIL
+        - MEMBERSHIP_PASSWORD_SAVED_EMAIL
+        - MEMBERSHIP_PASSWORDLESS_AUTH_EMAIL
+        - MEMBERSHIP_REGISTRATION_EMAIL
+        - MEMBERSHIP_REGISTRATION_FOLLOW_UP_EMAIL
+        - MEMBERSHIP_VERIFICATION_EMAIL
+        - OPTIN_EMAIL
+        - OPTIN_FOLLOWUP_EMAIL
+        - RESUBSCRIBE_EMAIL
+        - RSS_EMAIL
+        - RSS_EMAIL_CHILD
+        - SINGLE_SEND_API
+        - SMTP_TOKEN
+        - TICKET_EMAIL
+
+    MarketingEmailStats:
+      type: object
+      properties:
+        counters:
+          type: object
+          properties:
+            bounce:
+              type: integer
+            click:
+              type: integer
+            contactslost:
+              type: integer
+            delivered:
+              type: integer
+            dropped:
+              type: integer
+            hardbounced:
+              type: integer
+            notsent:
+              type: integer
+            open:
+              type: integer
+            pending:
+              type: integer
+            reply:
+              type: integer
+            selected:
+              type: integer
+            sent:
+              type: integer
+            softbounced:
+              type: integer
+            spamreport:
+              type: integer
+            suppressed:
+              type: integer
+            unsubscribed:
+              type: integer
+        ratios:
+          type: object
+          properties:
+            bounceratio:
+              type: number
+              format: double
+            clickratio:
+              type: number
+              format: double
+            clickthroughratio:
+              type: number
+              format: double
+            contactslostratio:
+              type: number
+              format: double
+            deliveredratio:
+              type: number
+              format: double
+            hardbounceratio:
+              type: number
+              format: double
+            notsentratio:
+              type: number
+              format: double
+            openratio:
+              type: number
+              format: double
+            pendingratio:
+              type: number
+              format: double
+            replyratio:
+              type: number
+              format: double
+            softbounceratio:
+              type: number
+              format: double
+            spamreportratio:
+              type: number
+              format: double
+            unsubscribedratio:
+              type: number
+              format: double
+        deviceBreakdown:
+          type: object
+          properties:
+            click_device_type:
+              $ref: '#/components/schemas/DeviceTypeStats'
+            open_device_type:
+              $ref: '#/components/schemas/DeviceTypeStats'
+        qualifierStats:
+          type: object
+
+    DeviceTypeStats:
+      type: object
+      properties:
+        computer:
+          type: integer
+        mobile:
+          type: integer
+        unknown:
+          type: integer
+
+    HubSpotPaging:
+      type: object
+      properties:
+        next:
+          type: object
+          properties:
+            after:
+              type: string
+            link:
+              type: string
+              format: uri
+        prev:
+          type: object
+          properties:
+            after:
+              type: string
+            link:
+              type: string
+              format: uri
+
+    # --------------------------------------------------------------------------
+    # LINKEDIN COMMON
+    # --------------------------------------------------------------------------
+    LinkedInMultiLocaleString:
+      type: object
+      description: Localizable string object type.
+      properties:
+        localized:
+          type: object
+          description: Localized values keyed by locale.
+          additionalProperties:
+            type: string
+          example:
+            en_US: Example Text
+        preferredLocale:
+          $ref: '#/components/schemas/LinkedInLocale'
+
+    LinkedInLocale:
+      type: object
+      description: Locale with country and language codes.
+      properties:
+        country:
+          type: string
+          description: ISO 3166-1 alpha-2 country code.
+          pattern: '^[A-Z]{2}$'
+          example: US
+        language:
+          type: string
+          description: ISO 639-1 language code.
+          pattern: '^[a-z]{2}$'
+          example: en
+
+    LinkedInMediaAsset:
+      type: object
+      description: Media asset reference.
+      properties:
+        displayImage:
+          type: string
+          description: URN reference to display image.
+          pattern: '^urn:li:digitalmediaAsset:[A-Za-z0-9_-]+$'
+        displayImageReference:
+          type: object
+          description: Reference information for the display image.
+
+    LinkedInPaging:
+      type: object
+      description: LinkedIn pagination information.
+      properties:
+        count:
+          type: integer
+          description: Number of elements in the current page.
+          example: 10
+        start:
+          type: integer
+          description: Starting index of the current page.
+          example: 0
+        links:
+          type: array
+          description: Pagination links.
+          items:
+            type: object
+
+    # --------------------------------------------------------------------------
+    # LINKEDIN ORGANIZATIONS
+    # --------------------------------------------------------------------------
+    LinkedInOrganization:
+      type: object
+      description: |
+        LinkedIn organization (Company Page). Non-admin access returns limited fields only.
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the organization.
+          example: 79988552
+        $URN:
+          type: string
+          description: URN reference for the organization.
+          pattern: '^urn:li:organization:\d+$'
+          example: 'urn:li:organization:79988552'
+        name:
+          $ref: '#/components/schemas/LinkedInMultiLocaleString'
+        localizedName:
+          type: string
+          description: Localized organization name.
+          example: FirstDemoCompany
+        vanityName:
+          type: string
+          description: Vanity name for profile URL (linkedin.com/company/{vanityName}).
+          example: firstdemocompany
+        localizedWebsite:
+          type: string
+          format: uri
+          description: Localized website URL.
+        logoV2:
+          $ref: '#/components/schemas/LinkedInMediaAsset'
+        coverPhotoV2:
+          $ref: '#/components/schemas/LinkedInCoverPhoto'
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkedInLocation'
+        primaryOrganizationType:
+          type: string
+          description: Primary organization type classification.
+          enum: [NONE, EDUCATIONAL, GOVERNMENTAL, NONPROFIT, PARTNERSHIP, PRIVATELY_HELD, PUBLIC_COMPANY, SELF_EMPLOYED, SELF_OWNED, SOLE_PROPRIETORSHIP]
+        organizationType:
+          type: string
+          description: Organization type (admin access required).
+          enum: [SELF_EMPLOYED, EDUCATIONAL, GOVERNMENTAL, NONPROFIT, PARTNERSHIP, PRIVATELY_HELD, PUBLIC_COMPANY, SELF_OWNED, SOLE_PROPRIETORSHIP]
+        versionTag:
+          type: string
+          description: Version tag (admin access required).
+        defaultLocale:
+          $ref: '#/components/schemas/LinkedInLocale'
+        groups:
+          type: array
+          description: Associated groups (admin access required).
+          items:
+            type: string
+        alternativeNames:
+          type: array
+          description: Alternative names (admin access required).
+          items:
+            $ref: '#/components/schemas/LinkedInMultiLocaleString'
+        specialties:
+          type: array
+          description: Organization specialties (admin access required).
+          items:
+            type: string
+        localizedSpecialties:
+          type: array
+          description: Localized specialties (admin access required).
+          items:
+            type: string
+        staffCountRange:
+          type: string
+          description: Staff count range (admin access required).
+          enum: [SIZE_1, SIZE_2_10, SIZE_11_50, SIZE_51_200, SIZE_201_500, SIZE_501_1000, SIZE_1001_5000, SIZE_5001_10000, SIZE_10001_PLUS]
+        industries:
+          type: array
+          description: Industry URNs (admin access required).
+          items:
+            type: string
+            pattern: '^urn:li:industry:\d+$'
+
+    LinkedInCoverPhoto:
+      type: object
+      description: Cover photo with cropping details.
+      properties:
+        cropped:
+          type: string
+          description: URN reference to cropped cover photo.
+          pattern: '^urn:li:digitalmediaAsset:[A-Za-z0-9_-]+$'
+        original:
+          type: string
+          description: URN reference to original cover photo.
+          pattern: '^urn:li:digitalmediaAsset:[A-Za-z0-9_-]+$'
+        cropInfo:
+          type: object
+          properties:
+            x:
+              type: integer
+            y:
+              type: integer
+            width:
+              type: integer
+            height:
+              type: integer
+
+    LinkedInLocation:
+      type: object
+      description: Organization location.
+      properties:
+        address:
+          type: object
+          properties:
+            line1:
+              type: string
+            line2:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            postalCode:
+              type: string
+            country:
+              type: string
+        geoLocation:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+            longitude:
+              type: number
+              format: double
+        description:
+          type: string
+
+    # --------------------------------------------------------------------------
+    # LINKEDIN PROFILES
+    # --------------------------------------------------------------------------
+    LinkedInProfileResponse:
+      type: object
+      description: Response containing LinkedIn member profile(s).
+      properties:
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkedInProfile'
+        paging:
+          $ref: '#/components/schemas/LinkedInPaging'
+
+    LinkedInProfile:
+      type: object
+      description: LinkedIn member profile information.
+      properties:
+        id:
+          type: string
+          description: |
+            A unique identifying value for the member (personId).
+            Can also be referenced as an URN such as urn:li:person:{personId}.
+            This value is linked to your specific application.
+          example: xo11w_WomY
+        vanityName:
+          type: string
+          description: |
+            The vanity name of the member used for the public profile URL: 
+            www.linkedin.com/in/{vanityName}
+          example: a-sample-vanity-name
+        firstName:
+          $ref: '#/components/schemas/LinkedInMultiLocaleString'
+        localizedFirstName:
+          type: string
+          description: Localized version of the firstName field.
+          example: First
+        lastName:
+          $ref: '#/components/schemas/LinkedInMultiLocaleString'
+        localizedLastName:
+          type: string
+          description: Localized version of the lastName field.
+          example: Last
+        maidenName:
+          $ref: '#/components/schemas/LinkedInMultiLocaleString'
+        localizedMaidenName:
+          type: string
+          description: Localized version of the maidenName field.
+        headline:
+          $ref: '#/components/schemas/LinkedInMultiLocaleString'
+        localizedHeadline:
+          type: string
+          description: Localized version of the headline field.
+          example: Software Engineer at LinkedIn
+        profilePicture:
+          $ref: '#/components/schemas/LinkedInMediaAsset'
+        positions:
+          type: object
+          description: Employment history of the member.
+          additionalProperties:
+            $ref: '#/components/schemas/LinkedInPosition'
+        positionsOrder:
+          type: array
+          description: Positions intra-section order.
+          items:
+            type: integer
+            format: int64
+
+    LinkedInPosition:
+      type: object
+      description: Employment position information.
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the position.
+          example: 47301314
+        title:
+          $ref: '#/components/schemas/LinkedInMultiLocaleString'
+        localizedTitle:
+          type: string
+          description: Localized version of the title field.
+          example: Software Engineer
+        company:
+          type: string
+          description: URN reference to the company organization.
+          example: 'urn:li:organization:12345'
+        companyName:
+          $ref: '#/components/schemas/LinkedInMultiLocaleString'
+        localizedCompanyName:
+          type: string
+          description: Localized version of the companyName field.
+          example: LinkedIn
+        created:
+          type: integer
+          format: int64
+          description: Timestamp when the position was created.
+          example: 1551295846540
+        lastModified:
+          type: integer
+          format: int64
+          description: Timestamp when the position was last modified.
+          example: 1551295846540
+
+  # ============================================================================
+  # EXAMPLES - LINKEDIN PROFILES
+  # ============================================================================
+  examples:
+    LinkedInProfileResponseFull:
+      summary: Full profile response
+      description: Complete profile with all available fields including positions and profile picture
+      value:
+        elements:
+          - id: "xo11w_WomY"
+            vanityName: "a-sample-vanity-name"
+            firstName:
+              localized:
+                en_US: "First"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedFirstName: "First"
+            lastName:
+              localized:
+                en_US: "Last"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedLastName: "Last"
+            headline:
+              localized:
+                en_US: "Software Engineer at LinkedIn"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedHeadline: "Software Engineer at LinkedIn"
+            profilePicture:
+              displayImage: "urn:li:digitalmediaAsset:C4D03AQGsitRwG8U8ZQ"
+            positions:
+              "47301314":
+                id: 47301314
+                title:
+                  localized:
+                    en_US: "Software Engineer"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedTitle: "Software Engineer"
+                company: "urn:li:organization:12345"
+                companyName:
+                  localized:
+                    en_US: "LinkedIn"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedCompanyName: "LinkedIn"
+                created: 1551295846540
+                lastModified: 1551295846540
+            positionsOrder:
+              - 47301314
+        paging:
+          count: 10
+          start: 0
+          links: []
+
+    LinkedInProfileResponseMinimal:
+      summary: Minimal profile response
+      description: Profile with only basic required fields (limited by member privacy settings)
+      value:
+        elements:
+          - id: "abc123XYZ"
+            vanityName: "john-doe-minimal"
+            firstName:
+              localized:
+                en_US: "John"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedFirstName: "John"
+            lastName:
+              localized:
+                en_US: "Doe"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedLastName: "Doe"
+        paging:
+          count: 10
+          start: 0
+          links: []
+
+    LinkedInProfileResponseMultiplePositions:
+      summary: Profile with multiple positions
+      description: Profile showing employment history with multiple positions
+      value:
+        elements:
+          - id: "def456ABC"
+            vanityName: "jane-smith-engineer"
+            firstName:
+              localized:
+                en_US: "Jane"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedFirstName: "Jane"
+            lastName:
+              localized:
+                en_US: "Smith"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedLastName: "Smith"
+            headline:
+              localized:
+                en_US: "Senior Engineering Manager at Google"
+              preferredLocale:
+                country: "US"
+                language: "en"
+            localizedHeadline: "Senior Engineering Manager at Google"
+            profilePicture:
+              displayImage: "urn:li:digitalmediaAsset:C4D03AQJaneSmithPhoto"
+            positions:
+              "98765432":
+                id: 98765432
+                title:
+                  localized:
+                    en_US: "Senior Engineering Manager"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedTitle: "Senior Engineering Manager"
+                company: "urn:li:organization:1441"
+                companyName:
+                  localized:
+                    en_US: "Google"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedCompanyName: "Google"
+                created: 1609459200000
+                lastModified: 1609459200000
+              "87654321":
+                id: 87654321
+                title:
+                  localized:
+                    en_US: "Software Engineer"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedTitle: "Software Engineer"
+                company: "urn:li:organization:1035"
+                companyName:
+                  localized:
+                    en_US: "Microsoft"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedCompanyName: "Microsoft"
+                created: 1483228800000
+                lastModified: 1609372800000
+              "76543210":
+                id: 76543210
+                title:
+                  localized:
+                    en_US: "Junior Developer"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedTitle: "Junior Developer"
+                company: "urn:li:organization:9999"
+                companyName:
+                  localized:
+                    en_US: "Startup Inc"
+                  preferredLocale:
+                    country: "US"
+                    language: "en"
+                localizedCompanyName: "Startup Inc"
+                created: 1420070400000
+                lastModified: 1483142400000
+            positionsOrder:
+              - 98765432
+              - 87654321
+              - 76543210
+        paging:
+          count: 10
+          start: 0
+          links: []
+
+    LinkedInProfileResponseEmpty:
+      summary: Empty response (no matching profile)
+      description: Response when vanityName does not match any profile (privacy restricted or does not exist)
+      value:
+        elements: []
+        paging:
+          count: 10
+          start: 0
+          links: []
+
+  # ============================================================================
+  # SECURITY SCHEMES
+  # ============================================================================
+  securitySchemes:
+    # Cvent
+    CventOAuth2ClientCredentials:
+      type: oauth2
+      description: Cvent OAuth2 Client Credentials Flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/events:read: Read events
+            event/events:write: Create/update events
+            event/attendees:read: Read attendees
+            event/attendees:write: Create attendees
+            event/sessions:read: Read sessions
+            event/sessions:write: Create/update sessions
+            event/sessions:delete: Delete sessions
+            event/speakers:read: Read speakers
+            event/registration-types:read: Read registration types
+            exhibitor/exhibitors:read: Read exhibitors
+            exhibitor/exhibitors:write: Create/update exhibitors
+            exhibitor/exhibitors:delete: Delete exhibitors
+
+    CventOAuth2AuthorizationCode:
+      type: oauth2
+      description: Cvent OAuth2 Authorization Code Flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+          tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+          scopes:
+            event/events:read: Read events
+            event/events:write: Create/update events
+            event/attendees:read: Read attendees
+            event/attendees:write: Create attendees
+            event/sessions:read: Read sessions
+            event/sessions:write: Create/update sessions
+            event/sessions:delete: Delete sessions
+            event/speakers:read: Read speakers
+            event/registration-types:read: Read registration types
+            exhibitor/exhibitors:read: Read exhibitors
+            exhibitor/exhibitors:write: Create/update exhibitors
+            exhibitor/exhibitors:delete: Delete exhibitors
+
+    # HubSpot
+    HubSpotOAuth2:
+      type: oauth2
+      description: HubSpot OAuth2 Authorization.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+          scopes:
+            content: Access to marketing content including emails
+
+    HubSpotBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: token
+      description: HubSpot Bearer token authentication.
+
+    # LinkedIn
+    LinkedInOAuth2:
+      type: oauth2
+      description: |
+        LinkedIn OAuth 2.0 using 3-legged Authorization Code Flow.
+        Different endpoints require different scopes:
+        - Organizations API: Requires rw_organization_admin for full access
+        - Profiles API: Requires r_compliance_2l (restricted to approved developers)
+      flows:
+        authorizationCode:
+          authorizationUrl: https://www.linkedin.com/oauth/v2/authorization
+          tokenUrl: https://www.linkedin.com/oauth/v2/accessToken
+          scopes:
+            rw_organization_admin: Manage organization pages and retrieve reporting data
+            r_compliance: Retrieve posts, comments, and likes for compliance monitoring (private)
+            r_compliance_2l: Compliance permission to allow access of APIs without member involvement (private)

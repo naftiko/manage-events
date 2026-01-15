@@ -1,0 +1,403 @@
+name: Mange Events Agent
+description: >-
+  A unified agent combining Cvent event management, HubSpot marketing, and
+  LinkedIn organization capabilities. Manages events, attendees, exhibitors,
+  sessions, speakers, marketing emails, and organization/profile lookups.
+url: https://api-platform.cvent.com/ea
+version: 0.1.0
+documentationUrl: https://api-platform.cvent.com/ea/docs
+provider:
+  organization: Mange Events
+  url: https://api-platform.cvent.com
+capabilities:
+  streaming: false
+  pushNotifications: false
+  stateTransitionHistory: false
+authentication:
+  schemes:
+    - scheme: oauth2
+      type: clientCredentials
+      tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+      scopes:
+        - event/events:read
+        - event/attendees:read
+        - event/sessions:read
+        - event/speakers:read
+        - exhibitor/exhibitors:read
+      description: Cvent OAuth2 Client Credentials Flow
+    - scheme: oauth2
+      type: authorizationCode
+      authorizationUrl: https://api-platform.cvent.com/ea/oauth2/authorize
+      tokenUrl: https://api-platform.cvent.com/ea/oauth2/token
+      scopes:
+        - event/events:read
+        - event/attendees:read
+        - event/sessions:read
+        - event/speakers:read
+        - exhibitor/exhibitors:read
+      description: Cvent OAuth2 Authorization Code Flow
+    - scheme: oauth2
+      type: authorizationCode
+      authorizationUrl: https://app.hubspot.com/oauth/authorize
+      tokenUrl: https://api.hubapi.com/oauth/v1/token
+      scopes:
+        - content
+      description: HubSpot OAuth2 Authorization
+    - scheme: oauth2
+      type: authorizationCode
+      authorizationUrl: https://www.linkedin.com/oauth/v2/authorization
+      tokenUrl: https://www.linkedin.com/oauth/v2/accessToken
+      scopes:
+        - rw_organization_admin
+        - r_compliance_2l
+      description: LinkedIn OAuth 2.0 Authorization Code Flow
+defaultInputModes:
+  - application/json
+defaultOutputModes:
+  - application/json
+skills:
+  - id: listEvents
+    name: List Events
+    description: >-
+      Gets a paginated list of events from Cvent. Supports filtering by status,
+      format, dates, planner info, venue address, and custom fields using
+      logical and comparison operators.
+    tags:
+      - events
+      - cvent
+      - read
+    examples:
+      - List all active virtual events
+      - Get events starting after January 2024
+      - Find conferences in New York
+    inputModes:
+      - application/json
+    outputModes:
+      - application/json
+    parameters:
+      type: object
+      properties:
+        after:
+          type: string
+          format: date-time
+          description: Query records added or updated after this ISO 8601 datetime.
+        before:
+          type: string
+          format: date-time
+          description: Query records added or updated before this ISO 8601 datetime.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page (1-200).
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request.
+        sort:
+          type: string
+          description: 'Sort order. Format: field:ORDER. Sortable: start.'
+        filter:
+          type: string
+          description: >-
+            Filter query string using comparison operators (eq, ne, gt, ge, lt,
+            le, contains).
+  - id: listAttendees
+    name: List Attendees
+    description: >-
+      Gets a paginated list of attendees in your Cvent account. Supports
+      filtering by event, check-in status, registration dates, contact
+      information, and more.
+    tags:
+      - attendees
+      - cvent
+      - read
+    examples:
+      - List all checked-in attendees for an event
+      - Find attendees registered after March 2024
+      - Get attendees from a specific company
+    inputModes:
+      - application/json
+    outputModes:
+      - application/json
+    parameters:
+      type: object
+      properties:
+        after:
+          type: string
+          format: date-time
+          description: Query records added or updated after this ISO 8601 datetime.
+        before:
+          type: string
+          format: date-time
+          description: Query records added or updated before this ISO 8601 datetime.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page.
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request.
+        expand:
+          type: array
+          items:
+            type: string
+            enum:
+              - answers.question
+              - registrationType
+          description: Expandable fields to include in response.
+        sort:
+          type: string
+          description: Sort order for results.
+        includeDeletedGuests:
+          type: boolean
+          default: false
+          description: Include deleted guests in the response.
+        filter:
+          type: string
+          description: Filter query string to narrow search results.
+  - id: listEventExhibitors
+    name: List Exhibitors
+    description: >-
+      Retrieves a paginated list of exhibitors associated with a single Cvent
+      event.
+    tags:
+      - exhibitors
+      - cvent
+      - read
+    examples:
+      - List all exhibitors for a trade show
+      - Find visible exhibitors only
+      - Get exhibitor details for event planning
+    inputModes:
+      - application/json
+    outputModes:
+      - application/json
+    parameters:
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: The unique identifier of the event.
+        after:
+          type: string
+          format: date-time
+          description: Query records added or updated after this ISO 8601 datetime.
+        before:
+          type: string
+          format: date-time
+          description: Query records added or updated before this ISO 8601 datetime.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page.
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request.
+        filter:
+          type: string
+          description: Filter by hidden, deleted, or id.
+      required:
+        - eventId
+  - id: listEventSessionLocations
+    name: List Session Locations
+    description: Gets a paginated list of session locations for a Cvent event.
+    tags:
+      - sessions
+      - locations
+      - cvent
+      - read
+    examples:
+      - Get all session rooms for a conference
+      - List venue locations for event sessions
+    inputModes:
+      - application/json
+    outputModes:
+      - application/json
+    parameters:
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: The unique identifier of the event.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page.
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request.
+      required:
+        - eventId
+  - id: listSessionSpeakers
+    name: List Session Speakers
+    description: Gets a paginated list of speakers assigned to a Cvent session.
+    tags:
+      - speakers
+      - sessions
+      - cvent
+      - read
+    examples:
+      - List all speakers for a keynote session
+      - Get speaker lineup for a workshop
+    inputModes:
+      - application/json
+    outputModes:
+      - application/json
+    parameters:
+      type: object
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+          description: The unique identifier of the session.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page.
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request.
+      required:
+        - sessionId
+  - id: listMarketingEmails
+    name: List Marketing Emails
+    description: >-
+      Retrieve a collection of HubSpot marketing emails with optional filtering
+      and pagination. Results can be filtered by publication status, campaign,
+      creation/update times, and email type.
+    tags:
+      - marketing
+      - emails
+      - hubspot
+      - read
+    examples:
+      - List all published marketing emails
+      - Get emails created in the last month
+      - Find automated email campaigns
+    inputModes:
+      - application/json
+    outputModes:
+      - application/json
+    parameters:
+      type: object
+      properties:
+        after:
+          type: string
+          description: Cursor token to get the next set of results.
+        limit:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+          description: Maximum results to return (1-100).
+        archived:
+          type: boolean
+          default: false
+          description: Return archived emails.
+        campaign:
+          type: string
+          description: Filter by campaign GUID.
+        createdAfter:
+          type: string
+          format: date-time
+          description: Only emails created after this time.
+        createdBefore:
+          type: string
+          format: date-time
+          description: Only emails created before this time.
+        includeStats:
+          type: boolean
+          default: false
+          description: Include email performance statistics.
+        isPublished:
+          type: boolean
+          description: Filter by published/draft status.
+        type:
+          type: array
+          items:
+            type: string
+          description: >-
+            Filter by email type(s): AB_EMAIL, AUTOMATED_EMAIL, BATCH_EMAIL,
+            etc.
+        sort:
+          type: array
+          items:
+            type: string
+          description: Sort fields. Prefix '-' for descending.
+  - id: getOrganization
+    name: Get Organization
+    description: >-
+      Look up LinkedIn organization information on behalf of authenticated
+      members. Admin access returns all Organization fields; non-admin access
+      returns limited fields including id, name, localizedName,
+      localizedWebsite, vanityName, logoV2, locations, primaryOrganizationType.
+    tags:
+      - organization
+      - linkedin
+      - read
+    examples:
+      - Get company information by organization ID
+      - Look up LinkedIn company page details
+      - Retrieve organization profile data
+    inputModes:
+      - application/json
+    outputModes:
+      - application/json
+    parameters:
+      type: object
+      properties:
+        organizationId:
+          type: integer
+          format: int64
+          description: The unique identifier for the organization.
+      required:
+        - organizationId
+  - id: getProfileByVanityName
+    name: Find Profile by VanityName
+    description: >-
+      Returns basic profile fields for the LinkedIn member that matches the
+      vanityName. The vanityName represents the public profile URL format:
+      www.linkedin.com/in/{vanityName}. Restricted to approved developers with
+      application limit of 500 requests per day.
+    tags:
+      - profiles
+      - linkedin
+      - read
+    examples:
+      - Find a LinkedIn member by their profile URL slug
+      - Look up profile information using vanity name
+      - Get member details from public profile identifier
+    inputModes:
+      - application/json
+    outputModes:
+      - application/json
+    parameters:
+      type: object
+      properties:
+        q:
+          type: string
+          enum:
+            - vanityName
+          description: Query type parameter, must be set to 'vanityName'.
+        vanityName:
+          type: string
+          description: The vanity name of the LinkedIn member to retrieve.
+      required:
+        - q
+        - vanityName

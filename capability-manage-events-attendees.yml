@@ -28,21 +28,7 @@ info:
   pinned: true
   featured: true
 
-ports:
-
-  artificialIntelligence:
-
-    - adapter: MCP
-      title: Cvent Attendees API
-      jsonSchema:
-
-        - $ref: model-context-protocol/manage-events-attendees.yml'        
-
-    - adapter: A2A
-      title: Atendees Agent
-      jsonSchema:
-
-        - $ref: agent2agent/attendees-agent.yml'             
+ports:          
 
   source:
 
@@ -190,47 +176,47 @@ standards:
 
   - name: Naftiko Capabilities
     description: This uses a exploratory schema to help inform and shape capabilities.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/capabilities/
+    docUrl: https://naftiko.github.io/technology/docs/capabilities/
 
   - name: OpenAPI
     description: This uses OpenAPI to define access to all HTTP APIs.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/openapi/
+    docUrl: https://naftiko.github.io/technology/docs/standards/openapi/
 
   - name: JSON Schema
     description: This uses JSON Schema to define and validate all entities used.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/json-schema/    
+    docUrl: https://naftiko.github.io/technology/docs/standards/json-schema/    
 
   - name: Spectral
     description: This uses Spectral rules to define and enforce policies across entities.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/spectral/     
+    docUrl: https://naftiko.github.io/technology/docs/standards/spectral/     
 
   - name: Model Context Protocol
     description: This uses MCP expresed as JSON schema to define each MCP server.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/model-context-protocol/
+    docUrl: https://naftiko.github.io/technology/docs/standards/model-context-protocol/
 
   - name: Bruno Collections
     description: This uses Bruno Collections to define each executable HTTP API integration.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/bruno-collections/        
+    docUrl: https://naftiko.github.io/technology/docs/standards/bruno-collections/        
 
   - name: Bruno Environments
     description: This uses Bruno Environments to store keys for each API to use in automation.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/bruno-environments/  
+    docUrl: https://naftiko.github.io/technology/docs/standards/bruno-environments/  
 
   - name: VCard
     description: This uses VCard to define each stakeholder in a portable manner.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/vcard-ontology/           
+    docUrl: https://naftiko.github.io/technology/docs/standards/vcard-ontology/           
 
   - name: APIs.json
     description: This uses an APIs.json to index all of the available properties for services.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/apis-json/     
+    docUrl: https://naftiko.github.io/technology/docs/standards/apis-json/     
 
   - name: API Commons
     description: This uses an API Commons schema to define the plans and rate limits.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/api-commons/      
+    docUrl: https://naftiko.github.io/technology/docs/standards/api-commons/      
 
   - name: OAuth 2.0
     description: This uses a exploratory schema to help inform and shape capabilities.
-    docUrl: https://psychic-bassoon-z2vjvn4.pages.github.io/docs/standards/oauth-20/       
+    docUrl: https://naftiko.github.io/technology/docs/standards/oauth-20/       
 
 security:
 
@@ -248,7 +234,7 @@ services:
 
   - name: Cvent
     description: Cvent is a software platform that helps organizations plan, manage, and analyze events by providing tools for registration, venues, marketing, attendee engagement, and event logistics.
-    docUrl: https://urban-adventure-6l4jvje.pages.github.io/docs/services/bigcommerce/
+    docUrl: https://naftiko.github.io/technology/docs/services/bigcommerce/
     apisJson: https://raw.githubusercontent.com/api-evangelist/cvent/refs/heads/main/apis.yml
     loginUrl: https://app.cvent.com/subscribers/Login.aspx
     signUpUrl: https://www.cvent.com/en/event-management-software/free-trial
@@ -261,7 +247,7 @@ services:
 
   - name: LinkedIn
     description: 
-    docUrl: https://urban-adventure-6l4jvje.pages.github.io/docs/services/LinkedIn/
+    docUrl: https://naftiko.github.io/technology/docs/services/LinkedIn/
     apisJson: https://raw.githubusercontent.com/api-evangelist/linkedin/refs/heads/main/apis.yml    
     loginUrl: https://www.linkedin.com/login
     signupUrl: https://www.linkedin.com/signup

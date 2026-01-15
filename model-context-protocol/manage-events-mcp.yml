@@ -1,0 +1,373 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+serverInfo:
+  name: manage-events
+  title: Manage Events
+  version: 1.0.0
+capabilities:
+  tools:
+    listChanged: false
+instructions: >-
+  This MCP server provides access to the manage events API, providing access to events, attendees, exhibitors, sesssions, speakers, marketing emails, organizations, and people.
+tools:
+  - name: listEvents
+    title: List Events
+    description: >-
+      Gets a paginated list of events from Cvent. Supports filtering by status,
+      format, dates, planner info, venue address, and custom fields using
+      logical and comparison operators.
+    inputSchema:
+      type: object
+      properties:
+        after:
+          type: string
+          format: date-time
+          description: Query records added or updated after this ISO 8601 datetime.
+        before:
+          type: string
+          format: date-time
+          description: Query records added or updated before this ISO 8601 datetime.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page (1-200).
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request (UUID v4).
+        sort:
+          type: string
+          description: 'Sort order. Format: field:ORDER. Sortable: start.'
+        filter:
+          type: string
+          description: >-
+            A filter query string to narrow search results. Filterable fields
+            include: id, title, code, description, note, start, end, status,
+            eventStatus, format, virtual, capacity, planner.*, stakeholder.*,
+            venue.address.*, customField.{uuid}. Comparison types: eq, ne, gt,
+            ge, lt, le, contains.
+    annotations:
+      readOnlyHint: true
+      openWorldHint: true
+  - name: listAttendees
+    title: List Attendees
+    description: >-
+      Gets a paginated list of attendees in your Cvent account. Supports
+      filtering by event, check-in status, registration dates, contact
+      information, and more.
+    inputSchema:
+      type: object
+      properties:
+        after:
+          type: string
+          format: date-time
+          description: Query records added or updated after this ISO 8601 datetime.
+        before:
+          type: string
+          format: date-time
+          description: Query records added or updated before this ISO 8601 datetime.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page (1-200).
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request (UUID v4).
+        expand:
+          type: array
+          items:
+            type: string
+            enum:
+              - answers.question
+              - registrationType
+          description: 'Expandable fields: answers.question, registrationType.'
+        sort:
+          type: string
+          description: >-
+            Sort order. Sortable: contact.firstName, contact.lastName,
+            contact.title, contact.company, registeredAt, checkIn.
+        includeDeletedGuests:
+          type: boolean
+          default: false
+          description: Include deleted guests in the response.
+        filter:
+          type: string
+          description: >-
+            A filter query string to narrow search results. Filterable fields
+            include: event.id, id, confirmationNumber, checkedIn, guest,
+            checkIn, checkOut, registeredAt, status, contact.* fields.
+    annotations:
+      readOnlyHint: true
+      openWorldHint: true
+  - name: listEventExhibitors
+    title: List Exhibitors
+    description: >-
+      Retrieves a paginated list of exhibitors associated with a single Cvent
+      event.
+    inputSchema:
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: The unique identifier of the event.
+        after:
+          type: string
+          format: date-time
+          description: Query records added or updated after this ISO 8601 datetime.
+        before:
+          type: string
+          format: date-time
+          description: Query records added or updated before this ISO 8601 datetime.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page (1-200).
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request (UUID v4).
+        filter:
+          type: string
+          description: Filter by hidden (eq), deleted (eq), or id (in).
+      required:
+        - eventId
+    annotations:
+      readOnlyHint: true
+      openWorldHint: true
+  - name: listEventSessionLocations
+    title: List Session Locations
+    description: Gets a paginated list of session locations for a Cvent event.
+    inputSchema:
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: The unique identifier of the event.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page (1-200).
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request (UUID v4).
+      required:
+        - eventId
+    annotations:
+      readOnlyHint: true
+      openWorldHint: true
+  - name: listSessionSpeakers
+    title: List Session Speakers
+    description: Gets a paginated list of speakers assigned to a Cvent session.
+    inputSchema:
+      type: object
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+          description: The unique identifier of the session.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 100
+          description: The maximum number of records to return per page (1-200).
+        token:
+          type: string
+          format: uuid
+          description: Continuation token from a previous request (UUID v4).
+      required:
+        - sessionId
+    annotations:
+      readOnlyHint: true
+      openWorldHint: true
+  - name: listMarketingEmails
+    title: List Marketing Emails
+    description: >-
+      Retrieve a collection of HubSpot marketing emails with optional filtering
+      and pagination. Results can be filtered by publication status, campaign,
+      creation/update times, and email type.
+    inputSchema:
+      type: object
+      properties:
+        after:
+          type: string
+          description: Cursor token to get the next set of results.
+        limit:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+          description: Maximum results to return (1-100). Default 10.
+        archived:
+          type: boolean
+          default: false
+          description: Return archived emails. Default false.
+        campaign:
+          type: string
+          description: Filter by campaign GUID.
+        createdAfter:
+          type: string
+          format: date-time
+          description: Only emails created after this time.
+        createdAt:
+          type: string
+          format: date-time
+          description: Only emails created at exactly this time.
+        createdBefore:
+          type: string
+          format: date-time
+          description: Only emails created before this time.
+        includedProperties:
+          type: array
+          items:
+            type: string
+          description: Limit response to specified properties.
+        includeStats:
+          type: boolean
+          default: false
+          description: Include email performance statistics.
+        isPublished:
+          type: boolean
+          description: Filter by published/draft status.
+        marketingCampaignNames:
+          type: boolean
+          default: false
+          description: Include associated marketing campaign names.
+        publishedAfter:
+          type: string
+          format: date-time
+          description: Only emails published after this time.
+        publishedAt:
+          type: string
+          format: date-time
+          description: Only emails published at exactly this time.
+        publishedBefore:
+          type: string
+          format: date-time
+          description: Only emails published before this time.
+        sort:
+          type: array
+          items:
+            type: string
+            enum:
+              - name
+              - createdAt
+              - updatedAt
+              - createdBy
+              - updatedBy
+              - '-name'
+              - '-createdAt'
+              - '-updatedAt'
+              - '-createdBy'
+              - '-updatedBy'
+          description: Sort fields. Prefix '-' for descending.
+        type:
+          type: array
+          items:
+            type: string
+            enum:
+              - AB_EMAIL
+              - AUTOMATED_AB_EMAIL
+              - AUTOMATED_EMAIL
+              - BATCH_EMAIL
+              - BLOG_EMAIL
+              - BLOG_EMAIL_CHILD
+              - FEEDBACK_CES_EMAIL
+              - FEEDBACK_CUSTOM_EMAIL
+              - FEEDBACK_CUSTOM_SURVEY_EMAIL
+              - FEEDBACK_NPS_EMAIL
+              - FOLLOWUP_EMAIL
+              - LEADFLOW_EMAIL
+              - LOCALTIME_EMAIL
+              - MARKETING_SINGLE_SEND_API
+              - MEMBERSHIP_EMAIL_VERIFICATION_EMAIL
+              - MEMBERSHIP_FOLLOW_UP_EMAIL
+              - MEMBERSHIP_OTP_LOGIN_EMAIL
+              - MEMBERSHIP_PASSWORD_RESET_EMAIL
+              - MEMBERSHIP_PASSWORD_SAVED_EMAIL
+              - MEMBERSHIP_PASSWORDLESS_AUTH_EMAIL
+              - MEMBERSHIP_REGISTRATION_EMAIL
+              - MEMBERSHIP_REGISTRATION_FOLLOW_UP_EMAIL
+              - MEMBERSHIP_VERIFICATION_EMAIL
+              - OPTIN_EMAIL
+              - OPTIN_FOLLOWUP_EMAIL
+              - RESUBSCRIBE_EMAIL
+              - RSS_EMAIL
+              - RSS_EMAIL_CHILD
+              - SINGLE_SEND_API
+              - SMTP_TOKEN
+              - TICKET_EMAIL
+          description: Filter by email type(s).
+        updatedAfter:
+          type: string
+          format: date-time
+          description: Only emails updated after this time.
+        updatedAt:
+          type: string
+          format: date-time
+          description: Only emails updated at exactly this time.
+        updatedBefore:
+          type: string
+          format: date-time
+          description: Only emails updated before this time.
+        workflowNames:
+          type: boolean
+          default: false
+          description: Include names of associated workflows.
+    annotations:
+      readOnlyHint: true
+      openWorldHint: true
+  - name: getOrganization
+    title: Get Organization
+    description: >-
+      Look up LinkedIn organization information on behalf of authenticated
+      members. Admin access returns all Organization fields; non-admin access
+      returns limited fields: id, name, localizedName, localizedWebsite,
+      vanityName, logoV2, locations, primaryOrganizationType.
+    inputSchema:
+      type: object
+      properties:
+        organizationId:
+          type: integer
+          format: int64
+          description: The unique identifier for the organization.
+      required:
+        - organizationId
+    annotations:
+      readOnlyHint: true
+      openWorldHint: true
+  - name: getProfileByVanityName
+    title: Find Profile by VanityName
+    description: >-
+      Returns basic profile fields for the LinkedIn member that matches the
+      vanityName. The vanityName is used to represent the public profile URL in
+      the format: www.linkedin.com/in/{vanityName}. Restricted to approved
+      developers with application limit of 500 requests per day.
+    inputSchema:
+      type: object
+      properties:
+        q:
+          type: string
+          enum:
+            - vanityName
+          description: Query type parameter, must be set to 'vanityName'.
+        vanityName:
+          type: string
+          description: The vanity name of the LinkedIn member to retrieve.
+      required:
+        - q
+        - vanityName
+    annotations:
+      readOnlyHint: true
+      openWorldHint: true
